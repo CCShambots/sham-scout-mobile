@@ -1,25 +1,26 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import {HashRouter, NavLink, Route, Routes} from "react-router-dom";
+import HomePage from "./pages/HomePage";
+import MatchPage from "./pages/MatchPage";
+import ScanPage from "./pages/ScanPage";
+import SchedulePage from "./pages/SchedulePage";
+import SettingsPage from "./pages/SettingsPage";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <HashRouter basename={`/`}>
+        <Routes>
+          <Route path='' element={ <HomePage /> } />
+          <Route path='/scan' element={ <ScanPage /> } />
+          <Route path='/matches' element={ <MatchPage /> } />
+          <Route path='/schedule' element={ <SchedulePage /> } />
+          <Route path='/settings' element={ <SettingsPage /> } />
+
+          <Route path="/*" element={<NavLink to="/" />}  /> {/* navigate to default route if no url matched */}
+        </Routes>
+
+      </HashRouter>
   );
 }
 

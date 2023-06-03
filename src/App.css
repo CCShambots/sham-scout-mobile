@@ -1,5 +1,37 @@
 .App {
   text-align: center;
+  background-color: #343a40;
+  min-height: 90vh;
+
+  color: white;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.App>h1 {
+  font-size: 4vh;
+}
+
+.App>h2 {
+  font-size: 3.5vh;
+}
+
+.App>h3 {
+  font-size: 3vh;
+}
+
+.App>h4 {
+  font-size: 2.5vh;
+}
+
+.App>h5 {
+  font-size: 2vh;
+}
+
+.App>h6 {
+  font-size: 1.5vh;
 }
 
 .App-logo {
@@ -21,7 +53,7 @@
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
-  color: white;
+  /*color: white;*/
 }
 
 .App-link {

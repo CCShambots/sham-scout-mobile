@@ -1,0 +1,8 @@
+{
+  "appId":  "com.ccshambots.shamscoutmobile",
+  "appName": "ShamScout Mobile",
+  "bundledWebRuntime": false,
+  "npmClient": "npm",
+  "webDir": "build",
+  "cordova": {}
+}
