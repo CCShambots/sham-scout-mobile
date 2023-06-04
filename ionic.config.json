@@ -1,7 +1,0 @@
-{
-  "name": "ShamScout Mobile",
-  "integrations": {
-    "capacitor": {}
-  },
-  "type": "react"
-}
