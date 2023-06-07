@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/sham-scout-mobile.iml" filepath="$PROJECT_DIR$/.idea/sham-scout-mobile.iml" />
+      <module fileurl="file://$PROJECT_DIR$/sham_scout_mobile.iml" filepath="$PROJECT_DIR$/sham_scout_mobile.iml" />
+      <module fileurl="file://$PROJECT_DIR$/android/sham_scout_mobile_android.iml" filepath="$PROJECT_DIR$/android/sham_scout_mobile_android.iml" />
     </modules>
   </component>
 </project>
