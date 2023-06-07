@@ -88,7 +88,7 @@ class HandleCode {
 
     }
 
-
+    prefs.setInt('num-matches', matches.length);
     prefs.setStringList('schedule', matches);
   }
 
