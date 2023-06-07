@@ -74,7 +74,7 @@ class ScheduleState extends State<Schedule> {
                 Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) => MatchForm(
-                      matchInfo: "${e.getMatch()} - ${e.getStation()}",
+                      scheduleMatch:e,
                       redAlliance: e.getStation().toLowerCase().contains("red"),
                     ),
                   ),

@@ -70,7 +70,7 @@ class BottomNavigationBarState extends State<BottomNavigation>{
   ];
 
   void onItemTapped(int index) {
-    pageViewController.animateToPage(index, duration: Duration(milliseconds: 200), curve: Curves.easeInOut);
+    pageViewController.animateToPage(index, duration: Duration(milliseconds: 100), curve: Curves.easeInOut);
   }
 
   @override

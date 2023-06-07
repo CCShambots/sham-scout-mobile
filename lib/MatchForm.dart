@@ -3,13 +3,14 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sham_scout_mobile/FormItems.dart';
+import 'package:sham_scout_mobile/Schedule.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MatchForm extends StatefulWidget {
-  final String matchInfo;
   final bool redAlliance;
+  final ScheduleMatch scheduleMatch;
 
-  const MatchForm({Key? key, required this.matchInfo, required this.redAlliance}): super(key: key);
+  const MatchForm({Key? key, required this.scheduleMatch, required this.redAlliance}): super(key: key);
 
   @override
   State<MatchForm> createState() => MatchFormState();
@@ -40,30 +41,58 @@ class MatchFormState extends State<MatchForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: widget.redAlliance ? Colors.red[400] : Colors.blue[400],
-        leading: BackButton(onPressed: () => Navigator.of(context).pop(),),
-        title: Text(widget.matchInfo),
-      ),
-      body: Scaffold(
-        backgroundColor: widget.redAlliance ? Colors.red[100] : Colors.blue[100],
-        body: SingleChildScrollView(
-          child: Column(
-            children: config.items.map((e) =>
-              e.widget
-            ).toList(),
-          )
-        ),
+    return WillPopScope(
+      onWillPop: () async {
+        openModal(context);
+        return false;
+      },
+        child: Scaffold(
+          appBar: AppBar(
+            backgroundColor: widget.redAlliance ? Colors.red[400] : Colors.blue[400],
+            leading: BackButton(onPressed: () => openModal(context)),
+            title: Text("${widget.scheduleMatch.getMatch()} - ${widget.scheduleMatch.getStation()}"),
+          ),
+          body: Scaffold(
+            backgroundColor: widget.redAlliance ? Colors.red[100] : Colors.blue[100],
+            body: SingleChildScrollView(
+                child: Column(
+                  children: config.items.map((e) =>
+                  e.widget
+                  ).toList(),
+                )
+            ),
 
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        tooltip: 'Save',
-        child: const Icon(Icons.save),
-      ),
+          ),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () {config.saveMatchForm(widget.scheduleMatch.station.index, widget.scheduleMatch.matchNum, 5907);},
+            tooltip: 'Save',
+            child: const Icon(Icons.save),
+          ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
-    );
+    ));
+
+  }
+
+  void openModal(BuildContext context) {
+    showDialog(context: context, builder: (BuildContext context) =>
+        AlertDialog(
+            content: Text("Do you want to discard your changes?"),
+            actions: <TextButton>[
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text('Cancel')
+              ),
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('Discard')
+              )
+            ]
+        ));
   }
 
 }
