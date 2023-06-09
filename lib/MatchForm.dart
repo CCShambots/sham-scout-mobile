@@ -64,7 +64,10 @@ class MatchFormState extends State<MatchForm> {
 
           ),
           floatingActionButton: FloatingActionButton(
-            onPressed: () {config.saveMatchForm(widget.scheduleMatch.station.index, widget.scheduleMatch.matchNum, 5907);},
+            onPressed: () {
+              config.saveMatchForm(widget.scheduleMatch.station.index, widget.scheduleMatch.matchNum, 5907)
+                  .then((value) => Navigator.of(context).pop());
+              },
             tooltip: 'Save',
             child: const Icon(Icons.save),
           ),

@@ -31,6 +31,7 @@ class GameConfig {
       'match': match,
       'station': station,
       'team': teamNum,
+      'scout': prefs.getString("name"),
       'title': title,
       'year': year,
       'fields': items.where((element) => element.isValidInput()).map((e) => e.generateJSON(prefs)).toList()
@@ -109,7 +110,6 @@ class ConfigItem {
 
   Map<String, dynamic> generateJSON(SharedPreferences prefs) {
     return {
-      'type': type,
       'label': label,
       'value': prefs.get(label) as dynamic
     };

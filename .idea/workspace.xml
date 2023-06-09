@@ -10,7 +10,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="70134016-93c8-4f74-903e-0c68fb181f93" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/lib/QRCodeDisplay.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/FormItems.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/FormItems.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/MatchForm.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/MatchForm.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Schedule.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Schedule.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

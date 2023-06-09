@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sham_scout_mobile/MatchForm.dart';
+import 'package:sham_scout_mobile/QRCodeDisplay.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Schedule extends StatefulWidget {
@@ -82,7 +83,19 @@ class ScheduleState extends State<Schedule> {
               },
             )
             ,).toList()
-          )
+          ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => QRCodeDisplay()
+            ),
+          );
+        },
+        tooltip: "Create QR Codes",
+        child: const Icon(Icons.qr_code),
+      ),
+      // floatingActionButtonLocation: FloatingActionButtonLocation.,
     );
   }
 
