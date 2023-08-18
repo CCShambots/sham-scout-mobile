@@ -44,46 +44,48 @@ class ScheduleState extends State<Schedule> {
     loadMatches();
 
     return Scaffold(
-        body: Column(
-          children: matches!.map((e) =>
-            GestureDetector(
-              child:Container(
-                height: 50,
-                padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
-                decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey),
-                    color: e.station.redAlliance ? Colors.red[100] : Colors.blue[100]
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Text(
-                      e.getMatch(),
-                      style: textStyle,
+        body: SingleChildScrollView(
+          child: Column(
+            children: matches!.map((e) =>
+                GestureDetector(
+                  child:Container(
+                    height: 50,
+                    padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
+                    decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey),
+                        color: e.station.redAlliance ? Colors.red[100] : Colors.blue[100]
                     ),
-                    Text(
-                        "Team num yay"
-                    ),
-                    Text(
-                      e.getStation(),
-                      style: textStyle,
-                    )
-                  ],
-                ),
-              ),
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => MatchForm(
-                      scheduleMatch:e,
-                      redAlliance: e.getStation().toLowerCase().contains("red"),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text(
+                          e.getMatch(),
+                          style: textStyle,
+                        ),
+                        Text(
+                            "Team num yay"
+                        ),
+                        Text(
+                          e.getStation(),
+                          style: textStyle,
+                        )
+                      ],
                     ),
                   ),
-                );
-              },
-            )
-            ,).toList()
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => MatchForm(
+                          scheduleMatch:e,
+                          redAlliance: e.getStation().toLowerCase().contains("red"),
+                        ),
+                      ),
+                    );
+                  },
+                )
+              ,).toList()
           ),
+        ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(context).push(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sham_scout_mobile/Home.dart';
 import 'package:sham_scout_mobile/Schedule.dart';
 import 'package:sham_scout_mobile/Scan.dart';
+import 'package:sham_scout_mobile/Settings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
@@ -64,10 +65,7 @@ class BottomNavigationBarState extends State<BottomNavigation>{
     Scan(),
     Home(),
     Schedule(),
-    Text(
-      'Index 2: School',
-      style: optionStyle,
-    ),
+    Settings(),
   ];
 
   void onItemTapped(int index) {
