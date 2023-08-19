@@ -15,6 +15,8 @@ class Schedule extends StatefulWidget {
 class ScheduleState extends State<Schedule> {
   List<ScheduleMatch> matches = [];
 
+  List<String> teamNums = [];
+
   @override
   void initState() {
     super.initState();
@@ -29,10 +31,14 @@ class ScheduleState extends State<Schedule> {
 
       matches.addAll(prefs.getStringList('schedule')!.map((e) => ScheduleMatch.fromCode(e)));
 
+      //Load team nums in each match
+      List<String> loadedNumbers = prefs.getString("match-schedule")!.split(",");
+      loadedNumbers.removeLast();
 
       //Copy the list to make the state update
       setState(() {
         matches = [...matches];
+        teamNums = loadedNumbers;
       });
   }
 
@@ -63,7 +69,8 @@ class ScheduleState extends State<Schedule> {
                           style: textStyle,
                         ),
                         Text(
-                            "Team num yay"
+                          teamNums[e.matchNum * 6 + e.station.index],
+                          style: textStyle,
                         ),
                         Text(
                           e.getStation(),

@@ -32,7 +32,7 @@ class HandleCode {
     code = code.substring(4);
 
     switch(type) {
-      case CodeType.Schedule: {
+      case CodeType.ScoutSchedule: {
         saveSchedule(code, prefs);
         break;
       }
@@ -42,14 +42,23 @@ class HandleCode {
         break;
       }
 
+      case CodeType.MatchSchedule: {
+        saveMatchSchedule(code, prefs);
+        break;
+      }
+
       default:
       {
         //Do nothing because there's nothing to do
       }
     }
 
-
     return type;
+  }
+
+  static saveMatchSchedule(String code, SharedPreferences prefs) {
+    //just save the code and parse it later
+    prefs.setString("match-schedule", code);
   }
 
   static saveGameConfig(String code, SharedPreferences prefs) {
@@ -96,8 +105,9 @@ class HandleCode {
     String relevant = code.substring(0, 3);
 
     switch(relevant) {
-      case "sch": return CodeType.Schedule;
+      case "sch": return CodeType.ScoutSchedule;
       case "cfg": return CodeType.GameConfig;
+      case "mtc": return CodeType.MatchSchedule;
       default: return CodeType.None;
     }
   }
@@ -130,8 +140,9 @@ class HandleCode {
 enum CodeType {
   None(type: "none", displayText: "Invalid Code!"),
   GameConfig(type: "cfg", displayText: "Loaded Game Config"),
+  MatchSchedule(type: "mtc", displayText: "Loaded Event Match Schedule"),
   Split(type: "pt", displayText: "Read Next Part of Code"),
-  Schedule(type: "sch", displayText: "Loaded Match Schedule!");
+  ScoutSchedule(type: "sch", displayText: "Loaded Scouter Schedule!");
 
   const CodeType({
     required this.type,

@@ -14,11 +14,22 @@ class GameConfig {
     required this.items,
   });
 
+  static String parseOutRatingJson(String starting) {
+    String val = starting.replaceAllMapped(
+        RegExp(r'{*"Rating"*:*{*"min"*:([0-9]+),*"max":([0-9]+)}}'),
+            (Match m) =>
+            "\"Rating\", \"min\":${m[1]},\"max\":${m[2]}"
+    );
+
+    print(val);
+    return val;
+  }
+
   factory GameConfig.fromJson(Map<String, dynamic> data) {
 
-    final title = data['title'] as String;
+    final title = data['name'] as String;
     final year = data['year'] as int;
-    final items = List.from(data['items']).map((e) => ConfigItem.fromJson(e)).toList();
+    final items = List.from(data['fields']).map((e) => ConfigItem.fromJson(e)).toList();
 
     return GameConfig(title: title, year: year, items: items);
 
@@ -100,8 +111,8 @@ class ConfigItem {
   }
 
   factory ConfigItem.fromJson(Map<String, dynamic> data) {
-    final type = data['type'] as String;
-    final label = data['label'] as String;
+    final type = data['data_type'] as String;
+    final label = data['name'] as String;
     final min = data['min'] != null ? data['min'] as int : -1;
     final max = data['max'] != null ? data['max'] as int : -1;
 
@@ -110,7 +121,7 @@ class ConfigItem {
 
   Map<String, dynamic> generateJSON(SharedPreferences prefs) {
     return {
-      'label': label,
+      'name': label,
       'value': prefs.get(label) as dynamic
     };
   }
@@ -128,19 +139,19 @@ class ConfigItem {
 
     switch(type) {
 
-      case ("title"): {
+      case ("Title"): {
         return TitleItem(label: label);
       }
-      case ("checkbox"): {
+      case ("CheckBox"): {
         return CheckBoxField(label: label);
       }
-      case ("rating"): {
+      case ("Rating"): {
         return RatingField(label: label, min: min, max: max);
       }
-      case ("number"): {
+      case ("Number"): {
         return NumberField(label: label);
       }
-      case ("short_text"): {
+      case ("Short_text"): {
         return ShortTextField(label: label);
       }
 

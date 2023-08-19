@@ -23,7 +23,6 @@ class SettingsState extends State<Settings> {
 
   String currentEvent = "";
 
-  String templates = "";
   List<Shift> shifts = [];
 
   String name = "Harrison";
@@ -137,9 +136,7 @@ class SettingsState extends State<Settings> {
               ),
               Row(
                 children: [
-                  Flexible(
-                      child: Text(templates, style: TextStyle(),)
-                  )
+                  TextButton(onPressed: () {}, child: Text("Pull Match Schedule"))
                 ],
               ),
             ],

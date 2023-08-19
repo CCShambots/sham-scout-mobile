@@ -55,7 +55,12 @@ class ScanState
                   child: const Text('Close')
               )
             ]
-        ));
+        )).then((val) {
+          setState(() {
+            modalOpen = false;
+            showModal = false;
+          });
+        });
   }
 
   @override

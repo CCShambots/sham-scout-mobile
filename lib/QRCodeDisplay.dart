@@ -6,8 +6,6 @@ class QRCodeDisplay extends StatefulWidget {
 
   const QRCodeDisplay({super.key});
 
-
-
   @override
   State<StatefulWidget> createState() => QRCodeDisplayState();
 

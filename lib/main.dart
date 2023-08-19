@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sham_scout_mobile/Home.dart';
+import 'package:sham_scout_mobile/Matches.dart';
 import 'package:sham_scout_mobile/Schedule.dart';
 import 'package:sham_scout_mobile/Scan.dart';
 import 'package:sham_scout_mobile/Settings.dart';
@@ -61,7 +62,7 @@ class BottomNavigationBarState extends State<BottomNavigation>{
 
   static const TextStyle optionStyle = TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static const List<Widget> widgetOptions = <Widget>[
-    Text('To be matches', style: optionStyle),
+    Matches(),
     Scan(),
     Home(),
     Schedule(),

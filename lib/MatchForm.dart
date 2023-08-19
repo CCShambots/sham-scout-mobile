@@ -20,6 +20,7 @@ class MatchForm extends StatefulWidget {
 class MatchFormState extends State<MatchForm> {
 
   GameConfig config = GameConfig(title: "none", year: 2023, items: []);
+  String team = "";
 
   @override
   void initState() {
@@ -30,14 +31,20 @@ class MatchFormState extends State<MatchForm> {
   Future<void> loadConfig() async {
     final prefs = await SharedPreferences.getInstance();
 
-    final parsedJson = jsonDecode(prefs.getString('game-config') ?? "");
+    //Remove newline characters to avoid problems
+    final parsedJson = jsonDecode(GameConfig.parseOutRatingJson(jsonEncode(jsonDecode(prefs.getString("game-config")!))));
 
     final GameConfig loadedConfig = GameConfig.fromJson(parsedJson);
 
+    List<String> loadedNumbers = prefs.getString("match-schedule")!.split(",");
+    loadedNumbers.removeLast();
+
     setState(() {
       config = loadedConfig;
+      team = loadedNumbers![widget.scheduleMatch.matchNum * 6 + widget.scheduleMatch.station.index];
     });
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +57,7 @@ class MatchFormState extends State<MatchForm> {
           appBar: AppBar(
             backgroundColor: widget.redAlliance ? Colors.red[400] : Colors.blue[400],
             leading: BackButton(onPressed: () => openModal(context)),
-            title: Text("${widget.scheduleMatch.getMatch()} - ${widget.scheduleMatch.getStation()}"),
+            title: Text("${widget.scheduleMatch.getMatch()} - ${team} - ${widget.scheduleMatch.getStation()}"),
           ),
           body: Scaffold(
             backgroundColor: widget.redAlliance ? Colors.red[100] : Colors.blue[100],
