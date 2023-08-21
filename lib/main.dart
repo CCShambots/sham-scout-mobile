@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sham_scout_mobile/History.dart';
 import 'package:sham_scout_mobile/Home.dart';
 import 'package:sham_scout_mobile/Matches.dart';
 import 'package:sham_scout_mobile/Schedule.dart';
@@ -66,6 +67,7 @@ class BottomNavigationBarState extends State<BottomNavigation>{
     Scan(),
     Home(),
     Schedule(),
+    History(),
     Settings(),
   ];
 
@@ -119,8 +121,13 @@ class BottomNavigationBarState extends State<BottomNavigation>{
           ),
           BottomNavigationBarItem(
               icon: Icon(Icons.calendar_month),
-              label:'Schedule',
+              label:'Upcoming',
               backgroundColor: Colors.black,
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.history),
+            label:'Completed',
+            backgroundColor: Colors.black,
           ),
           BottomNavigationBarItem(
               icon: Icon(Icons.settings),

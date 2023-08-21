@@ -120,14 +120,15 @@ class TeamLink extends StatelessWidget{
 
   const TeamLink({super.key, required this.matchIndex, required this.station, required this.team});
 
+  //TODO: not always red alliance..?
   @override
   Widget build(BuildContext context) {
     return TextButton(child: Text(team), onPressed: () {
       Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) => MatchForm(
-            scheduleMatch:ScheduleMatch(station: station, matchNum: matchIndex),
-            redAlliance: true,
+            scheduleMatch:ScheduleMatch(station, matchIndex),
+            redAlliance: station.index < 3,
           ),
         ),
       );

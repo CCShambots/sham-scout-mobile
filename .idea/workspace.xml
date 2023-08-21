@@ -10,15 +10,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="70134016-93c8-4f74-903e-0c68fb181f93" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/lib/Matches.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/History.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/FormItems.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/FormItems.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/HandleCode.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/HandleCode.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Home.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Home.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/MatchForm.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/MatchForm.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/QRCodeDisplay.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/QRCodeDisplay.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Scan.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Scan.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Matches.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Matches.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/Schedule.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Schedule.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Settings.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Settings.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/main.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -27,7 +25,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="DarkyenusTimeTracker">
-    <option name="totalTimeSeconds" value="8390" />
+    <option name="totalTimeSeconds" value="22786" />
     <option name="gitIntegration" value="true" />
     <option name="naggedAbout" value="1" />
   </component>

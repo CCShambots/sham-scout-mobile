@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:sham_scout_mobile/FormItems.dart';
 import 'package:sham_scout_mobile/MatchForm.dart';
 import 'package:sham_scout_mobile/QRCodeDisplay.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -14,6 +15,7 @@ class Schedule extends StatefulWidget {
 
 class ScheduleState extends State<Schedule> {
   List<ScheduleMatch> matches = [];
+  List<ScheduleMatch> submittedMatches = [];
 
   List<String> teamNums = [];
 
@@ -24,25 +26,21 @@ class ScheduleState extends State<Schedule> {
   }
 
   Future<void> loadMatches() async{
+
       final prefs = await SharedPreferences.getInstance();
-
-      //Make sure we don't double load matches
-      matches.clear();
-
-      matches.addAll(prefs.getStringList('schedule')!.map((e) => ScheduleMatch.fromCode(e)));
 
       //Load team nums in each match
       List<String> loadedNumbers = prefs.getString("match-schedule")!.split(",");
       loadedNumbers.removeLast();
 
+      List<ScheduleMatch> loaded = await GameConfig.loadUnplayedSchedule();
+
       //Copy the list to make the state update
       setState(() {
-        matches = [...matches];
+        matches = loaded;
         teamNums = loadedNumbers;
       });
   }
-
-  static const TextStyle textStyle = TextStyle(fontSize: 20, fontWeight: FontWeight.bold);
 
   @override
   Widget build(BuildContext context) {
@@ -53,43 +51,16 @@ class ScheduleState extends State<Schedule> {
         body: SingleChildScrollView(
           child: Column(
             children: matches!.map((e) =>
-                GestureDetector(
-                  child:Container(
-                    height: 50,
-                    padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey),
-                        color: e.station.redAlliance ? Colors.red[100] : Colors.blue[100]
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Text(
-                          e.getMatch(),
-                          style: textStyle,
-                        ),
-                        Text(
-                          teamNums[e.matchNum * 6 + e.station.index],
-                          style: textStyle,
-                        ),
-                        Text(
-                          e.getStation(),
-                          style: textStyle,
-                        )
-                      ],
-                    ),
-                  ),
-                  onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => MatchForm(
-                          scheduleMatch:e,
-                          redAlliance: e.getStation().toLowerCase().contains("red"),
-                        ),
+                ScheduleItem(match: e, teamNum: teamNums[e.matchNum * 6 + e.station.index], onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => MatchForm(
+                        scheduleMatch:e,
+                        redAlliance: e.getStation().toLowerCase().contains("red"),
                       ),
-                    );
-                  },
-                )
+                    ),
+                  );
+                },)
               ,).toList()
           ),
         ),
@@ -110,26 +81,88 @@ class ScheduleState extends State<Schedule> {
 
 }
 
+class ScheduleItem extends StatelessWidget {
+  final ScheduleMatch match;
+  final Function onTap;
+  final String teamNum;
+
+  const ScheduleItem({required this.match, required this.onTap, required this.teamNum});
+
+  static const TextStyle textStyle = TextStyle(fontSize: 20, fontWeight: FontWeight.bold);
+
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      child:Container(
+        height: 50,
+        padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
+        decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey),
+            color: match.station.redAlliance ? Colors.red[100] : Colors.blue[100]
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Text(
+              match.getMatch(),
+              style: textStyle,
+            ),
+            Text(
+              teamNum,
+              style: textStyle,
+            ),
+            Text(
+              match.getStation(),
+              style: textStyle,
+            )
+          ],
+        ),
+      ),
+      onTap: () {
+        onTap();
+      },
+    );
+  }
+}
+
 class ScheduleMatch {
   final Station station;
   final int matchNum;
+  int teamNum;
 
-  const ScheduleMatch({
-    required this.station,
-    required this.matchNum
-  });
+  ScheduleMatch(
+    this.station,
+    this.matchNum,
+    [this.teamNum = -1]
+  );
+
+  bool equal(ScheduleMatch other) {
+    return (
+      other.station == station &&
+      other.matchNum == matchNum
+    );
+  }
 
   String getStation() {return station.displayName;}
   String getMatch() {return "Quals ${matchNum+1}";}
 
   static ScheduleMatch fromCode(String code) {
     return ScheduleMatch(
-        station: stationFromindex(int.parse(code.substring(1, code.indexOf("m")))),
-        matchNum: int.parse(code.substring(code.indexOf("m")+1))
+        stationFromIndex(int.parse(code.substring(1, code.indexOf("m")))),
+        int.parse(code.substring(code.indexOf("m")+1))
     );
   }
 
-  static Station stationFromindex(int index) {
+  static ScheduleMatch fromSavedFile(String fileName) {
+    //TODO: since station isn't in file name...
+    RegExp exp = RegExp(r'm([0-9]+)s([0-9])-([0-9]+)');
+    RegExpMatch? match = exp.firstMatch(fileName);
+
+    return ScheduleMatch(stationFromIndex(int.parse(match![2]!)), int.parse(match![1]!), int.parse(match![3]!));
+  }
+
+  static Station stationFromIndex(int index) {
     switch(index) {
       case 0: return Station.Red1;
       case 1: return Station.Red2;

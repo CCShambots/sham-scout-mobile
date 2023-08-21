@@ -20,7 +20,9 @@ class MatchForm extends StatefulWidget {
 class MatchFormState extends State<MatchForm> {
 
   GameConfig config = GameConfig(title: "none", year: 2023, items: []);
-  String team = "";
+  String team = "0";
+
+  bool loadedValues = false;
 
   @override
   void initState() {
@@ -39,15 +41,22 @@ class MatchFormState extends State<MatchForm> {
     List<String> loadedNumbers = prefs.getString("match-schedule")!.split(",");
     loadedNumbers.removeLast();
 
+    String outputTeamNum = loadedNumbers![widget.scheduleMatch.matchNum * 6 + widget.scheduleMatch.station.index];
+
+    //Load in saved values and place them on the form
+    loadedConfig.loadSavedValues(widget.scheduleMatch.matchNum, int.parse(outputTeamNum));
+
     setState(() {
       config = loadedConfig;
-      team = loadedNumbers![widget.scheduleMatch.matchNum * 6 + widget.scheduleMatch.station.index];
+      team = outputTeamNum;
+
     });
   }
 
 
   @override
   Widget build(BuildContext context) {
+
     return WillPopScope(
       onWillPop: () async {
         openModal(context);
@@ -57,7 +66,7 @@ class MatchFormState extends State<MatchForm> {
           appBar: AppBar(
             backgroundColor: widget.redAlliance ? Colors.red[400] : Colors.blue[400],
             leading: BackButton(onPressed: () => openModal(context)),
-            title: Text("${widget.scheduleMatch.getMatch()} - ${team} - ${widget.scheduleMatch.getStation()}"),
+            title: Text("${widget.scheduleMatch.getMatch()} - $team - ${widget.scheduleMatch.getStation()}"),
           ),
           body: Scaffold(
             backgroundColor: widget.redAlliance ? Colors.red[100] : Colors.blue[100],
@@ -72,7 +81,7 @@ class MatchFormState extends State<MatchForm> {
           ),
           floatingActionButton: FloatingActionButton(
             onPressed: () {
-              config.saveMatchForm(widget.scheduleMatch.station.index, widget.scheduleMatch.matchNum, 5907)
+              config.saveMatchForm(widget.scheduleMatch.station.index, widget.scheduleMatch.matchNum, int.parse(team))
                   .then((value) => Navigator.of(context).pop());
               },
             tooltip: 'Save',
