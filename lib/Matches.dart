@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sham_scout_mobile/MatchForm.dart';
 import 'package:sham_scout_mobile/Schedule.dart';
+import 'package:sham_scout_mobile/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Matches extends StatefulWidget {
@@ -26,7 +27,7 @@ class MatchesState extends State<Matches> {
   Future<void> loadMatchSchedule() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    String matchScheduleCode = prefs.getString("match-schedule")!;
+    String matchScheduleCode = prefs.getString(PrefsConstants.matchSchedulePref)!;
 
     setState(() {
       matchSchedule = Match.parseCode(matchScheduleCode);

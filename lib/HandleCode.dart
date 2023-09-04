@@ -1,3 +1,4 @@
+import 'package:sham_scout_mobile/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HandleCode {
@@ -58,12 +59,12 @@ class HandleCode {
 
   static saveMatchSchedule(String code, SharedPreferences prefs) {
     //just save the code and parse it later
-    prefs.setString("match-schedule", code);
+    prefs.setString(PrefsConstants.matchSchedulePref, code);
   }
 
   static saveGameConfig(String code, SharedPreferences prefs) {
     //just save the json and parse it later
-    prefs.setString("game-config", code);
+    prefs.setString(PrefsConstants.activeConfigPref, code);
   }
   
   static saveSchedule(String code, SharedPreferences prefs) {
@@ -71,7 +72,7 @@ class HandleCode {
     String name = code.substring(0, code.indexOf(':'));
     code = code.substring(name.length + 1);
 
-    prefs.setString('name', name);
+    prefs.setString(PrefsConstants.namePref, name);
 
     List<String> matches = <String>[];
 
@@ -97,8 +98,8 @@ class HandleCode {
 
     }
 
-    prefs.setInt('num-matches', matches.length);
-    prefs.setStringList('schedule', matches);
+    prefs.setInt(PrefsConstants.numMatchesPref, matches.length);
+    prefs.setStringList(PrefsConstants.schedulePref, matches);
   }
 
   static CodeType getCodeType(String code) {

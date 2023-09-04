@@ -36,8 +36,8 @@ class SettingsState extends State<Settings> {
   Future<void> loadVariables() async{
     final prefs = await SharedPreferences.getInstance();
 
-    String currentKey = prefs.getString('current-event')!;
-    String loadedName = prefs.getString("name")!;
+    String currentKey = prefs.getString(PrefsConstants.currentEventPref)!;
+    String loadedName = prefs.getString(PrefsConstants.namePref)!;
 
     getShifts(currentKey);
 
@@ -51,7 +51,7 @@ class SettingsState extends State<Settings> {
   Future<void> saveEventKey(String value) async {
     final prefs = await SharedPreferences.getInstance();
 
-    prefs.setString("current-event", value);
+    prefs.setString(PrefsConstants.currentEventPref, value);
     getShifts(value);
 
     setState(() {
@@ -80,7 +80,7 @@ class SettingsState extends State<Settings> {
 
     final prefs = await SharedPreferences.getInstance();
 
-    prefs.setString("name", scouter);
+    prefs.setString(PrefsConstants.namePref, scouter);
 
     String code = Shift.generateCode(scouter, shifts);
     print(code);

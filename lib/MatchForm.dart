@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sham_scout_mobile/FormItems.dart';
 import 'package:sham_scout_mobile/Schedule.dart';
+import 'package:sham_scout_mobile/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MatchForm extends StatefulWidget {
@@ -38,7 +39,7 @@ class MatchFormState extends State<MatchForm> {
 
     final GameConfig loadedConfig = GameConfig.fromJson(parsedJson);
 
-    List<String> loadedNumbers = prefs.getString("match-schedule")!.split(",");
+    List<String> loadedNumbers = prefs.getString(PrefsConstants.matchSchedulePref)!.split(",");
     loadedNumbers.removeLast();
 
     String outputTeamNum = loadedNumbers![widget.scheduleMatch.matchNum * 6 + widget.scheduleMatch.station.index];

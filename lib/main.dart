@@ -5,6 +5,7 @@ import 'package:sham_scout_mobile/Matches.dart';
 import 'package:sham_scout_mobile/Schedule.dart';
 import 'package:sham_scout_mobile/Scan.dart';
 import 'package:sham_scout_mobile/Settings.dart';
+import 'package:sham_scout_mobile/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
@@ -57,7 +58,7 @@ class BottomNavigationBarState extends State<BottomNavigation>{
     final prefs = await SharedPreferences.getInstance();
 
     setState(() {
-      name = prefs.getString('name') != null ? 'Welcome, ${prefs.getString('name') ?? ""}!' : "Welcome!";
+      name = prefs.getString(PrefsConstants.namePref) != null ? 'Welcome, ${prefs.getString(PrefsConstants.namePref) ?? ""}!' : "Welcome!";
     });
   }
 

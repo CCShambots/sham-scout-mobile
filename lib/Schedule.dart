@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:sham_scout_mobile/FormItems.dart';
 import 'package:sham_scout_mobile/MatchForm.dart';
 import 'package:sham_scout_mobile/QRCodeDisplay.dart';
+import 'package:sham_scout_mobile/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Schedule extends StatefulWidget {
@@ -30,7 +31,7 @@ class ScheduleState extends State<Schedule> {
       final prefs = await SharedPreferences.getInstance();
 
       //Load team nums in each match
-      List<String> loadedNumbers = prefs.getString("match-schedule")!.split(",");
+      List<String> loadedNumbers = prefs.getString(PrefsConstants.matchSchedulePref)!.split(",");
       loadedNumbers.removeLast();
 
       List<ScheduleMatch> loaded = await GameConfig.loadUnplayedSchedule();

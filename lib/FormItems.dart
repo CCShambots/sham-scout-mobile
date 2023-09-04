@@ -22,7 +22,7 @@ class GameConfig {
   static Future<List<ScheduleMatch>> loadUnplayedSchedule() async {
     final prefs = await SharedPreferences.getInstance();
 
-    List<ScheduleMatch> matches = prefs.getStringList('schedule')!.map((e) => ScheduleMatch.fromCode(e)).toList();
+    List<ScheduleMatch> matches = prefs.getStringList(PrefsConstants.schedulePref)!.map((e) => ScheduleMatch.fromCode(e)).toList();
 
     List<String> fileNames = await GameConfig.loadSubmittedForms();
     List<ScheduleMatch> submittedMatches = fileNames.map((e) => ScheduleMatch.fromSavedFile(e)).toList();
@@ -60,8 +60,8 @@ class GameConfig {
     Map<String, dynamic> data = {
       'match_number': match + 1,
       'team': teamNum,
-      'scouter': prefs.getString("name"),
-      'event_key': prefs.getString("current-event"),
+      'scouter': prefs.getString(PrefsConstants.namePref),
+      'event_key': prefs.getString(PrefsConstants.currentEventPref),
       'fields': Map.fromIterable(
           items.where((element) => element.isValidInput()).map((e) => e.generateJSON(prefs)).toList(),
           key: (e) => e.keys.first,
@@ -113,7 +113,7 @@ class GameConfig {
 
     if(!directory.existsSync()) directory.createSync();
 
-    String? name = prefs.getString("name");
+    String? name = prefs.getString(PrefsConstants.namePref);
 
     File file =  File('${directory.path}/matches/m${match}s${station}-$teamNum-${name ?? "unknown"}-$num.json');
 
