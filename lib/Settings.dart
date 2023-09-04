@@ -21,9 +21,12 @@ class Settings extends StatefulWidget {
 
 class SettingsState extends State<Settings> {
 
-  String currentEvent = "";
+  String currentEventKey = "";
+  bool eventKeyOverride = true;
 
   List<Shift> shifts = [];
+
+  TextEditingController controller = TextEditingController();
 
   String name = "Harrison";
 
@@ -38,13 +41,17 @@ class SettingsState extends State<Settings> {
 
     String currentKey = prefs.getString(PrefsConstants.currentEventPref)!;
     String loadedName = prefs.getString(PrefsConstants.namePref)!;
+    bool override = prefs.getBool(PrefsConstants.overrideCurrentEventPref) ?? true;
+
+    controller.text = currentKey;
 
     getShifts(currentKey);
 
     setState(() {
       //Load the current event
-        currentEvent = currentKey;
+        currentEventKey = currentKey;
         name = loadedName;
+        eventKeyOverride = override;
     });
   }
 
@@ -55,9 +62,19 @@ class SettingsState extends State<Settings> {
     getShifts(value);
 
     setState(() {
-      currentEvent = value;
+      currentEventKey = value;
     });
 
+  }
+
+  Future<void> setEventKeyOverride(bool val) async {
+    final prefs = await SharedPreferences.getInstance();
+
+    prefs.setBool(PrefsConstants.overrideCurrentEventPref, val);
+
+    setState(() {
+      eventKeyOverride = val;
+    });
   }
 
   Future<void> getShifts(String eventKey) async {
@@ -93,6 +110,13 @@ class SettingsState extends State<Settings> {
     });
   }
 
+  Future<void> syncMatchSchedule() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    //TODO: Make this happen
+
+  }
+
   @override
   void dispose() {
     super.dispose();
@@ -104,7 +128,6 @@ class SettingsState extends State<Settings> {
       body: SingleChildScrollView(
           child: Column(
             children: [
-            //TODO: Make this not scuffed/autocomplete/explained
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
                 child: TextField(
@@ -113,9 +136,16 @@ class SettingsState extends State<Settings> {
                     hintText: "Enter event key"
                   ),
                   onSubmitted: (String? value) {
-                    saveEventKey(value!);
+
+                    if(value != currentEventKey) {
+                      if(eventKeyOverride) {
+                        saveEventKey(value!);
+                      } else {
+                        openModal(context, value!);
+                      }
+                    }
                   },
-                  controller: TextEditingController()..text = currentEvent,
+                  controller: controller,
                 )
               ),
               Row(
@@ -135,14 +165,46 @@ class SettingsState extends State<Settings> {
                 ],
               ),
               Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  TextButton(onPressed: () {}, child: Text("Pull Match Schedule"))
+                  ElevatedButton.icon(
+                      onPressed: syncMatchSchedule,
+                      icon: Icon(
+                        Icons.sync,
+                      ),
+                      label: const Text("Sync Match Schedule")
+                  )
                 ],
-              ),
+              )
             ],
           )
         )
     );
+  }
+
+  void openModal(BuildContext context, String value) {
+    showDialog(context: context, builder: (BuildContext context) =>
+        AlertDialog(
+            title: Text("Wait!"),
+            content: Text("You scanned the event key via QR Code. Unless you know what you're doing, changing this could break all your submitted data!"),
+            actions: <TextButton>[
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    saveEventKey(value);
+                    setEventKeyOverride(true);
+                  },
+                  child: const Text('Apply')
+              ),
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    controller.text = currentEventKey;
+                  },
+                  child: const Text('Cancel')
+              ),
+            ]
+        ));
   }
 
 }

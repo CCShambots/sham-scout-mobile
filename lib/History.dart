@@ -45,7 +45,7 @@ class HistoryState extends State<History> {
     return Scaffold(
         body: SingleChildScrollView(
             child: Column(
-              children: submittedMatches.map((e) =>
+              children: submittedMatches.isNotEmpty ?  submittedMatches.map((e) =>
                   ScheduleItem(match: e, teamNum: e.teamNum.toString(), onTap: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
@@ -57,6 +57,11 @@ class HistoryState extends State<History> {
                     );
                   },)
               ).toList()
+                  : [
+                    Center(
+                      child:Text("No Completed Matches Yet!", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),),
+                    )
+              ]
             )
         ),
       floatingActionButton: FloatingActionButton(

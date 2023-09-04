@@ -27,6 +27,8 @@ class HomeState extends State<Home> {
 
   ScheduleMatch? nextMatch;
 
+  TextStyle bigText = TextStyle(fontSize: 24, fontWeight: FontWeight.bold);
+
   @override
   void initState() {
     getUsers();
@@ -78,7 +80,7 @@ class HomeState extends State<Home> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text("Next Match:"),
+              Text("Next Match:", style: bigText,),
             ],
           ),
           nextMatch != null ? ScheduleItem(match: nextMatch!, teamNum: nextMatch!.teamNum.toString(), onTap: () {
@@ -90,17 +92,17 @@ class HomeState extends State<Home> {
                 ),
               ),
             );
-          }) : Text("No upcoming matches!"),
+          }) : Text("No upcoming matches!", style: bigText,),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text("$matchesToGo")
+              Text("$matchesToGo", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 48),)
             ],
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text("Matches to go!")
+              Text("Matches to go!", style: bigText,)
             ],
           )
         ],

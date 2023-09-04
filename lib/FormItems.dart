@@ -123,11 +123,14 @@ class GameConfig {
   }
 
   static Future<List<String>> loadSubmittedForms() async{
-    final directory = await getApplicationDocumentsDirectory();
+    final docsDirectory = await getApplicationDocumentsDirectory();
 
+    if(!docsDirectory.existsSync()) docsDirectory.createSync();
+
+    final directory = Directory("${docsDirectory.path}/matches/");
     if(!directory.existsSync()) directory.createSync();
 
-    List<FileSystemEntity> entities =  Directory("${directory.path}/matches/").listSync();
+    List<FileSystemEntity> entities = directory.listSync();
     
     List<File> files = entities.whereType<File>().toList();
 

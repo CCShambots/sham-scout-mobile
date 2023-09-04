@@ -8,6 +8,8 @@ class PrefsConstants {
   static String activeConfigPref = "game-config";
   static String namePref = "name";
   static String currentEventPref = "current-event";
+  static String overrideCurrentEventPref = "current-event-override";
   static String numMatchesPref = "num-matches";
   static String schedulePref = "schedule";
+  static String tbaPref = "tba-key";
 }

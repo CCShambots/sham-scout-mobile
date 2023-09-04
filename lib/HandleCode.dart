@@ -25,6 +25,7 @@ class HandleCode {
 
     currentPartialCode = "";
 
+    //TODO: Delete print
     print('code ${code}');
 
     CodeType type = getCodeType(code);
@@ -48,6 +49,11 @@ class HandleCode {
         break;
       }
 
+      case CodeType.EventKey: {
+        saveEventKey(code, prefs);
+        break;
+      }
+
       default:
       {
         //Do nothing because there's nothing to do
@@ -55,6 +61,12 @@ class HandleCode {
     }
 
     return type;
+  }
+
+  static saveEventKey(String code, SharedPreferences prefs)  {
+    //Just save the event key for later
+    prefs.setString(PrefsConstants.currentEventPref, code);
+    prefs.setBool(PrefsConstants.overrideCurrentEventPref, false);
   }
 
   static saveMatchSchedule(String code, SharedPreferences prefs) {
@@ -109,6 +121,7 @@ class HandleCode {
       case "sch": return CodeType.ScoutSchedule;
       case "cfg": return CodeType.GameConfig;
       case "mtc": return CodeType.MatchSchedule;
+      case "eve": return CodeType.EventKey;
       default: return CodeType.None;
     }
   }
@@ -142,8 +155,10 @@ enum CodeType {
   None(type: "none", displayText: "Invalid Code!"),
   GameConfig(type: "cfg", displayText: "Loaded Game Config"),
   MatchSchedule(type: "mtc", displayText: "Loaded Event Match Schedule"),
+  ScoutSchedule(type: "sch", displayText: "Loaded Scouter Schedule!"),
+  EventKey(type: "eve", displayText: "Loaded event Key"),
   Split(type: "pt", displayText: "Read Next Part of Code"),
-  ScoutSchedule(type: "sch", displayText: "Loaded Scouter Schedule!");
+  ;
 
   const CodeType({
     required this.type,

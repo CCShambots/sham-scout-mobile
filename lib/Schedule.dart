@@ -51,7 +51,7 @@ class ScheduleState extends State<Schedule> {
     return Scaffold(
         body: SingleChildScrollView(
           child: Column(
-            children: matches!.map((e) =>
+            children: matches.isNotEmpty ? matches!.map((e) =>
                 ScheduleItem(match: e, teamNum: teamNums[e.matchNum * 6 + e.station.index], onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
@@ -63,6 +63,11 @@ class ScheduleState extends State<Schedule> {
                   );
                 },)
               ,).toList()
+                : [
+                  Center(
+                  child:Text("No Upcoming Matches!", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),),
+                )
+              ]
           ),
         ),
       // floatingActionButtonLocation: FloatingActionButtonLocation.,
