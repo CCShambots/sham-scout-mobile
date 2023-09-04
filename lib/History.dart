@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sham_scout_mobile/FormItems.dart';
 import 'package:sham_scout_mobile/MatchForm.dart';
+import 'package:sham_scout_mobile/QRCodeDisplay.dart';
 import 'package:sham_scout_mobile/Schedule.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -57,7 +58,18 @@ class HistoryState extends State<History> {
                   },)
               ).toList()
             )
-        )
+        ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+                builder: (context) => QRCodeDisplay()
+            ),
+          );
+        },
+        tooltip: "Create QR Codes",
+        child: const Icon(Icons.qr_code),
+      ),
     );
   }
 

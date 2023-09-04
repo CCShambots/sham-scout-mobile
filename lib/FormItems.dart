@@ -7,7 +7,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sham_scout_mobile/Schedule.dart';
+import 'package:sham_scout_mobile/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 
 class GameConfig {
 
@@ -53,24 +55,54 @@ class GameConfig {
   Future<void> saveMatchForm(int station, int match, int teamNum) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
+    //TODO: Use a "for item"??
+
     Map<String, dynamic> data = {
-      'match_number': match,
+      'match_number': match + 1,
       'team': teamNum,
-      'scout': prefs.getString("name"),
+      'scouter': prefs.getString("name"),
       'event_key': prefs.getString("current-event"),
-      'fields': items.where((element) => element.isValidInput()).map((e) => e.generateJSON(prefs)).toList()
+      'fields': Map.fromIterable(
+          items.where((element) => element.isValidInput()).map((e) => e.generateJSON(prefs)).toList(),
+          key: (e) => e.keys.first,
+          value: (e) => e[e.keys.first]
+      )
     };
 
     String json = jsonEncode(data);
 
-    File file = await generateFile(station, match, teamNum);
+    File file = await generateFile(station, match+1, teamNum);
 
     file.createSync();
 
     //If there's already something there, this will just overwrite it (i.e. rewriting)
     file.writeAsStringSync(json);
 
+    //Save to the server through the api
+
+    await saveToAPI(json);
+
     print(await file.readAsString());
+  }
+
+  Future<void> saveToAPI(String json) async {
+    try {
+      var url = Uri.parse("${ApiConstants.baseUrl}/template/$title/submit");
+      var response = await http.post(
+        url,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: json,
+      );
+
+      if (response.statusCode != 200) {
+        print("FAILED API POST");
+        print(response.statusCode);
+        print(response.body);
+
+      }
+    } catch (e) {}
   }
 
   Future<File> generateFile(int station, int match, int teamNum, [int num = 0]) async {
@@ -106,43 +138,24 @@ class GameConfig {
   /// If they exist, load the saved values from working on the form before
   Future<void> loadSavedValues(int match, int teamNum) async {
 
-    print("running saved values ");
-
     final directory = await getApplicationDocumentsDirectory();
-
-    print("running saved values 2");
 
     if(!directory.existsSync()) directory.createSync();
 
-    print("running saved values 3");
-
     List<String> submittedForms = await loadSubmittedForms();
 
-    print("running saved values 4");
-
     String? path = submittedForms.where((element) =>
-        RegExp("m${match}s[0-9]-$teamNum").hasMatch(element)).firstOrNull;
-
-    print("running saved values 5: $match $teamNum");
+        RegExp("m${match+1}s[0-9]-$teamNum").hasMatch(element)).firstOrNull;
 
     if(path != null) {
       File file =  File(path);
 
-      print("running saved values 6");
-      print(path);
-
       if(file.existsSync()) {
-        List<dynamic> fields = jsonDecode(file.readAsStringSync())["fields"];
+        Map<String, dynamic> fields = jsonDecode(file.readAsStringSync())["fields"];
 
-        for (var element in fields) {
-          String label =  element.keys.first;
-          String type = element[label].keys.first;
-          print(label);
-          print(type);
-          print(element[label][type]);
-          print(items.map((e) => e.label));
-          print(items.length);
-          items.where((element) => element.label == label).firstOrNull!.updateSavedValue(element[label][type]);
+        for (var label in fields.keys) {
+          String type = fields[label].keys.first;
+          items.where((element) => element.label == label).firstOrNull!.updateSavedValue(fields[label][type]);
         }
       }
     }

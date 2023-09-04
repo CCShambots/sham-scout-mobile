@@ -64,17 +64,6 @@ class ScheduleState extends State<Schedule> {
               ,).toList()
           ),
         ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => QRCodeDisplay()
-            ),
-          );
-        },
-        tooltip: "Create QR Codes",
-        child: const Icon(Icons.qr_code),
-      ),
       // floatingActionButtonLocation: FloatingActionButtonLocation.,
     );
   }
