@@ -9,18 +9,14 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="70134016-93c8-4f74-903e-0c68fb181f93" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/FormItems.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/FormItems.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/History.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/History.dart" afterDir="false" />
-    </list>
+    <list default="true" id="70134016-93c8-4f74-903e-0c68fb181f93" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="DarkyenusTimeTracker">
-    <option name="totalTimeSeconds" value="33910" />
+    <option name="totalTimeSeconds" value="34031" />
     <option name="gitIntegration" value="true" />
     <option name="naggedAbout" value="1" />
   </component>
