@@ -66,11 +66,15 @@ class HistoryState extends State<History> {
         ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-                builder: (context) => QRCodeDisplay()
-            ),
-          );
+
+          //Only Show QR Codes if there are matches to show
+          if(submittedMatches.isNotEmpty) {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                  builder: (context) => QRCodeDisplay()
+              ),
+            );
+          }
         },
         tooltip: "Create QR Codes",
         child: const Icon(Icons.qr_code),

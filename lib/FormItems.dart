@@ -248,7 +248,7 @@ class ConfigItem {
       case ("Number"): {
         return NumberField(label: label, item: this);
       }
-      case ("Short_text"): {
+      case ("ShortText"): {
         return ShortTextField(label: label, item: this);
       }
 
