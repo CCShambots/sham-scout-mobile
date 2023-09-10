@@ -109,6 +109,7 @@ class GameConfig {
         body: json,
       );
 
+      print(response.body);
 
       if (response.statusCode != 200) {
         print("FAILED API POST");
@@ -150,6 +151,17 @@ class GameConfig {
     List<File> files = entities.whereType<File>().toList();
 
     return files.map((e) => e.path).toList();
+  }
+
+  static Future<void> deleteSubmittedForms() async {
+    List<String> forms = await loadSubmittedForms();
+
+    for (var element in forms) {
+      File file = File(element);
+      if(file.existsSync()) {
+        file.deleteSync();
+      }
+    }
   }
 
 
@@ -353,13 +365,11 @@ class NumberFieldState extends FormItemState<NumberField>{
             IconButton(
                 onPressed: () => {if(val > 0) setVal(val-1)},
                 icon: Icon(Icons.remove),
-                color: Colors.black,
             ),
             Text(val.toString()),
             IconButton(
                 onPressed: () => {setVal(val+1)},
                 icon: Icon(Icons.add),
-                color: Colors.black,
             ),
 
           ]

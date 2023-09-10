@@ -216,7 +216,7 @@ class SettingsState extends State<Settings> {
               ),
               Padding(
                   padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-                  child: TextField(
+                  child: PrefsConstants.editorMode ? TextField(
                     decoration: InputDecoration(
                         border: OutlineInputBorder(),
                         hintText: "Enter TBA Key"
@@ -225,9 +225,8 @@ class SettingsState extends State<Settings> {
                       saveTBAKey();
                     },
                     controller: tbaKeyController,
-                  )
+                  ) : Text("TBA Key not set! Talk to the Scouting Manager", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),)
               ),
-              //TODO: make this button do button
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

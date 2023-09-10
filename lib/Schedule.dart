@@ -45,15 +45,16 @@ class ScheduleState extends State<Schedule> {
       }
   }
 
+
   @override
   Widget build(BuildContext context) {
 
     loadMatches();
 
     return Scaffold(
-        body: SingleChildScrollView(
+        body:  matches.isNotEmpty ? SingleChildScrollView(
           child: Column(
-            children: matches.isNotEmpty ? matches!.map((e) =>
+            children: matches!.map((e) =>
                 ScheduleItem(match: e, teamNum: teamNums[e.matchNum * 6 + e.station.index], onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
@@ -65,12 +66,10 @@ class ScheduleState extends State<Schedule> {
                   );
                 },)
               ,).toList()
-                : [
-                  Center(
-                  child:Text("No Upcoming Matches!", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),),
-                )
-              ]
-          ),
+          )
+        ):
+        Center(
+          child:Text("No Upcoming Matches!", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),),
         ),
       // floatingActionButtonLocation: FloatingActionButtonLocation.,
     );

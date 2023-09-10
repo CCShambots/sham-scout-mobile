@@ -59,6 +59,16 @@ class MatchFormState extends State<MatchForm> {
   @override
   Widget build(BuildContext context) {
 
+    var brightness = MediaQuery.of(context).platformBrightness;
+    bool isDarkMode = brightness == Brightness.dark;
+
+    Color redColor = isDarkMode ? Colors.red[800]! : Colors.red[100]!;
+    Color blueColor = isDarkMode ? Colors.blue[800]! : Colors.blue[100]!;
+
+    Color redHeader = isDarkMode ? Colors.red[900]! : Colors.red[400]!;
+    Color blueHeader = isDarkMode ? Colors.blue[900]! : Colors.blue[400]!;
+
+
     return WillPopScope(
       onWillPop: () async {
         openModal(context);
@@ -66,12 +76,12 @@ class MatchFormState extends State<MatchForm> {
       },
         child: Scaffold(
           appBar: AppBar(
-            backgroundColor: widget.redAlliance ? Colors.red[400] : Colors.blue[400],
+            backgroundColor: widget.redAlliance ? redHeader : blueHeader,
             leading: BackButton(onPressed: () => openModal(context)),
             title: Text("${widget.scheduleMatch.getMatch()} - $team - ${widget.scheduleMatch.getStation()}"),
           ),
           body: Scaffold(
-            backgroundColor: widget.redAlliance ? Colors.red[100] : Colors.blue[100],
+            backgroundColor: widget.redAlliance ? redColor : blueColor,
             body: SingleChildScrollView(
                 child: Column(
                   children: config.items.map((e) =>

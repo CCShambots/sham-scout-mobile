@@ -38,14 +38,12 @@ class HistoryState extends State<History> {
     super.dispose();
   }
 
-  //TODO: Load the values of a saved match
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: SingleChildScrollView(
+        body: submittedMatches.isNotEmpty ? SingleChildScrollView(
             child: Column(
-              children: submittedMatches.isNotEmpty ?  submittedMatches.map((e) =>
+              children: submittedMatches.map((e) =>
                   ScheduleItem(match: e, teamNum: e.teamNum.toString(), onTap: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
@@ -57,13 +55,11 @@ class HistoryState extends State<History> {
                     );
                   },)
               ).toList()
-                  : [
-                    Center(
-                      child:Text("No Completed Matches Yet!", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),),
-                    )
-              ]
             )
-        ),
+        ):
+          Center(
+            child:Text("No Completed Matches Yet!", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),),
+          ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
 

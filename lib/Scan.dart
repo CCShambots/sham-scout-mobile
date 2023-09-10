@@ -22,7 +22,7 @@ class ScanState
 
   bool showModal = false;
   bool modalOpen = false;
-  CodeType type = CodeType.None;
+  CodeType type = CodeType.none;
 
   Future<void> onDetect(BarcodeCapture barcode) async {
     capture = barcode;

@@ -49,7 +49,7 @@ class MatchesState extends State<Matches> {
     Color blueColor = isDarkMode ? Colors.blue[800]! : Colors.blue[100]!;
 
     return Scaffold(
-        body: SingleChildScrollView(
+        body: matchSchedule.length > 0 ? SingleChildScrollView(
             child: Column(
               children:
                 matchSchedule.map((e) =>
@@ -114,6 +114,9 @@ class MatchesState extends State<Matches> {
                   ),
                 ).toList(),
             )
+        ) :
+        Center(
+          child: Text("No Match Schedule Found!", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),)
         )
     );
   }

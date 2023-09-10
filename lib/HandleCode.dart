@@ -1,3 +1,4 @@
+import 'package:sham_scout_mobile/FormItems.dart';
 import 'package:sham_scout_mobile/Settings.dart';
 import 'package:sham_scout_mobile/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -20,7 +21,7 @@ class HandleCode {
         lastSplitIndex = 0;
         splitDone = false;
       } else {
-        return CodeType.Split;
+        return CodeType.split;
       }
     }
 
@@ -35,23 +36,28 @@ class HandleCode {
     code = code.substring(4);
 
     switch(type) {
-      case CodeType.ScoutSchedule: {
+      case CodeType.scoutSchedule: {
         saveSchedule(code, prefs);
         break;
       }
 
-      case CodeType.GameConfig: {
+      case CodeType.gameConfig: {
         saveGameConfig(code, prefs);
         break;
       }
 
-      case CodeType.MatchSchedule: {
+      case CodeType.matchSchedule: {
         saveMatchSchedule(code, prefs);
         break;
       }
 
-      case CodeType.EventKey: {
+      case CodeType.eventKey: {
         saveEventKey(code, prefs);
+        break;
+      }
+      
+      case CodeType.clear: {
+        clearInfo(prefs);
         break;
       }
 
@@ -62,6 +68,18 @@ class HandleCode {
     }
 
     return type;
+  }
+  
+  static clearInfo(SharedPreferences prefs) {
+    
+    prefs.setString(PrefsConstants.tbaPref, '');
+    prefs.setString(PrefsConstants.matchSchedulePref, "");
+    prefs.setString(PrefsConstants.currentEventPref, "");
+    prefs.setStringList(PrefsConstants.schedulePref, []);
+
+    GameConfig.deleteSubmittedForms();
+
+
   }
 
   static saveEventKey(String code, SharedPreferences prefs)  {
@@ -123,11 +141,12 @@ class HandleCode {
     String relevant = code.substring(0, 3);
 
     switch(relevant) {
-      case "sch": return CodeType.ScoutSchedule;
-      case "cfg": return CodeType.GameConfig;
-      case "mtc": return CodeType.MatchSchedule;
-      case "eve": return CodeType.EventKey;
-      default: return CodeType.None;
+      case "sch": return CodeType.scoutSchedule;
+      case "cfg": return CodeType.gameConfig;
+      case "mtc": return CodeType.matchSchedule;
+      case "eve": return CodeType.eventKey;
+      case "cle": return CodeType.clear;
+      default: return CodeType.none;
     }
   }
 
@@ -157,12 +176,13 @@ class HandleCode {
 
 }
 enum CodeType {
-  None(type: "none", displayText: "Invalid Code!"),
-  GameConfig(type: "cfg", displayText: "Loaded Game Config"),
-  MatchSchedule(type: "mtc", displayText: "Loaded Event Match Schedule"),
-  ScoutSchedule(type: "sch", displayText: "Loaded Scouter Schedule!"),
-  EventKey(type: "eve", displayText: "Loaded event Key"),
-  Split(type: "pt", displayText: "Read Next Part of Code"),
+  none(type: "none", displayText: "Invalid Code!"),
+  gameConfig(type: "cfg", displayText: "Loaded Game Config"),
+  matchSchedule(type: "mtc", displayText: "Loaded Event Match Schedule"),
+  scoutSchedule(type: "sch", displayText: "Loaded Scouter Schedule!"),
+  eventKey(type: "eve", displayText: "Loaded event Key"),
+  clear(type: "cle", displayText: "Cleared Info!"),
+  split(type: "pt", displayText: "Read Next Part of Code"),
   ;
 
   const CodeType({
