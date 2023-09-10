@@ -37,10 +37,12 @@ class ScheduleState extends State<Schedule> {
       List<ScheduleMatch> loaded = await GameConfig.loadUnplayedSchedule();
 
       //Copy the list to make the state update
-      setState(() {
-        matches = loaded;
-        teamNums = loadedNumbers;
-      });
+      if(mounted) {
+        setState(() {
+          matches = loaded;
+          teamNums = loadedNumbers;
+        });
+      }
   }
 
   @override
@@ -88,13 +90,20 @@ class ScheduleItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var brightness = MediaQuery.of(context).platformBrightness;
+    bool isDarkMode = brightness == Brightness.dark;
+
+    Color redColor = isDarkMode ? Colors.red[800]! : Colors.red[100]!;
+    Color blueColor = isDarkMode ? Colors.blue[800]! : Colors.blue[100]!;
+
+
     return GestureDetector(
       child:Container(
         height: 50,
         padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
         decoration: BoxDecoration(
             border: Border.all(color: Colors.grey),
-            color: match.station.redAlliance ? Colors.red[100] : Colors.blue[100]
+            color: match.station.redAlliance ? redColor : blueColor
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,

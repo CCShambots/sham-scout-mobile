@@ -10,15 +10,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="70134016-93c8-4f74-903e-0c68fb181f93" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/FormItems.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/FormItems.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/HandleCode.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/HandleCode.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/Home.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Home.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/MatchForm.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/MatchForm.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Matches.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Matches.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Scan.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Scan.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/Schedule.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Schedule.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/Settings.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Settings.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/constants.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/constants.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/main.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/macos/Flutter/GeneratedPluginRegistrant.swift" beforeDir="false" afterPath="$PROJECT_DIR$/macos/Flutter/GeneratedPluginRegistrant.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -26,7 +30,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="DarkyenusTimeTracker">
-    <option name="totalTimeSeconds" value="40109" />
+    <option name="totalTimeSeconds" value="47084" />
     <option name="gitIntegration" value="true" />
     <option name="naggedAbout" value="1" />
   </component>

@@ -128,10 +128,13 @@ class SettingsState extends State<Settings> {
     });
   }
 
-  Future<void> syncMatchSchedule() async {
+  static Future<void> syncMatchSchedule() async {
     final prefs = await SharedPreferences.getInstance();
 
-    var url = Uri.parse("${ApiConstants.tbaBaseUrl}/event/$currentEventKey/matches/simple");
+    String eventKey = prefs.getString(PrefsConstants.currentEventPref)!;
+    String tbaKey = prefs.getString(PrefsConstants.tbaPref)!;
+
+    var url = Uri.parse("${ApiConstants.tbaBaseUrl}/event/$eventKey/matches/simple");
 
     Map<String, String> headers = {"X-TBA-Auth-Key": tbaKey};
 

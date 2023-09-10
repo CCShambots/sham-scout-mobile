@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:sham_scout_mobile/History.dart';
 import 'package:sham_scout_mobile/Home.dart';
@@ -9,8 +11,32 @@ import 'package:sham_scout_mobile/constants.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
+class ConnectionStatus {
+  static bool connected = false;
+
+  static const tenSec = Duration(seconds: 10);
+
+}
+
 void main() {
   runApp(const MyApp());
+
+  //Regularly check the api connection
+
+  Timer.periodic(ConnectionStatus.tenSec, (timer) async {
+    var url = Uri.parse(ApiConstants.statusEndpoint);
+
+    try {
+      var response = await http.get(url).timeout(const Duration(seconds: 5), onTimeout: () {
+        return http.Response('Disconnected Error', 408);
+      });
+
+      ConnectionStatus.connected = response.statusCode == 200;
+
+    } catch(e) {
+      ConnectionStatus.connected = false;
+    }
+  });
 }
 
 class MyApp extends StatelessWidget {
@@ -25,6 +51,10 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
         scaffoldBackgroundColor: Theme.of(context).colorScheme.background,
+      ),
+      darkTheme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue, brightness: Brightness.dark),
+        brightness: Brightness.dark
       ),
       home: BottomNavigation(),
     );
@@ -54,7 +84,12 @@ class BottomNavigationBarState extends State<BottomNavigation>{
   void initState() {
     super.initState();
     loadName();
-    checkAPIConnection();
+
+    Timer.periodic(ConnectionStatus.tenSec, (timer) {
+      setState(() {
+        connection = ConnectionStatus.connected;
+      });
+    });
   }
 
   Future<void> loadName() async {
@@ -64,24 +99,6 @@ class BottomNavigationBarState extends State<BottomNavigation>{
     setState(() {
       name = prefs.getString(PrefsConstants.namePref) != null ? 'Welcome, ${prefs.getString(PrefsConstants.namePref) ?? ""}!' : "Welcome!";
     });
-  }
-
-  Future<void> checkAPIConnection() async {
-
-    var url = Uri.parse(ApiConstants.statusEndpoint);
-
-    try {
-      var response = await http.get(url);
-
-      setState(() {
-        connection = response.statusCode == 200;
-      });
-
-    } catch(e) {
-      setState(() {
-        connection = false;
-      });
-    }
   }
 
   static const TextStyle optionStyle = TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
@@ -110,6 +127,9 @@ class BottomNavigationBarState extends State<BottomNavigation>{
     //Reload the user's name
     loadName();
 
+    Color bottomBarColor = Theme.of(context).colorScheme.background;
+    Color bottomIconColor = Theme.of(context).colorScheme.onBackground;
+
     return Scaffold(
       appBar: AppBar(
         title: Text(name),
@@ -120,7 +140,7 @@ class BottomNavigationBarState extends State<BottomNavigation>{
                 color: connection ? Colors.green : Colors.red,
               ),
               tooltip: connection ? "API Connected" : "API Disconnected",
-              onPressed: checkAPIConnection,
+              onPressed: null,
           )
         ],
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
@@ -139,37 +159,32 @@ class BottomNavigationBarState extends State<BottomNavigation>{
           BottomNavigationBarItem(
               icon: Icon(Icons.list_alt),
               label:'Matches',
-              backgroundColor: Colors.black,
           ),
           BottomNavigationBarItem(
               icon: Icon(Icons.qr_code),
               label:'Scan',
-              backgroundColor: Colors.black,
           ),
           BottomNavigationBarItem(
               icon: Icon(Icons.home),
               label:'Home',
-              backgroundColor: Colors.black,
           ),
           BottomNavigationBarItem(
               icon: Icon(Icons.calendar_month),
               label:'Upcoming',
-              backgroundColor: Colors.black,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.history),
             label:'Completed',
-            backgroundColor: Colors.black,
           ),
           BottomNavigationBarItem(
               icon: Icon(Icons.settings),
               label:'Settings',
-              backgroundColor: Colors.black,
           ),
         ],
         currentIndex: selectedIndex,
-        selectedItemColor: Theme.of(context).colorScheme.inversePrimary,
-        unselectedItemColor: Theme.of(context).colorScheme.background,
+        selectedItemColor: Theme.of(context).colorScheme.primary,
+        unselectedItemColor: Theme.of(context).colorScheme.onBackground,
+        unselectedLabelStyle: TextStyle(color: Theme.of(context).colorScheme.onBackground),
         onTap: onItemTapped,
       ),
     );

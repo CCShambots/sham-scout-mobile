@@ -1,3 +1,4 @@
+import 'package:sham_scout_mobile/Settings.dart';
 import 'package:sham_scout_mobile/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -68,14 +69,14 @@ class HandleCode {
     prefs.setString(PrefsConstants.currentEventPref, code.substring(0, code.indexOf(",")));
     prefs.setBool(PrefsConstants.overrideCurrentEventPref, false);
 
-    print(code.substring(code.indexOf(",")+1));
-
     prefs.setString(PrefsConstants.tbaPref, code.substring(code.indexOf(",")+1));
   }
 
   static saveMatchSchedule(String code, SharedPreferences prefs) {
     //just save the code and parse it later
     prefs.setString(PrefsConstants.matchSchedulePref, code);
+    
+    SettingsState.syncMatchSchedule();
   }
 
   static saveGameConfig(String code, SharedPreferences prefs) {

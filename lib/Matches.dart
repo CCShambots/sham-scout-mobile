@@ -41,6 +41,13 @@ class MatchesState extends State<Matches> {
 
   @override
   Widget build(BuildContext context) {
+
+    var brightness = MediaQuery.of(context).platformBrightness;
+    bool isDarkMode = brightness == Brightness.dark;
+
+    Color redColor = isDarkMode ? Colors.red[800]! : Colors.red[100]!;
+    Color blueColor = isDarkMode ? Colors.blue[800]! : Colors.blue[100]!;
+
     return Scaffold(
         body: SingleChildScrollView(
             child: Column(
@@ -71,7 +78,7 @@ class MatchesState extends State<Matches> {
                                   padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
                                   decoration: BoxDecoration(
                                       border: Border.all(color: Colors.grey),
-                                      color: Colors.red[100]
+                                      color: redColor
                                   ),
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -88,7 +95,7 @@ class MatchesState extends State<Matches> {
                                   padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
                                   decoration: BoxDecoration(
                                       border: Border.all(color: Colors.grey),
-                                      color: Colors.blue[100]
+                                      color: blueColor
                                   ),
                                   child:Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -1,14 +1,9 @@
-
-import 'dart:developer';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sham_scout_mobile/FormItems.dart';
 import 'package:sham_scout_mobile/MatchForm.dart';
 import 'package:sham_scout_mobile/Schedule.dart';
 import 'package:sham_scout_mobile/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
 
 class Home extends StatefulWidget {
 
@@ -32,9 +27,7 @@ class HomeState extends State<Home> {
     loadNextUpMatch();
     super.initState();
   }
-
-  //TODO: Make this work after you submit :)
-
+  
   Future<void> loadNextUpMatch() async{
 
     final prefs = await SharedPreferences.getInstance();
@@ -75,7 +68,9 @@ class HomeState extends State<Home> {
                   redAlliance: nextMatch!.getStation().toLowerCase().contains("red"),
                 ),
               ),
-            );
+            ).then((value) => {
+                loadNextUpMatch()
+            });
           }) : Text("No upcoming matches!", style: bigText,),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,

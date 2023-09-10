@@ -80,9 +80,22 @@ class GameConfig {
 
     //Save to the server through the api
 
-    saveToAPI(json);
+    saveListToAPI([json]);
 
     print(await file.readAsString());
+  }
+
+  //TODO: Delete when fixed
+  Future<void> saveListToAPI(List<String> json) async {
+    String compositeString = "[";
+
+    for (var element in json) {
+      compositeString += "$element,";
+    }
+
+    compositeString = "${compositeString.substring(0, compositeString.length-1)}]";
+
+    saveToAPI(compositeString);
   }
 
   Future<void> saveToAPI(String json) async {
@@ -96,13 +109,15 @@ class GameConfig {
         body: json,
       );
 
+
       if (response.statusCode != 200) {
         print("FAILED API POST");
         print(response.statusCode);
         print(response.body);
-
       }
-    } catch (e) {}
+    } catch (e) {
+      print("API Post request errored out!");
+    }
   }
 
   Future<File> generateFile(int station, int match, int teamNum, [int num = 0]) async {
@@ -193,8 +208,6 @@ class ConfigItem {
   }
 
   void updateSavedValue(dynamic val) {
-
-    print("received: $val, on $label");
     savedVal = val;
     valSaved = true;
   }
@@ -227,7 +240,8 @@ class ConfigItem {
   bool isValidInput() {
     return type == "CheckBox" ||
         type == "Rating" ||
-        type == "Number"
+        type == "Number" ||
+        type == "ShortText"
     ;
   }
 
@@ -276,6 +290,8 @@ class ShortTextField extends FormItem {
 
 class ShortTextFieldState extends FormItemState<ShortTextField>{
 
+  final textController = TextEditingController();
+
   ShortTextFieldState({required label, required initial}): super(label: label, initial: initial);
 
   @override
@@ -284,16 +300,21 @@ class ShortTextFieldState extends FormItemState<ShortTextField>{
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         Text(widget.label, style: labelTextStyle,),
-        Expanded(child: TextFormField(
-
-        )
-        )
+        Expanded(child: TextField(
+          controller: textController,
+          onSubmitted:(String value) {
+            prefs.setString(widget.label, value);
+          } ,
+        ))
       ],
     );
   }
 
   @override
-  Future<void> waitForSavedValue() async {}
+  Future<void> waitForSavedValue() async {
+    String savedVal = (await widget.item!.recoverSavedValue()) as String;
+    textController.text = savedVal;
+  }
 
 }
 

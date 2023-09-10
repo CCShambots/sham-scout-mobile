@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:sham_scout_mobile/HandleCode.dart';
+import 'package:vibration/vibration.dart';
+
 
 class Scan extends StatefulWidget {
   const Scan({Key? key}) : super(key: key);
@@ -25,6 +27,11 @@ class ScanState
   Future<void> onDetect(BarcodeCapture barcode) async {
     capture = barcode;
     setState(() => this.barcode = barcode.barcodes.first);
+
+
+    if(await Vibration.hasVibrator() ?? false) {
+      Vibration.vibrate();
+    }
 
     if(!showModal) {
       HandleCode.handleQRCode(barcode.barcodes.first.displayValue).then((value) {
