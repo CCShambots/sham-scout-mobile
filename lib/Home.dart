@@ -23,15 +23,12 @@ class HomeState extends State<Home> {
 
   int matchesToGo = 0;
 
-  String templates = "";
-
   ScheduleMatch? nextMatch;
 
   TextStyle bigText = TextStyle(fontSize: 24, fontWeight: FontWeight.bold);
 
   @override
   void initState() {
-    getUsers();
     loadNextUpMatch();
     super.initState();
   }
@@ -58,19 +55,6 @@ class HomeState extends State<Home> {
     });
   }
 
-  Future<void> getUsers() async {
-    try {
-      var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.templatesEndpoint);
-      var response = await http.get(url);
-      if (response.statusCode == 200) {
-        setState(() {
-          templates = response.body;
-        });
-      }
-    } catch (e) {
-      log(e.toString());
-    }
-  }
 
   @override
   Widget build(BuildContext context) {

@@ -26,9 +26,12 @@ class SettingsState extends State<Settings> {
 
   List<Shift> shifts = [];
 
-  TextEditingController controller = TextEditingController();
+  TextEditingController eventKeyController = TextEditingController();
+  TextEditingController tbaKeyController = TextEditingController();
 
-  String name = "Harrison";
+  String name = "";
+
+  String tbaKey = "";
 
   @override
   void initState() {
@@ -42,8 +45,10 @@ class SettingsState extends State<Settings> {
     String currentKey = prefs.getString(PrefsConstants.currentEventPref)!;
     String loadedName = prefs.getString(PrefsConstants.namePref)!;
     bool override = prefs.getBool(PrefsConstants.overrideCurrentEventPref) ?? true;
+    String tba = prefs.getString(PrefsConstants.tbaPref) ?? "";
 
-    controller.text = currentKey;
+    eventKeyController.text = currentKey;
+    tbaKeyController.text = tba;
 
     getShifts(currentKey);
 
@@ -52,6 +57,7 @@ class SettingsState extends State<Settings> {
         currentEventKey = currentKey;
         name = loadedName;
         eventKeyOverride = override;
+        tbaKey = tba;
     });
   }
 
@@ -110,10 +116,51 @@ class SettingsState extends State<Settings> {
     });
   }
 
+  Future<void> saveTBAKey() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    String val = tbaKeyController.text;
+
+    prefs.setString(PrefsConstants.tbaPref, val);
+
+    setState(() {
+      tbaKey = val;
+    });
+  }
+
   Future<void> syncMatchSchedule() async {
     final prefs = await SharedPreferences.getInstance();
 
-    //TODO: Make this happen
+    var url = Uri.parse("${ApiConstants.tbaBaseUrl}/event/$currentEventKey/matches/simple");
+
+    Map<String, String> headers = {"X-TBA-Auth-Key": tbaKey};
+
+    var response = await http.get(url, headers: headers);
+    
+    String schedule = "";
+
+    List.from(jsonDecode(response.body))
+        .where((element) => element["key"].indexOf("_qm") != -1)
+        .forEach((element) { 
+          List<dynamic> redAllianceKeys = element["alliances"]["red"]["team_keys"];
+          List<dynamic> blueAllianceKeys = element["alliances"]["blue"]["team_keys"];
+          
+          List<String> redAllianceNumbers = redAllianceKeys.map((e) => (e as String).substring(3)).toList();
+          List<String> blueAllianceNumbers = blueAllianceKeys.map((e) => (e as String).substring(3)).toList();
+          
+          for (var element in redAllianceNumbers) {
+            schedule = "$schedule$element,";
+          }
+
+          for (var element in blueAllianceNumbers) {
+            schedule = "$schedule$element,";
+          }
+
+        });
+
+        schedule = schedule.substring(0, schedule.length);
+
+        prefs.setString(PrefsConstants.matchSchedulePref, schedule);
 
   }
 
@@ -145,7 +192,7 @@ class SettingsState extends State<Settings> {
                       }
                     }
                   },
-                  controller: controller,
+                  controller: eventKeyController,
                 )
               ),
               Row(
@@ -164,11 +211,25 @@ class SettingsState extends State<Settings> {
                   )
                 ],
               ),
+              Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+                  child: TextField(
+                    decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        hintText: "Enter TBA Key"
+                    ),
+                    onSubmitted: (String? value) {
+                      saveTBAKey();
+                    },
+                    controller: tbaKeyController,
+                  )
+              ),
+              //TODO: make this button do button
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   ElevatedButton.icon(
-                      onPressed: syncMatchSchedule,
+                      onPressed: tbaKey != "" ? syncMatchSchedule : null,
                       icon: Icon(
                         Icons.sync,
                       ),
@@ -199,7 +260,7 @@ class SettingsState extends State<Settings> {
               TextButton(
                   onPressed: () {
                     Navigator.pop(context);
-                    controller.text = currentEventKey;
+                    eventKeyController.text = currentEventKey;
                   },
                   child: const Text('Cancel')
               ),

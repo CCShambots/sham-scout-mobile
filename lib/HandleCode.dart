@@ -65,8 +65,12 @@ class HandleCode {
 
   static saveEventKey(String code, SharedPreferences prefs)  {
     //Just save the event key for later
-    prefs.setString(PrefsConstants.currentEventPref, code);
+    prefs.setString(PrefsConstants.currentEventPref, code.substring(0, code.indexOf(",")));
     prefs.setBool(PrefsConstants.overrideCurrentEventPref, false);
+
+    print(code.substring(code.indexOf(",")+1));
+
+    prefs.setString(PrefsConstants.tbaPref, code.substring(code.indexOf(",")+1));
   }
 
   static saveMatchSchedule(String code, SharedPreferences prefs) {

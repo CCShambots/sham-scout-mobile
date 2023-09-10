@@ -45,3 +45,7 @@ app.*.map.json
 
 .idea/
 /android/key.properties
+CERTIFICATE.pfx
+mobile-crt.crt
+mobile-csr.csr
+private.key

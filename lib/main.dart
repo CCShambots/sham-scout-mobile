@@ -6,6 +6,7 @@ import 'package:sham_scout_mobile/Schedule.dart';
 import 'package:sham_scout_mobile/Scan.dart';
 import 'package:sham_scout_mobile/Settings.dart';
 import 'package:sham_scout_mobile/constants.dart';
+import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
@@ -44,6 +45,8 @@ class BottomNavigationBarState extends State<BottomNavigation>{
   int selectedIndex = 2;
   String name = "Welcome!";
 
+  bool connection = false;
+
   final pageViewController = PageController(initialPage: 2);
 
 
@@ -51,6 +54,7 @@ class BottomNavigationBarState extends State<BottomNavigation>{
   void initState() {
     super.initState();
     loadName();
+    checkAPIConnection();
   }
 
   Future<void> loadName() async {
@@ -60,6 +64,24 @@ class BottomNavigationBarState extends State<BottomNavigation>{
     setState(() {
       name = prefs.getString(PrefsConstants.namePref) != null ? 'Welcome, ${prefs.getString(PrefsConstants.namePref) ?? ""}!' : "Welcome!";
     });
+  }
+
+  Future<void> checkAPIConnection() async {
+
+    var url = Uri.parse(ApiConstants.statusEndpoint);
+
+    try {
+      var response = await http.get(url);
+
+      setState(() {
+        connection = response.statusCode == 200;
+      });
+
+    } catch(e) {
+      setState(() {
+        connection = false;
+      });
+    }
   }
 
   static const TextStyle optionStyle = TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
@@ -91,10 +113,19 @@ class BottomNavigationBarState extends State<BottomNavigation>{
     return Scaffold(
       appBar: AppBar(
         title: Text(name),
+        actions: [
+          IconButton(
+              icon: Icon(
+                connection ? Icons.cloud_done : Icons.cloud_off,
+                color: connection ? Colors.green : Colors.red,
+              ),
+              tooltip: connection ? "API Connected" : "API Disconnected",
+              onPressed: checkAPIConnection,
+          )
+        ],
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
       ),
       body: PageView(
-
         controller: pageViewController,
         children: widgetOptions,
         onPageChanged: (index) {
@@ -104,7 +135,7 @@ class BottomNavigationBarState extends State<BottomNavigation>{
         },
       ),
       bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
+        items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
               icon: Icon(Icons.list_alt),
               label:'Matches',

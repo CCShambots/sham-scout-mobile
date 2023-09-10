@@ -154,7 +154,7 @@ class ScheduleMatch {
     RegExp exp = RegExp(r'm([0-9]+)s([0-9])-([0-9]+)');
     RegExpMatch? match = exp.firstMatch(fileName);
 
-    return ScheduleMatch(stationFromIndex(int.parse(match![2]!)), int.parse(match![1]!), int.parse(match![3]!));
+    return ScheduleMatch(stationFromIndex(int.parse(match![2]!)), int.parse(match![1]!)-1, int.parse(match![3]!));
   }
 
   static Station stationFromIndex(int index) {

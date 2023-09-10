@@ -80,7 +80,7 @@ class GameConfig {
 
     //Save to the server through the api
 
-    await saveToAPI(json);
+    saveToAPI(json);
 
     print(await file.readAsString());
   }
