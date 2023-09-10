@@ -11,14 +11,6 @@
   <component name="ChangeListManager">
     <list default="true" id="70134016-93c8-4f74-903e-0c68fb181f93" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/FormItems.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/FormItems.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/HandleCode.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/HandleCode.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/History.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/History.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/MatchForm.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/MatchForm.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Matches.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Matches.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Scan.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Scan.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Schedule.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Schedule.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Settings.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Settings.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -26,7 +18,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="DarkyenusTimeTracker">
-    <option name="totalTimeSeconds" value="49418" />
+    <option name="totalTimeSeconds" value="49629" />
     <option name="gitIntegration" value="true" />
     <option name="naggedAbout" value="1" />
   </component>
@@ -42,22 +34,22 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
-    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
-    &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
-    &quot;io.flutter.reload.alreadyRun&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/barta/Documents/Github/quick_qb_notes&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;show.migrate.to.gradle.popup&quot;: &quot;false&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.cidr.known.project.marker": "true",
+    "cidr.known.project.marker": "true",
+    "dart.analysis.tool.window.visible": "false",
+    "io.flutter.reload.alreadyRun": "true",
+    "last_opened_file_path": "C:/Users/barta/Documents/Github/sham-scout-mobile",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
+    "settings.editor.selected.configurable": "flutter.settings",
+    "show.migrate.to.gradle.popup": "false"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\barta\Documents\Github\sham-scout-mobile\assets\icon" />
@@ -67,6 +59,19 @@
     <configuration name="main.dart" type="FlutterRunConfigurationType" factoryName="Flutter">
       <option name="filePath" value="$PROJECT_DIR$/lib/main.dart" />
       <method v="2" />
+    </configuration>
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="sham_scout_mobile_android" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="sham_scout_mobile_android" />
+      <option name="filePath" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
     </configuration>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />

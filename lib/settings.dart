@@ -4,8 +4,8 @@ import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:sham_scout_mobile/HandleCode.dart';
-import 'package:sham_scout_mobile/Shift.dart';
+import 'package:sham_scout_mobile/handleCode.dart';
+import 'package:sham_scout_mobile/shift.dart';
 import 'package:sham_scout_mobile/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;

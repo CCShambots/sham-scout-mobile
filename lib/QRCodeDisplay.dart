@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import 'package:sham_scout_mobile/FormItems.dart';
-import 'package:sham_scout_mobile/Schedule.dart';
+import 'package:sham_scout_mobile/formItems.dart';
+import 'package:sham_scout_mobile/schedule.dart';
 
 class QRCodeDisplay extends StatefulWidget {
 

@@ -1,5 +1,5 @@
-import 'package:sham_scout_mobile/FormItems.dart';
-import 'package:sham_scout_mobile/Settings.dart';
+import 'package:sham_scout_mobile/formItems.dart';
+import 'package:sham_scout_mobile/settings.dart';
 import 'package:sham_scout_mobile/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

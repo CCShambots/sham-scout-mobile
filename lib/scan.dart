@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
-import 'package:sham_scout_mobile/HandleCode.dart';
+import 'package:sham_scout_mobile/handleCode.dart';
 import 'package:vibration/vibration.dart';
 
 

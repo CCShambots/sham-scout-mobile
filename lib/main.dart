@@ -1,12 +1,12 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:sham_scout_mobile/History.dart';
-import 'package:sham_scout_mobile/Home.dart';
-import 'package:sham_scout_mobile/Matches.dart';
-import 'package:sham_scout_mobile/Schedule.dart';
-import 'package:sham_scout_mobile/Scan.dart';
-import 'package:sham_scout_mobile/Settings.dart';
+import 'package:sham_scout_mobile/history.dart';
+import 'package:sham_scout_mobile/home.dart';
+import 'package:sham_scout_mobile/matches.dart';
+import 'package:sham_scout_mobile/schedule.dart';
+import 'package:sham_scout_mobile/scan.dart';
+import 'package:sham_scout_mobile/settings.dart';
 import 'package:sham_scout_mobile/constants.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
