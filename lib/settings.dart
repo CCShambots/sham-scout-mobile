@@ -142,9 +142,23 @@ class SettingsState extends State<Settings> {
     
     String schedule = "";
 
-    List.from(jsonDecode(response.body))
+    var result = List.from(jsonDecode(response.body))
         .where((element) => element["key"].indexOf("_qm") != -1)
-        .forEach((element) { 
+        .toList();
+
+    int sortMatchNum(e1, e2) {
+      String e1Key = e1["key"];
+      var e2Key = e2["key"];
+
+      int e1Num = int.parse(e1Key.substring(e1Key.indexOf("_qm")+3));
+      int e2Num = int.parse(e2Key.substring(e1Key.indexOf("_qm")+3));
+
+      return e1Num-e2Num;
+    }
+
+    result.sort(sortMatchNum);
+
+    for (var element in result) {
           List<dynamic> redAllianceKeys = element["alliances"]["red"]["team_keys"];
           List<dynamic> blueAllianceKeys = element["alliances"]["blue"]["team_keys"];
           
@@ -159,7 +173,7 @@ class SettingsState extends State<Settings> {
             schedule = "$schedule$element,";
           }
 
-        });
+        }
 
         schedule = schedule.substring(0, schedule.length);
 
