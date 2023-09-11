@@ -225,7 +225,7 @@ class SettingsState extends State<Settings> {
                       saveTBAKey();
                     },
                     controller: tbaKeyController,
-                  ) : Text("TBA Key not set! Talk to the Scouting Manager", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),)
+                  ) : Text(tbaKey == "" ? "TBA Key not set! Talk to the Scouting Manager" : "TBA Key Set!", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),)
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,

@@ -107,12 +107,12 @@ class GameConfig {
         body: json,
       );
 
-      print(response.body);
-
       if (response.statusCode != 200) {
         print("FAILED API POST");
         print(response.statusCode);
         print(response.body);
+      } else {
+        print("API successfully posted!");
       }
     } catch (e) {
       print("API Post request errored out!");
@@ -400,14 +400,14 @@ class RatingFieldState extends FormItemState<RatingField>{
 
   RatingFieldState({required label, required initial}): super(label: label, initial: initial);
 
-  double val = 0;
+  int val = 0;
 
-  void setVal(double newVal) {
+  void setVal(int newVal) {
     setState(() {
       val = newVal;
     });
 
-    prefs.setDouble(widget.label, newVal);
+    prefs.setInt(widget.label, newVal);
   }
 
   @override
@@ -420,10 +420,10 @@ class RatingFieldState extends FormItemState<RatingField>{
           children: [
             Text(widget.min.toString(), style: labelTextStyle,),
             Slider(
-                value: val,
+                value: val.toDouble(),
                 label: val.round().toString(),
                 onChanged: (double value) {
-                    setVal(value);
+                    setVal(value.toInt());
                 },
               min:  widget.min.toDouble(),
               max: widget.max.toDouble(),
@@ -439,7 +439,7 @@ class RatingFieldState extends FormItemState<RatingField>{
 
   @override
   Future<void> waitForSavedValue() async {
-    double savedVal = (await widget.item!.recoverSavedValue()) as double;
+    int savedVal = (await widget.item!.recoverSavedValue()) as int;
     setVal(savedVal);
   }
 

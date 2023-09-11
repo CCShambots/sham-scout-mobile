@@ -72,11 +72,11 @@ class BottomNavigation extends StatefulWidget {
 
 class BottomNavigationBarState extends State<BottomNavigation>{
 
-  int selectedIndex = 2;
   String name = "Welcome!";
 
   bool connection = false;
 
+  int selectedIndex = 2;
   final pageViewController = PageController(initialPage: 2);
 
 
@@ -126,9 +126,6 @@ class BottomNavigationBarState extends State<BottomNavigation>{
 
     //Reload the user's name
     loadName();
-
-    Color bottomBarColor = Theme.of(context).colorScheme.background;
-    Color bottomIconColor = Theme.of(context).colorScheme.onBackground;
 
     return Scaffold(
       appBar: AppBar(
