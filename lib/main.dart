@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:sham_scout_mobile/history.dart';
 import 'package:sham_scout_mobile/home.dart';
 import 'package:sham_scout_mobile/matches.dart';
@@ -16,14 +17,7 @@ class ConnectionStatus {
 
   static const tenSec = Duration(seconds: 10);
 
-}
-
-void main() {
-  runApp(const MyApp());
-
-  //Regularly check the api connection
-
-  Timer.periodic(ConnectionStatus.tenSec, (timer) async {
+  static checkConnection() async{
     var url = Uri.parse(ApiConstants.statusEndpoint);
 
     try {
@@ -36,7 +30,23 @@ void main() {
     } catch(e) {
       ConnectionStatus.connected = false;
     }
-  });
+  }
+
+}
+
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitUp]);
+
+  runApp(const MyApp());
+
+  //Regularly check the api connection
+
+  Timer.periodic(ConnectionStatus.tenSec, (timer) {ConnectionStatus.checkConnection();});
+
+  //Check connection immediately at startup to better inform users
+  ConnectionStatus.checkConnection();
 }
 
 class MyApp extends StatelessWidget {

@@ -12,6 +12,7 @@ class ApiConstants {
 class PrefsConstants {
   static String matchSchedulePref = "match-schedule";
   static String activeConfigPref = "game-config";
+  static String activeConfigNamePref = "game-config-name";
   static String namePref = "name";
   static String currentEventPref = "current-event";
   static String overrideCurrentEventPref = "current-event-override";

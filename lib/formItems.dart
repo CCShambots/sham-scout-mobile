@@ -239,6 +239,7 @@ class ConfigItem {
   }
 
   Map<String, dynamic> generateJSON(SharedPreferences prefs) {
+
     return {
       label: {
         type: prefs.get(label) as dynamic
@@ -312,9 +313,9 @@ class ShortTextFieldState extends FormItemState<ShortTextField>{
         Text(widget.label, style: labelTextStyle,),
         Expanded(child: TextField(
           controller: textController,
-          onSubmitted:(String value) {
+          onChanged: (String value) {
             prefs.setString(widget.label, value);
-          } ,
+          },
         ))
       ],
     );

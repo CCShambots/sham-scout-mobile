@@ -85,7 +85,10 @@ class QRCodeDisplayState extends State<QRCodeDisplay> {
                     },
                     iconSize: 75,
                     icon: Icon(Icons.keyboard_arrow_left)),
-                Text("Form ${formIndex+1} of ${submittedMatches.length}", style: textStyle,),
+                Text("Form ${formIndex+1} of ${submittedMatches.length}", style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18
+                ),),
                 IconButton(
                     onPressed: () {
                     if(formIndex + 1 < submittedMatches.length) {

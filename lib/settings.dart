@@ -25,11 +25,14 @@ class SettingsState extends State<Settings> {
   bool eventKeyOverride = true;
 
   List<Shift> shifts = [];
+  List<String> templates = [];
 
   TextEditingController eventKeyController = TextEditingController();
   TextEditingController tbaKeyController = TextEditingController();
 
   String name = "";
+
+  String config = "";
 
   String tbaKey = "";
 
@@ -47,10 +50,14 @@ class SettingsState extends State<Settings> {
     bool override = prefs.getBool(PrefsConstants.overrideCurrentEventPref) ?? true;
     String tba = prefs.getString(PrefsConstants.tbaPref) ?? "";
 
+    String configName = prefs.getString(PrefsConstants.activeConfigNamePref) ?? "";
+
     eventKeyController.text = currentKey;
     tbaKeyController.text = tba;
 
     getShifts(currentKey);
+
+    getTemplates();
 
     setState(() {
       //Load the current event
@@ -58,6 +65,7 @@ class SettingsState extends State<Settings> {
         name = loadedName;
         eventKeyOverride = override;
         tbaKey = tba;
+        config = configName;
     });
   }
 
@@ -97,22 +105,52 @@ class SettingsState extends State<Settings> {
     }
   }
 
+  Future<void> getTemplates() async {
+    try {
+      var url = Uri.parse("${ApiConstants.baseUrl}/templates");
+
+      var response=  await http.get(url);
+
+      if(response.statusCode == 200) {
+
+        var json = jsonDecode(response.body) as List<dynamic>;
+
+        setState(() {
+          templates = json.whereType<String>().toList();
+        });
+      }
+
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+
   Future<void> setScouter(String scouter) async {
-
-    print(scouter);
-
     final prefs = await SharedPreferences.getInstance();
 
     prefs.setString(PrefsConstants.namePref, scouter);
 
     String code = Shift.generateCode(scouter, shifts);
-    print(code);
 
     HandleCode.handleQRCode(code);
 
-
     setState(() {
       name = scouter;
+    });
+  }
+
+  Future<void> setGameConfig(String configName) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    var url = Uri.parse("${ApiConstants.baseUrl}/templates/$configName");
+
+    var response =  await http.get(url);
+
+    prefs.setString(PrefsConstants.activeConfigPref, response.body);
+    prefs.setString(PrefsConstants.activeConfigNamePref, configName);
+
+    setState(() {
+      config = configName;
     });
   }
 
@@ -252,7 +290,25 @@ class SettingsState extends State<Settings> {
                       label: const Text("Sync Match Schedule")
                   )
                 ],
-              )
+              ),
+              PrefsConstants.editorMode ?
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Text("Select Game Config"),
+                  DropdownButton<String>(
+                    value: config,
+                    icon: const Icon(Icons.keyboard_arrow_down),
+                    onChanged: (String? value) {
+                      setGameConfig(value!);
+                    },
+                    items: templates.map<DropdownMenuItem<String>>((String value) {
+                      print("evaluating: $value");
+                      return DropdownMenuItem(value: value, child: Text(value));
+                    }).toList(),
+                  )
+                ],
+              ) : Container(),
             ],
           )
         )
