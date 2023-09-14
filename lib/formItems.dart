@@ -78,27 +78,14 @@ class GameConfig {
 
     //Save to the server through the api
 
-    saveListToAPI([json]);
+    saveToAPI(json);
 
     print(await file.readAsString());
   }
 
-  //TODO: Delete when fixed
-  Future<void> saveListToAPI(List<String> json) async {
-    String compositeString = "[";
-
-    for (var element in json) {
-      compositeString += "$element,";
-    }
-
-    compositeString = "${compositeString.substring(0, compositeString.length-1)}]";
-
-    saveToAPI(compositeString);
-  }
-
   Future<void> saveToAPI(String json) async {
     try {
-      var url = Uri.parse("${ApiConstants.baseUrl}/template/$title/submit");
+      var url = Uri.parse("${ApiConstants.baseUrl}/forms/submit/template/$title");
       var response = await http.post(
         url,
         headers: <String, String>{
@@ -129,7 +116,7 @@ class GameConfig {
 
     String? name = prefs.getString(PrefsConstants.namePref);
 
-    File file =  File('${directory.path}/matches/m${match}s${station}-$teamNum-${name ?? "unknown"}-$num.json');
+    File file =  File('${directory.path}/matches/m${match}s$station-$teamNum-${name ?? "unknown"}-$num.json');
 
     if(!file.parent.existsSync()) file.parent.createSync();
 

@@ -1,9 +1,10 @@
 class ApiConstants {
-  static String remoteUrl = 'http://192.168.0.180:8080';
+  // static String remoteUrl = 'http://192.168.0.180:8080';
+  static String remoteUrl = 'http://192.168.1.188:8080';
   static String localUrl = 'http://localhost:8080';
 
   static String baseUrl = PrefsConstants.editorMode ? localUrl : remoteUrl;
-  static String templatesEndpoint = '/templates';
+  static String templatesEndpoint = '/templates/get';
   static String statusEndpoint = '$baseUrl/status';
 
   static String tbaBaseUrl = 'https://www.thebluealliance.com/api/v3';

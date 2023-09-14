@@ -95,6 +95,10 @@ class BottomNavigationBarState extends State<BottomNavigation>{
     super.initState();
     loadName();
 
+    setState(() {
+      connection = ConnectionStatus.connected;
+    });
+
     Timer.periodic(ConnectionStatus.tenSec, (timer) {
       setState(() {
         connection = ConnectionStatus.connected;

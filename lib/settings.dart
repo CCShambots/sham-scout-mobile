@@ -93,7 +93,7 @@ class SettingsState extends State<Settings> {
 
   Future<void> getShifts(String eventKey) async {
     try {
-      var url = Uri.parse("${ApiConstants.baseUrl}/schedules/$eventKey");
+      var url = Uri.parse("${ApiConstants.baseUrl}/schedules/get/event/$eventKey");
       var response = await http.get(url);
       if (response.statusCode == 200) {
         setState(() {
@@ -107,7 +107,7 @@ class SettingsState extends State<Settings> {
 
   Future<void> getTemplates() async {
     try {
-      var url = Uri.parse("${ApiConstants.baseUrl}/templates");
+      var url = Uri.parse("${ApiConstants.baseUrl}/templates/get");
 
       var response=  await http.get(url);
 
@@ -142,7 +142,7 @@ class SettingsState extends State<Settings> {
   Future<void> setGameConfig(String configName) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    var url = Uri.parse("${ApiConstants.baseUrl}/templates/$configName");
+    var url = Uri.parse("${ApiConstants.baseUrl}/templates/get/name/$configName");
 
     var response =  await http.get(url);
 
