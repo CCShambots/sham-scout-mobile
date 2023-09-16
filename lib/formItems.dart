@@ -146,7 +146,20 @@ class GameConfig {
     }
   }
 
-  Future<File> generateFile(int station, int match, int teamNum, [int num = 0]) async {
+  //Save that this match was scanned by the qr code
+  static Future<void> saveQRCodeScan(ScheduleMatch match) async {
+    File file = await generateFile(match.station.index, match.matchNum+1, match.teamNum);
+
+    print(file.path);
+
+    Map<String, dynamic> data = jsonDecode(file.readAsStringSync());
+
+    data["id"] = "set-with-qr-code";
+
+    file.writeAsStringSync(jsonEncode(data));
+  }
+
+  static Future<File> generateFile(int station, int match, int teamNum, [int num = 0]) async {
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
 

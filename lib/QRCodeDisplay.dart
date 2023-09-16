@@ -61,7 +61,7 @@ class QRCodeDisplayState extends State<QRCodeDisplay> {
         leading: BackButton(onPressed: () => Navigator.of(context).pop()),
         title: Text("Scan me!"),
       ),
-      body: Center(
+      body: submittedMatches.isNotEmpty ? Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -114,6 +114,19 @@ class QRCodeDisplayState extends State<QRCodeDisplay> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                IconButton(
+                    onPressed: () async {
+                      await GameConfig.saveQRCodeScan(submittedMatches[formIndex]);
+
+                      loadSubmittedMatches();
+                    },
+                    icon: Icon(Icons.check, color: Colors.green,)
+                )
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
                 Text("Show Uploaded Matches", style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 18
@@ -126,6 +139,8 @@ class QRCodeDisplayState extends State<QRCodeDisplay> {
             )
           ],
         ),
+      ) : Center(
+        child: Text("All your completed matches are uploaded! 👍"),
       ),
 
     );
