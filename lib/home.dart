@@ -60,7 +60,7 @@ class HomeState extends State<Home> {
               Text("Next Match:", style: bigText,),
             ],
           ),
-          nextMatch != null ? ScheduleItem(match: nextMatch!, teamNum: nextMatch!.teamNum.toString(), onTap: () {
+          nextMatch != null ? ScheduleItem(nextMatch!, () {
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (context) => MatchForm(
@@ -71,7 +71,7 @@ class HomeState extends State<Home> {
             ).then((value) => {
                 loadNextUpMatch()
             });
-          }) : Text("No upcoming matches!", style: bigText,),
+          },nextMatch!.teamNum.toString(),) : Text("No upcoming matches!", style: bigText,),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

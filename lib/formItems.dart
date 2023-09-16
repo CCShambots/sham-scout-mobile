@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sham_scout_mobile/schedule.dart';
 import 'package:sham_scout_mobile/constants.dart';
@@ -23,7 +24,7 @@ class GameConfig {
     List<ScheduleMatch> matches = prefs.getStringList(PrefsConstants.schedulePref)!.map((e) => ScheduleMatch.fromCode(e)).toList();
 
     List<String> fileNames = await GameConfig.loadSubmittedForms();
-    List<ScheduleMatch> submittedMatches = fileNames.map((e) => ScheduleMatch.fromSavedFile(e)).toList();
+    List<ScheduleMatch> submittedMatches = await ScheduleMatch.fromSavedFileList(fileNames);
 
     matches.removeWhere((element) => submittedMatches.where((submitted) => submitted.equal(element)).isNotEmpty);
 
@@ -50,7 +51,7 @@ class GameConfig {
 
   }
 
-  Future<void> saveMatchForm(int station, int match, int teamNum) async {
+  Future<void> saveMatchFromUI(int station, int match, int teamNum, [String id = "none"]) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     //TODO: Use a "for item"??
@@ -67,32 +68,69 @@ class GameConfig {
       )
     };
 
+    await saveForm(data, station, match, teamNum, id != "none", id);
+  }
+
+  Future<bool> saveForm(Map<String, dynamic> data, int station, int match, int teamNum, bool editing, String id) async {
     String json = jsonEncode(data);
 
     File file = await generateFile(station, match+1, teamNum);
 
     file.createSync();
 
+    bool success = false;
+
+    try {
+      //Save to the server through the api
+      Response? response = await saveToAPI(json, editing, id).timeout(Duration(seconds: 2));
+
+      print(response!.body);
+
+      //If we got a response and the request succeeded, save the uuid
+      if(response != null && response.statusCode == 200) {
+        if(!editing) {
+          data.addAll({"id": jsonDecode(response.body)});
+        } else {
+          data.addAll({"id": id});
+        }
+
+        success = true;
+
+      } else {
+        data.addAll({"id": "none"});
+      }
+    } on TimeoutException {
+      data.addAll({"id": "none"});
+
+    }
+
+    //Convert the new data to a string (with the uuid)
+    json = jsonEncode(data);
+
     //If there's already something there, this will just overwrite it (i.e. rewriting)
     file.writeAsStringSync(json);
 
-    //Save to the server through the api
-
-    saveToAPI(json);
-
-    print(await file.readAsString());
+    return success;
   }
 
-  Future<void> saveToAPI(String json) async {
+  Future<Response?> saveToAPI(String json, bool editing, String id) async {
+
     try {
-      var url = Uri.parse("${ApiConstants.baseUrl}/forms/submit/template/$title");
-      var response = await http.post(
+      var url = !editing ? Uri.parse("${ApiConstants.baseUrl}/forms/submit/template/$title") : Uri.parse("${ApiConstants.baseUrl}/forms/edit/template/$title/id/$id");
+      var response = await (!editing ? http.post(
         url,
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
         body: json,
-      );
+      ) : http.put(
+        url,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: json,
+      ));
+
 
       if (response.statusCode != 200) {
         print("FAILED API POST");
@@ -101,6 +139,8 @@ class GameConfig {
       } else {
         print("API successfully posted!");
       }
+
+      return response;
     } catch (e) {
       print("API Post request errored out!");
     }
@@ -121,6 +161,41 @@ class GameConfig {
     if(!file.parent.existsSync()) file.parent.createSync();
 
     return file;
+  }
+
+  Future<int> attemptUploadOfSubmittedForms(BuildContext context) async {
+
+    List<String> forms = await loadSubmittedForms();
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String> matchSchedule = prefs.getString(PrefsConstants.matchSchedulePref)!.split(",");
+
+    int numSaved = 0;
+
+    for(String name in forms) {
+      File fileLoaded = File(name);
+
+      Map<String,dynamic> loadedJson = jsonDecode(fileLoaded.readAsStringSync());
+
+      if(loadedJson["id"] == "none") {
+
+        //0-indexed
+        int matchIndex = loadedJson["match_number"]-1;
+
+        int team = loadedJson["team"];
+
+        List<String> thisMatchSchedule = matchSchedule.sublist(matchIndex * 6, matchIndex * 6 +6);
+
+        //We can just say station zero because it doesn't matter when deploying
+        bool success = await saveForm(loadedJson, thisMatchSchedule.indexOf(team.toString()), matchIndex, team, false, loadedJson["id"]);
+
+        if(success) numSaved++;
+
+      }
+    }
+
+    return numSaved;
+
   }
 
   static Future<List<String>> loadSubmittedForms() async{

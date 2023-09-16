@@ -87,9 +87,10 @@ class ScanState
 
     final scanWindow = Rect.fromCenter(
       center: MediaQuery.of(context).size.center(Offset.zero),
-      width: 200,
-      height: 200,
+      width: 300,
+      height: 300,
     );
+
     return Scaffold(
       backgroundColor: Colors.black,
       body: Builder(

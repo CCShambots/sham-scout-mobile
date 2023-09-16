@@ -1,8 +1,10 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sham_scout_mobile/formItems.dart';
 import 'package:sham_scout_mobile/matchForm.dart';
-import 'package:sham_scout_mobile/QRCodeDisplay.dart';
 import 'package:sham_scout_mobile/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -55,7 +57,7 @@ class ScheduleState extends State<Schedule> {
         body:  matches.isNotEmpty ? SingleChildScrollView(
           child: Column(
             children: matches!.map((e) =>
-                ScheduleItem(match: e, teamNum: teamNums[e.matchNum * 6 + e.station.index], onTap: () {
+                ScheduleItem(e, () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) => MatchForm(
@@ -64,7 +66,7 @@ class ScheduleState extends State<Schedule> {
                       ),
                     ),
                   );
-                },)
+                }, teamNums[e.matchNum * 6 + e.station.index], )
               ,).toList()
           )
         ):
@@ -81,8 +83,9 @@ class ScheduleItem extends StatelessWidget {
   final ScheduleMatch match;
   final Function onTap;
   final String teamNum;
+  bool completed;
 
-  const ScheduleItem({required this.match, required this.onTap, required this.teamNum});
+  ScheduleItem(this.match, this.onTap, this.teamNum, [this.completed = false]);
 
   static const TextStyle textStyle = TextStyle(fontSize: 20, fontWeight: FontWeight.bold);
 
@@ -95,7 +98,6 @@ class ScheduleItem extends StatelessWidget {
     Color redColor = isDarkMode ? Colors.red[800]! : Colors.red[100]!;
     Color blueColor = isDarkMode ? Colors.blue[800]! : Colors.blue[100]!;
 
-
     return GestureDetector(
       child:Container(
         height: 50,
@@ -107,9 +109,20 @@ class ScheduleItem extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Text(
-              match.getMatch(),
-              style: textStyle,
+            Row(
+              children: [
+                !completed ? Container() :
+                    Container(
+                      child: match.uploaded ?
+                          Icon(Icons.check)
+                          : Icon(Icons.upload),
+                    )
+                    ,
+                Text(
+                  match.getMatch(),
+                  style: textStyle,
+                ),
+              ],
             ),
             Text(
               teamNum,
@@ -133,11 +146,13 @@ class ScheduleMatch {
   final Station station;
   final int matchNum;
   int teamNum;
+  bool uploaded;
+  String id;
 
   ScheduleMatch(
     this.station,
     this.matchNum,
-    [this.teamNum = -1]
+    [this.teamNum = -1, this.uploaded = false, this.id = "none"]
   );
 
   bool equal(ScheduleMatch other) {
@@ -157,12 +172,40 @@ class ScheduleMatch {
     );
   }
 
-  static ScheduleMatch fromSavedFile(String fileName) {
-    //TODO: since station isn't in file name...
+  static Future<List<ScheduleMatch>> fromSavedFileList(List<String> fileNames) async {
+    List<ScheduleMatch> matches = [];
+
+    for(String name in fileNames) {
+      matches.add(await fromSavedFile(name));
+    }
+
+    return matches;
+  }
+
+  static Future<ScheduleMatch> fromSavedFile(String fileName) async {
     RegExp exp = RegExp(r'm([0-9]+)s([0-9])-([0-9]+)');
     RegExpMatch? match = exp.firstMatch(fileName);
 
-    return ScheduleMatch(stationFromIndex(int.parse(match![2]!)), int.parse(match![1]!)-1, int.parse(match![3]!));
+    String id = isUploaded(fileName);
+    bool uploaded = id != "none";
+
+    return ScheduleMatch(stationFromIndex(int.parse(match![2]!)), int.parse(match![1]!)-1, int.parse(match![3]!), uploaded, id);
+  }
+
+  static String isUploaded(String fileName) {
+    File form = File(fileName);
+
+    if(form.existsSync()) {
+      String? id = jsonDecode(form.readAsStringSync())["id"];
+
+      if(id != null) {
+        return id;
+      } else {
+        return "none";
+      }
+    }
+
+    return "none";
   }
 
   static Station stationFromIndex(int index) {

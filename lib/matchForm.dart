@@ -93,7 +93,12 @@ class MatchFormState extends State<MatchForm> {
           ),
           floatingActionButton: FloatingActionButton(
             onPressed: () {
-              config.saveMatchForm(widget.scheduleMatch.station.index, widget.scheduleMatch.matchNum, int.parse(team))
+              config.saveMatchFromUI(
+                  widget.scheduleMatch.station.index,
+                  widget.scheduleMatch.matchNum,
+                  int.parse(team),
+                  widget.scheduleMatch.id
+              )
                   .then((value) => Navigator.of(context).pop());
               },
             tooltip: 'Save',

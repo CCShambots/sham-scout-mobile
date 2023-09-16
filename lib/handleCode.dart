@@ -61,6 +61,11 @@ class HandleCode {
         break;
       }
 
+      case CodeType.api: {
+
+        break;
+      }
+
       default:
       {
         //Do nothing because there's nothing to do
@@ -80,6 +85,13 @@ class HandleCode {
     GameConfig.deleteSubmittedForms();
 
 
+  }
+
+  static saveAPIAdress(String code, SharedPreferences prefs) {
+
+    prefs.setString(PrefsConstants.apiAddressPref, code);
+
+    ApiConstants.loadRemoteAPI();
   }
 
   static saveEventKey(String code, SharedPreferences prefs)  {
@@ -146,6 +158,7 @@ class HandleCode {
       case "mtc": return CodeType.matchSchedule;
       case "eve": return CodeType.eventKey;
       case "cle": return CodeType.clear;
+      case "api": return CodeType.api;
       default: return CodeType.none;
     }
   }
@@ -181,6 +194,7 @@ enum CodeType {
   matchSchedule(type: "mtc", displayText: "Loaded Event Match Schedule"),
   scoutSchedule(type: "sch", displayText: "Loaded Scouter Schedule!"),
   eventKey(type: "eve", displayText: "Loaded event Key"),
+  api(type: "api", displayText: "Loaded Api Address"),
   clear(type: "cle", displayText: "Cleared Info!"),
   split(type: "pt", displayText: "Read Next Part of Code"),
   ;

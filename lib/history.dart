@@ -27,8 +27,10 @@ class HistoryState extends State<History> {
 
   Future<void> loadSubmittedMatches() async {
     List<String> fileNames = await GameConfig.loadSubmittedForms();
+
+    List<ScheduleMatch> submittedSchedulesLoad = await ScheduleMatch.fromSavedFileList(fileNames);
     setState(() {
-      submittedMatches = fileNames.map((e) => ScheduleMatch.fromSavedFile(e)).toList();
+      submittedMatches = submittedSchedulesLoad;
       submittedMatches.sort((e1, e2) => e2.matchNum-e1.matchNum);
     });
   }
@@ -44,7 +46,7 @@ class HistoryState extends State<History> {
         body: submittedMatches.isNotEmpty ? SingleChildScrollView(
             child: Column(
               children: submittedMatches.map((e) =>
-                  ScheduleItem(match: e, teamNum: e.teamNum.toString(), onTap: () {
+                  ScheduleItem(e, () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) => MatchForm(
@@ -53,7 +55,7 @@ class HistoryState extends State<History> {
                         ),
                       ),
                     );
-                  },)
+                  }, e.teamNum.toString(), true)
               ).toList()
             )
         ):

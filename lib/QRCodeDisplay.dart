@@ -22,6 +22,8 @@ class QRCodeDisplayState extends State<QRCodeDisplay> {
 
   int formIndex = 0;
 
+  bool showUploaded = false;
+
   TextStyle textStyle = TextStyle(
     fontWeight: FontWeight.bold,
     fontSize: 30
@@ -34,8 +36,16 @@ class QRCodeDisplayState extends State<QRCodeDisplay> {
 
   Future<void> loadSubmittedMatches() async {
     List<String> fileNames = await GameConfig.loadSubmittedForms();
+
+    List<ScheduleMatch> submittedMatchesLoad = await ScheduleMatch.fromSavedFileList(fileNames);
     setState(() {
-      submittedMatches = fileNames.map((e) => ScheduleMatch.fromSavedFile(e)).toList();
+
+      //Determine whether to show uploaded matches
+      if(showUploaded) {
+        submittedMatches = submittedMatchesLoad;
+      } else {
+        submittedMatches = submittedMatchesLoad.where((element) => !element.uploaded).toList();
+      }
       submittedMatches.sort((e1, e2) => e1.matchNum-e2.matchNum);
 
       jsonValues = fileNames.map((e) => File(e).readAsStringSync()).toList();
@@ -99,6 +109,19 @@ class QRCodeDisplayState extends State<QRCodeDisplay> {
                   },
                     iconSize: 75,
                     icon: Icon(Icons.keyboard_arrow_right))
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text("Show Uploaded Matches", style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18
+                ),),
+                Checkbox(value: showUploaded, onChanged: (val) => setState(() {
+                  loadSubmittedMatches();
+                  showUploaded = val??false;
+                }))
               ],
             )
           ],

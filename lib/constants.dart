@@ -1,6 +1,7 @@
+import 'package:shared_preferences/shared_preferences.dart';
+
 class ApiConstants {
-  // static String remoteUrl = 'http://192.168.0.180:8080';
-  static String remoteUrl = 'http://192.168.1.188:8080';
+  static String remoteUrl = 'http://192.168.22.41:8080';
   static String localUrl = 'http://localhost:8080';
 
   static String baseUrl = PrefsConstants.editorMode ? localUrl : remoteUrl;
@@ -8,6 +9,14 @@ class ApiConstants {
   static String statusEndpoint = '$baseUrl/status';
 
   static String tbaBaseUrl = 'https://www.thebluealliance.com/api/v3';
+
+  static void loadRemoteAPI() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    String host = prefs.getString(PrefsConstants.apiAddressPref)!;
+
+    remoteUrl = host;
+  }
 }
 
 class PrefsConstants {
@@ -20,6 +29,7 @@ class PrefsConstants {
   static String numMatchesPref = "num-matches";
   static String schedulePref = "schedule";
   static String tbaPref = "tba-key";
+  static String apiAddressPref = "api-address";
 
   static bool editorMode = false;
 }

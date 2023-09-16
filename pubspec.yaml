@@ -45,6 +45,8 @@ dependencies:
   permission_handler: ^10.3.0
   http: ^0.13.4
   vibration: ^1.8.1
+  package_info_plus: ^4.1.0
+
 
 dev_dependencies:
   flutter_test:
