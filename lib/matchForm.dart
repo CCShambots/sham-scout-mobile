@@ -38,6 +38,8 @@ class MatchFormState extends State<MatchForm> {
     //Remove newline characters to avoid problems
     final parsedJson = jsonDecode(GameConfig.parseOutRatingJson(jsonEncode(jsonDecode(prefs.getString("game-config")!))));
 
+    print(parsedJson);
+
     final GameConfig loadedConfig = GameConfig.fromJson(parsedJson);
 
     List<String> loadedNumbers = prefs.getString(PrefsConstants.matchSchedulePref)!.split(",");

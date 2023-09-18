@@ -14,7 +14,7 @@ class ApiConstants {
   static void loadRemoteAPI() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    String host = prefs.getString(PrefsConstants.apiAddressPref)!;
+    String host = prefs.getString(PrefsConstants.apiAddressPref) ?? remoteUrl;
 
     remoteUrl = host;
     baseUrl = PrefsConstants.editorMode ? localUrl : remoteUrl;

@@ -22,11 +22,6 @@ class ConnectionStatus {
   static checkConnection() async{
     var url = Uri.parse(ApiConstants.statusEndpoint);
 
-    print(url.host);
-    print(url.path);
-
-
-
     try {
       var response = await http.get(url).timeout(const Duration(seconds: 5), onTimeout: () {
         return http.Response('Disconnected Error', 408);
@@ -159,7 +154,7 @@ class BottomNavigationBarState extends State<BottomNavigation>{
     final prefs = await SharedPreferences.getInstance();
 
     //Remove newline characters to avoid problems
-    final parsedJson = jsonDecode(GameConfig.parseOutRatingJson(jsonEncode(jsonDecode(prefs.getString("game-config")!))));
+    final parsedJson = jsonDecode(GameConfig.parseOutRatingJson(jsonEncode(jsonDecode(prefs.getString("game-config") ?? '{"name": "None", "year": 2023, "fields":[]}'))));
 
     final GameConfig loadedConfig = GameConfig.fromJson(parsedJson);
 

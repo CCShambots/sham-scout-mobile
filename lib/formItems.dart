@@ -21,7 +21,7 @@ class GameConfig {
   static Future<List<ScheduleMatch>> loadUnplayedSchedule() async {
     final prefs = await SharedPreferences.getInstance();
 
-    List<ScheduleMatch> matches = prefs.getStringList(PrefsConstants.schedulePref)!.map((e) => ScheduleMatch.fromCode(e)).toList();
+    List<ScheduleMatch> matches = (prefs.getStringList(PrefsConstants.schedulePref) ?? []).map((e) => ScheduleMatch.fromCode(e)).toList();
 
     List<String> fileNames = await GameConfig.loadSubmittedForms();
     List<ScheduleMatch> submittedMatches = await ScheduleMatch.fromSavedFileList(fileNames);
@@ -42,6 +42,8 @@ class GameConfig {
   }
 
   factory GameConfig.fromJson(Map<String, dynamic> data) {
+
+    print(data['fields']);
 
     final title = data['name'] as String;
     final year = data['year'] as int;
@@ -181,7 +183,7 @@ class GameConfig {
     List<String> forms = await loadSubmittedForms();
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<String> matchSchedule = prefs.getString(PrefsConstants.matchSchedulePref)!.split(",");
+    List<String> matchSchedule = (prefs.getString(PrefsConstants.matchSchedulePref) ?? ",").split(",");
 
     int numSaved = 0;
 
@@ -305,6 +307,7 @@ class ConfigItem {
   }
 
   factory ConfigItem.fromJson(Map<String, dynamic> data) {
+
     final type = data['data_type'] as String;
     final label = data['name'] as String;
     final min = data['min'] != null ? data['min'] as int : -1;

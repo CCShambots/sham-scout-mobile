@@ -33,7 +33,7 @@ class ScheduleState extends State<Schedule> {
       final prefs = await SharedPreferences.getInstance();
 
       //Load team nums in each match
-      List<String> loadedNumbers = prefs.getString(PrefsConstants.matchSchedulePref)!.split(",");
+      List<String> loadedNumbers = (prefs.getString(PrefsConstants.matchSchedulePref) ?? ",").split(",");
       loadedNumbers.removeLast();
 
       List<ScheduleMatch> loaded = await GameConfig.loadUnplayedSchedule();
