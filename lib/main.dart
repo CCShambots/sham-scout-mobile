@@ -22,10 +22,18 @@ class ConnectionStatus {
   static checkConnection() async{
     var url = Uri.parse(ApiConstants.statusEndpoint);
 
+    print(url.host);
+    print(url.path);
+
+
+
     try {
       var response = await http.get(url).timeout(const Duration(seconds: 5), onTimeout: () {
         return http.Response('Disconnected Error', 408);
       });
+
+      print(response.body);
+      print(response.statusCode);
 
       bool success = response.statusCode == 200;
 

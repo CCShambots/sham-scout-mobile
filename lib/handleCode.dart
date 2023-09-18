@@ -62,7 +62,7 @@ class HandleCode {
       }
 
       case CodeType.api: {
-
+        saveAPIAddress(code, prefs);
         break;
       }
 
@@ -87,9 +87,9 @@ class HandleCode {
 
   }
 
-  static saveAPIAdress(String code, SharedPreferences prefs) {
+  static saveAPIAddress(String code, SharedPreferences prefs) {
 
-    prefs.setString(PrefsConstants.apiAddressPref, code);
+    prefs.setString(PrefsConstants.apiAddressPref, code.substring(0, code.length-1));
 
     ApiConstants.loadRemoteAPI();
   }
