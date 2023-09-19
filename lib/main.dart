@@ -27,9 +27,6 @@ class ConnectionStatus {
         return http.Response('Disconnected Error', 408);
       });
 
-      print(response.body);
-      print(response.statusCode);
-
       bool success = response.statusCode == 200;
 
       ConnectionStatus.connected = success;
@@ -161,7 +158,7 @@ class BottomNavigationBarState extends State<BottomNavigation>{
     if(mounted) {
       int numSaved = await loadedConfig.attemptUploadOfSubmittedForms(context);
 
-      if(mounted) {
+      if(mounted && numSaved > 0) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Reconnected! Uploaded $numSaved matches to database")));
       }
     }

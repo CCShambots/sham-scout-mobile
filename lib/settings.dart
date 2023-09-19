@@ -51,8 +51,6 @@ class SettingsState extends State<Settings> {
     bool override = prefs.getBool(PrefsConstants.overrideCurrentEventPref) ?? true;
     String tba = prefs.getString(PrefsConstants.tbaPref) ?? "";
 
-    print(loadedName);
-
     String configName = prefs.getString(PrefsConstants.activeConfigNamePref) ?? "";
 
     eventKeyController.text = currentKey;
@@ -234,8 +232,6 @@ class SettingsState extends State<Settings> {
   @override
   Widget build(BuildContext context) {
 
-    print("Length of shifts: ${shifts.length}");
-    print("Value of name: ${name}");
     return Scaffold(
       body: SingleChildScrollView(
           child: Column(
@@ -272,7 +268,7 @@ class SettingsState extends State<Settings> {
                     },
                     items: shifts.isNotEmpty ? shifts.map((e) => e.scouter).toSet().toList().map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem(value: value, child: Text(value));
-                    }).toList() : [DropdownMenuItem(value: "NONE", child: Text(""))],
+                    }).toList() : [DropdownMenuItem(value: name, child: Text("FAIL"))],
                   )
                 ],
               ),
