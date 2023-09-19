@@ -3,6 +3,9 @@ import 'package:sham_scout_mobile/settings.dart';
 import 'package:sham_scout_mobile/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:http/http.dart' as http;
+
+
 class HandleCode {
 
   static String currentPartialCode = "";
@@ -62,7 +65,7 @@ class HandleCode {
       }
 
       case CodeType.api: {
-
+        saveAPIAddress(code, prefs);
         break;
       }
 
@@ -87,19 +90,33 @@ class HandleCode {
 
   }
 
-  static saveAPIAdress(String code, SharedPreferences prefs) {
+  static saveAPIAddress(String code, SharedPreferences prefs) {
 
-    prefs.setString(PrefsConstants.apiAddressPref, code);
+    prefs.setString(PrefsConstants.apiAddressPref, code.substring(0, code.length-1));
 
     ApiConstants.loadRemoteAPI();
   }
 
   static saveEventKey(String code, SharedPreferences prefs)  {
+
+    List<String> items = code.split(",");
+
     //Just save the event key for later
-    prefs.setString(PrefsConstants.currentEventPref, code.substring(0, code.indexOf(",")));
+    prefs.setString(PrefsConstants.currentEventPref, items[0]);
     prefs.setBool(PrefsConstants.overrideCurrentEventPref, false);
 
-    prefs.setString(PrefsConstants.tbaPref, code.substring(code.indexOf(",")+1));
+    prefs.setString(PrefsConstants.tbaPref, items[1]);
+
+    pullTemplate(items[2], prefs);
+  }
+
+  static pullTemplate(String name, SharedPreferences prefs) async {
+
+    Uri path = Uri.parse("${ApiConstants.remoteUrl}/templates/get/name/$name");
+
+    http.Response response = await http.get(path);
+
+    saveGameConfig(response.body, prefs);
   }
 
   static saveMatchSchedule(String code, SharedPreferences prefs) {
@@ -193,7 +210,7 @@ enum CodeType {
   gameConfig(type: "cfg", displayText: "Loaded Game Config"),
   matchSchedule(type: "mtc", displayText: "Loaded Event Match Schedule"),
   scoutSchedule(type: "sch", displayText: "Loaded Scouter Schedule!"),
-  eventKey(type: "eve", displayText: "Loaded event Key"),
+  eventKey(type: "eve", displayText: "Loaded event Key, TBA API, and Form Template"),
   api(type: "api", displayText: "Loaded Api Address"),
   clear(type: "cle", displayText: "Cleared Info!"),
   split(type: "pt", displayText: "Read Next Part of Code"),

@@ -151,14 +151,14 @@ class BottomNavigationBarState extends State<BottomNavigation>{
     final prefs = await SharedPreferences.getInstance();
 
     //Remove newline characters to avoid problems
-    final parsedJson = jsonDecode(GameConfig.parseOutRatingJson(jsonEncode(jsonDecode(prefs.getString("game-config")!))));
+    final parsedJson = jsonDecode(GameConfig.parseOutRatingJson(jsonEncode(jsonDecode(prefs.getString("game-config") ?? '{"name": "None", "year": 2023, "fields":[]}'))));
 
     final GameConfig loadedConfig = GameConfig.fromJson(parsedJson);
 
     if(mounted) {
       int numSaved = await loadedConfig.attemptUploadOfSubmittedForms(context);
 
-      if(mounted) {
+      if(mounted && numSaved > 0) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Reconnected! Uploaded $numSaved matches to database")));
       }
     }

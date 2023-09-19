@@ -31,7 +31,7 @@ class SettingsState extends State<Settings> {
   TextEditingController eventKeyController = TextEditingController();
   TextEditingController tbaKeyController = TextEditingController();
 
-  String name = "";
+  String name = "NONE";
 
   String config = "";
 
@@ -46,8 +46,8 @@ class SettingsState extends State<Settings> {
   Future<void> loadVariables() async{
     final prefs = await SharedPreferences.getInstance();
 
-    String currentKey = prefs.getString(PrefsConstants.currentEventPref)!;
-    String loadedName = prefs.getString(PrefsConstants.namePref)!;
+    String currentKey = prefs.getString(PrefsConstants.currentEventPref) ?? "none";
+    String loadedName = prefs.getString(PrefsConstants.namePref) ?? "NONE";
     bool override = prefs.getBool(PrefsConstants.overrideCurrentEventPref) ?? true;
     String tba = prefs.getString(PrefsConstants.tbaPref) ?? "";
 
@@ -99,11 +99,15 @@ class SettingsState extends State<Settings> {
       if (response.statusCode == 200) {
         setState(() {
           shifts = List.from(jsonDecode(response.body)["shifts"]).map((e) => Shift.fromJson(e)).toList();
+          if(name == "NONE") {
+            name = shifts[0].scouter;
+          }
         });
       }
     } catch (e) {
       log(e.toString());
     }
+
   }
 
   Future<void> getTemplates() async {
@@ -227,6 +231,7 @@ class SettingsState extends State<Settings> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       body: SingleChildScrollView(
           child: Column(
@@ -261,9 +266,9 @@ class SettingsState extends State<Settings> {
                     onChanged: (String? value) {
                       setScouter(value!);
                     },
-                    items: shifts.map((e) => e.scouter).toSet().toList().map<DropdownMenuItem<String>>((String value) {
+                    items: shifts.isNotEmpty ? shifts.map((e) => e.scouter).toSet().toList().map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem(value: value, child: Text(value));
-                    }).toList(),
+                    }).toList() : [DropdownMenuItem(value: name, child: Text("FAIL"))],
                   )
                 ],
               ),

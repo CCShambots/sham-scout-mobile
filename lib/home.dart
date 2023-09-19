@@ -33,19 +33,22 @@ class HomeState extends State<Home> {
     final prefs = await SharedPreferences.getInstance();
 
     //Load team nums in each match
-    List<String> loadedNumbers = prefs.getString(PrefsConstants.matchSchedulePref)!.split(",");
-    loadedNumbers.removeLast();
+    List<String> loadedNumbers = (prefs.getString(PrefsConstants.matchSchedulePref) ?? "").split(",");
 
-    List<ScheduleMatch> loaded = await GameConfig.loadUnplayedSchedule();
+    if(loadedNumbers.isNotEmpty) {
+      loadedNumbers.removeLast();
 
-    ScheduleMatch? firstMatch = loaded.firstOrNull;
-    firstMatch?.teamNum = int.parse(loadedNumbers[firstMatch.matchNum * 6 + firstMatch.station.index]);
+      List<ScheduleMatch> loaded = await GameConfig.loadUnplayedSchedule();
 
-    //Copy the list to make the state update
-    setState(() {
-      nextMatch = firstMatch;
-      matchesToGo = loaded.length;
-    });
+      ScheduleMatch? firstMatch = loaded.firstOrNull;
+      firstMatch?.teamNum = int.parse(loadedNumbers[firstMatch.matchNum * 6 + firstMatch.station.index]);
+
+      //Copy the list to make the state update
+      setState(() {
+        nextMatch = firstMatch;
+        matchesToGo = loaded.length;
+      });
+    }
   }
 
 
