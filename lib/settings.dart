@@ -4,7 +4,6 @@ import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 import 'package:sham_scout_mobile/handleCode.dart';
 import 'package:sham_scout_mobile/shift.dart';
 import 'package:sham_scout_mobile/constants.dart';
@@ -33,7 +32,7 @@ class SettingsState extends State<Settings> {
 
   String name = "NONE";
 
-  String config = "";
+  String template = "";
 
   String tbaKey = "";
 
@@ -66,7 +65,7 @@ class SettingsState extends State<Settings> {
         name = loadedName;
         eventKeyOverride = override;
         tbaKey = tba;
-        config = configName;
+        template = configName;
     });
   }
 
@@ -120,8 +119,15 @@ class SettingsState extends State<Settings> {
 
         var json = jsonDecode(response.body) as List<dynamic>;
 
+        List<String> thisTemplates = json.whereType<String>().toList();
+        if(!thisTemplates.contains(template)) {
+          setState(() {
+            template = thisTemplates[0];
+          });
+        }
+
         setState(() {
-          templates = json.whereType<String>().toList();
+          templates = thisTemplates;
         });
       }
 
@@ -155,7 +161,7 @@ class SettingsState extends State<Settings> {
     prefs.setString(PrefsConstants.activeConfigNamePref, configName);
 
     setState(() {
-      config = configName;
+      template = configName;
     });
   }
 
@@ -303,7 +309,7 @@ class SettingsState extends State<Settings> {
                 children: [
                   Text("Select Game Config"),
                   DropdownButton<String>(
-                    value: config,
+                    value: template,
                     icon: const Icon(Icons.keyboard_arrow_down),
                     onChanged: (String? value) {
                       setGameConfig(value!);

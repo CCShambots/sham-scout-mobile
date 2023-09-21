@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:sham_scout_mobile/SearchWindow.dart';
 import 'package:sham_scout_mobile/formItems.dart';
 import 'package:sham_scout_mobile/history.dart';
 import 'package:sham_scout_mobile/home.dart';
@@ -128,9 +129,10 @@ class BottomNavigationBarState extends State<BottomNavigation>{
   }
 
   static const TextStyle optionStyle = TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-  static const List<Widget> widgetOptions = <Widget>[
+  static List<Widget> widgetOptions = <Widget>[
     Matches(),
-    Scan(),
+    !PrefsConstants.editorMode ?
+    Scan() : SearchWindow(),
     Home(),
     Schedule(),
     History(),
@@ -209,13 +211,18 @@ class BottomNavigationBarState extends State<BottomNavigation>{
               icon: Icon(Icons.list_alt),
               label:'Matches',
           ),
+          !PrefsConstants.editorMode ?
           BottomNavigationBarItem(
               icon: Icon(Icons.qr_code),
               label:'Scan',
+          ) :
+          BottomNavigationBarItem(
+            icon: Icon(Icons.search),
+            label:'Scan',
           ),
           BottomNavigationBarItem(
               icon: Icon(Icons.home),
-              label:'Home',
+              label:'Search',
           ),
           BottomNavigationBarItem(
               icon: Icon(Icons.calendar_month),

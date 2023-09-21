@@ -24,6 +24,20 @@ class ScanState
   bool modalOpen = false;
   CodeType type = CodeType.none;
 
+  bool loadCamera = false;
+
+  @override
+  void initState() {
+    Future.delayed(Duration(milliseconds: 500), () {
+      if(mounted) {
+        setState(() {
+          loadCamera = true;
+        });
+      }
+    });
+  }
+
+
   Future<void> onDetect(BarcodeCapture barcode) async {
     capture = barcode;
     setState(() => this.barcode = barcode.barcodes.first);
@@ -91,7 +105,7 @@ class ScanState
       height: 300,
     );
 
-    return Scaffold(
+    return loadCamera ? Scaffold(
       backgroundColor: Colors.black,
       body: Builder(
         builder: (context) {
@@ -103,9 +117,11 @@ class ScanState
                 scanWindow: scanWindow,
                 controller: controller,
                 onScannerStarted: (arguments) {
-                  setState(() {
-                    this.arguments = arguments;
-                  });
+                  if(mounted) {
+                    setState(() {
+                      this.arguments = arguments;
+                    });
+                  }
                 },
                 onDetect: onDetect,
               ),
@@ -171,6 +187,9 @@ class ScanState
           );
         },
       ),
+    ) :
+    Scaffold(
+        body: Center(child: Text("Loading camera...", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),)),
     );
   }
 }
