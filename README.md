@@ -2,15 +2,31 @@
 
 Sham Scout Mobile
 
-## Getting Started
+## Mobile Builds
+- Ensure `editorMode` is set to `false` in `constants.dart`
+- Update the version number with the year as the major version. Bump the minor version for new features and bump the patch number for bug fixes.
+    - Ex. 2023.1.1 --> 2024.0.0 at the start of a new season
+    - Ex. 2023.1.1 --> 2023.2.0 when adding new features
+    - Ex. 2023.1.1 --> 2023.1.2 when patching bugs
+- Increase the build number by one (i.e. 2023.1.1+1 --> 2023.1.1+2)
+- Android
+  - In Android Studio, go to Build > Flutter > Build App Bundle
+  - Go to [Google Play Console](https://play.google.com/console)
+  - Select the ShamScout Mobile and navigate to the Production Section, and click "Create new release"
+  - Make sure the build finished successfully (exit code 0)
+  - Upload `app-release.aab` in `build\app\outputs\bundle\release\` to the Play Store
+  - Enter the version number as the name
+  - Write any relevant changelog information in the description section
+- Apple
+  - IDK if Appollo will give us access, but if they do, I need to write docuemtation for how to do that
+  - Anyways, somehow get your `.ipa` file up to [App Store Connect](https://appstoreconnect.apple.com)
+  - Update based on status of app being released to the public
 
-This project is a starting point for a Flutter application.
+## Editor builds
+- Make sure you have [Inno Setup](https://jrsoftware.org/isdl.php) installed
+- Ensure `editorMode` is set to `true` in `constants.dart`
+- Run `flutter build windows`
+- Open the `editor builder script.iss` and run it
+- Upload `ShamScoutEditor.exe` to GitHub
+- Set `editorMode` back to `false` in `constants.dart`
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
