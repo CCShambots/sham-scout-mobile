@@ -83,7 +83,7 @@ class ScheduleItem extends StatelessWidget {
   final ScheduleMatch match;
   final Function onTap;
   final String teamNum;
-  bool completed;
+  final bool completed;
 
   ScheduleItem(this.match, this.onTap, this.teamNum, [this.completed = false]);
 
@@ -102,9 +102,10 @@ class ScheduleItem extends StatelessWidget {
       child:Container(
         height: 50,
         padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
+        margin: EdgeInsets.all(5),
         decoration: BoxDecoration(
-            border: Border.all(color: Colors.grey),
-            color: match.station.redAlliance ? redColor : blueColor
+            color: match.station.redAlliance ? redColor : blueColor,
+            borderRadius: BorderRadius.all(Radius.circular(10))
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,

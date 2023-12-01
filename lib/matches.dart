@@ -54,9 +54,10 @@ class MatchesState extends State<Matches> {
               children:
                 matchSchedule.map((e) =>
                   Container(
-                      // padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
+                      margin: EdgeInsets.all(5),
                       decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey),
+                          color: Theme.of(context).cardColor,
+                          borderRadius: BorderRadius.all(Radius.circular(10))
                       ),
                     child:Row(
                       children: [
@@ -77,7 +78,10 @@ class MatchesState extends State<Matches> {
                                   height: 40,
                                   padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
                                   decoration: BoxDecoration(
-                                      border: Border.all(color: Colors.grey),
+                                      borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(10),
+                                        topRight: Radius.circular(10)
+                                      ),
                                       color: redColor
                                   ),
                                   child: Row(
@@ -94,7 +98,10 @@ class MatchesState extends State<Matches> {
                                   height: 40,
                                   padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
                                   decoration: BoxDecoration(
-                                      border: Border.all(color: Colors.grey),
+                                      borderRadius: BorderRadius.only(
+                                        bottomRight: Radius.circular(10),
+                                        bottomLeft: Radius.circular(10)
+                                      ),
                                       color: blueColor
                                   ),
                                   child:Row(
@@ -134,15 +141,23 @@ class TeamLink extends StatelessWidget{
   //TODO: not always red alliance..?
   @override
   Widget build(BuildContext context) {
-    return TextButton(child: Text(team), onPressed: () {
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => MatchForm(
-            scheduleMatch:ScheduleMatch(station, matchIndex),
-            redAlliance: station.index < 3,
+
+    var brightness = MediaQuery.of(context).platformBrightness;
+    bool isDarkMode = brightness == Brightness.dark;
+
+    return TextButton(
+        child: Text(team,
+        style: TextStyle(fontWeight: FontWeight.bold, color: isDarkMode ? Colors.white : Colors.black),
+      ),
+      onPressed: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => MatchForm(
+              scheduleMatch:ScheduleMatch(station, matchIndex),
+              redAlliance: station.index < 3,
+            ),
           ),
-        ),
-      );
+        );
     });
   }
 
