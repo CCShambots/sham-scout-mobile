@@ -39,15 +39,18 @@ class ScanState
 
 
   Future<void> onDetect(BarcodeCapture barcode) async {
+
     capture = barcode;
     setState(() => this.barcode = barcode.barcodes.first);
 
 
-    if(await Vibration.hasVibrator() ?? false) {
-      Vibration.vibrate();
-    }
 
-    if(!showModal) {
+    if(!modalOpen) {
+      if(await Vibration.hasVibrator() ?? false) {
+        Vibration.vibrate();
+      }
+
+      
       HandleCode.handleQRCode(barcode.barcodes.first.displayValue).then((value) {
         setState(() {
           showModal = true;
