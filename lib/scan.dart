@@ -50,7 +50,7 @@ class ScanState
         Vibration.vibrate();
       }
 
-      
+
       HandleCode.handleQRCode(barcode.barcodes.first.displayValue).then((value) {
         setState(() {
           showModal = true;

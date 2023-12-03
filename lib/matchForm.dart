@@ -26,6 +26,8 @@ class MatchFormState extends State<MatchForm> {
 
   bool loadedValues = false;
 
+  bool haveChangedSomething = false;
+
   @override
   void initState() {
     super.initState();
@@ -73,41 +75,53 @@ class MatchFormState extends State<MatchForm> {
 
     return WillPopScope(
       onWillPop: () async {
-        openModal(context);
-        return false;
+        if(haveChangedSomething) {
+          openModal(context);
+          return false;
+        } else {
+          return true;
+        }
       },
-        child: Scaffold(
-          appBar: AppBar(
-            backgroundColor: widget.redAlliance ? redHeader : blueHeader,
-            leading: BackButton(onPressed: () => openModal(context)),
-            title: Text("${widget.scheduleMatch.getMatch()} - $team - ${widget.scheduleMatch.getStation()}"),
-          ),
-          body: Scaffold(
-            backgroundColor: widget.redAlliance ? redColor : blueColor,
-            body: SingleChildScrollView(
-                child: Column(
-                  children: config.items.map((e) =>
-                  e.widget
-                  ).toList(),
-                )
-            ),
+        child: GestureDetector(
+          onTap: () => {
+            setState(() {
+              haveChangedSomething = true;
+            })
+          },
+          child: Scaffold(
+              appBar: AppBar(
+                backgroundColor: widget.redAlliance ? redHeader : blueHeader,
+                leading: BackButton(onPressed: () => openModal(context)),
+                title: Text("${widget.scheduleMatch.getMatch()} - $team - ${widget.scheduleMatch.getStation()}"),
+              ),
+              body: Scaffold(
+                backgroundColor: widget.redAlliance ? redColor : blueColor,
+                body: SingleChildScrollView(
+                    child: Column(
+                      children: config.items.map((e) =>
+                      e.widget
+                      ).toList(),
+                    )
+                ),
 
-          ),
-          floatingActionButton: FloatingActionButton(
-            onPressed: () {
-              config.saveMatchFromUI(
-                  widget.scheduleMatch.station.index,
-                  widget.scheduleMatch.matchNum,
-                  int.parse(team),
-                  widget.scheduleMatch.id
-              )
-                  .then((value) => Navigator.of(context).pop());
-              },
-            tooltip: 'Save',
-            child: const Icon(Icons.save),
-          ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
-    ));
+              ),
+              floatingActionButton: FloatingActionButton(
+                onPressed: () {
+                  config.saveMatchFromUI(
+                      widget.scheduleMatch.station.index,
+                      widget.scheduleMatch.matchNum,
+                      int.parse(team),
+                      widget.scheduleMatch.id
+                  )
+                      .then((value) => Navigator.of(context).pop());
+                  },
+                tooltip: 'Save',
+                child: const Icon(Icons.save),
+              ),
+          floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
+        )
+        )
+    );
 
   }
 

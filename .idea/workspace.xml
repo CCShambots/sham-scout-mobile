@@ -9,9 +9,7 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="70134016-93c8-4f74-903e-0c68fb181f93" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/lib/scan.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/scan.dart" afterDir="false" />
-    </list>
+    <list default="true" id="70134016-93c8-4f74-903e-0c68fb181f93" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -21,7 +19,7 @@
     <option name="formatViaClangd" value="false" />
   </component>
   <component name="DarkyenusTimeTracker">
-    <option name="totalTimeSeconds" value="92514" />
+    <option name="totalTimeSeconds" value="92739" />
     <option name="gitIntegration" value="true" />
     <option name="naggedAbout" value="1" />
   </component>
