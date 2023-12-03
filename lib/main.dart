@@ -90,7 +90,7 @@ class BottomNavigation extends StatefulWidget {
 
 class BottomNavigationBarState extends State<BottomNavigation>{
 
-  String name = "Welcome!";
+  String name = "Select a Name!";
 
   bool connection = false;
   bool wasConnected = false;
@@ -124,7 +124,7 @@ class BottomNavigationBarState extends State<BottomNavigation>{
     final prefs = await SharedPreferences.getInstance();
 
     setState(() {
-      name = prefs.getString(PrefsConstants.namePref) != null ? 'Welcome, ${prefs.getString(PrefsConstants.namePref) ?? ""}!' : "Welcome!";
+      name = prefs.getString(PrefsConstants.namePref) != null ? prefs.getString(PrefsConstants.namePref) ?? "" : name;
     });
   }
 
