@@ -22,8 +22,6 @@ class HomeState extends State<Home> {
 
   ScheduleMatch? nextMatch;
 
-  TextStyle bigText = TextStyle(fontSize: 24, fontWeight: FontWeight.bold);
-
   @override
   void initState() {
     loadNextUpMatch();
@@ -61,6 +59,7 @@ class HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
 
+    TextStyle bigText = TextStyle(fontSize: 32, fontWeight: FontWeight.bold);
     TextStyle statisticsText = TextStyle(fontWeight: FontWeight.bold, fontSize: 48);
 
     return Scaffold(
