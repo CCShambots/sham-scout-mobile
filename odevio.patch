@@ -1,0 +1,3707 @@
+diff --git a/.metadata b/.metadata
+index 0b9f276..78a65c5 100644
+--- a/.metadata
++++ b/.metadata
+@@ -1,11 +1,11 @@
+ # This file tracks properties of this Flutter project.
+ # Used by Flutter tool to assess capabilities and perform upgrades etc.
+ #
+-# This file should be version controlled.
++# This file should be version controlled and should not be manually edited.
+ 
+ version:
+-  revision: f92f44110e87bad5ff168335c36da6f6053036e6
+-  channel: stable
++  revision: "9e1c857886f07d342cf106f2cd588bcd5e031bb2"
++  channel: "stable"
+ 
+ project_type: app
+ 
+@@ -13,26 +13,26 @@ project_type: app
+ migration:
+   platforms:
+     - platform: root
+-      create_revision: f92f44110e87bad5ff168335c36da6f6053036e6
+-      base_revision: f92f44110e87bad5ff168335c36da6f6053036e6
++      create_revision: 9e1c857886f07d342cf106f2cd588bcd5e031bb2
++      base_revision: 9e1c857886f07d342cf106f2cd588bcd5e031bb2
+     - platform: android
+-      create_revision: f92f44110e87bad5ff168335c36da6f6053036e6
+-      base_revision: f92f44110e87bad5ff168335c36da6f6053036e6
++      create_revision: 9e1c857886f07d342cf106f2cd588bcd5e031bb2
++      base_revision: 9e1c857886f07d342cf106f2cd588bcd5e031bb2
+     - platform: ios
+-      create_revision: f92f44110e87bad5ff168335c36da6f6053036e6
+-      base_revision: f92f44110e87bad5ff168335c36da6f6053036e6
++      create_revision: 9e1c857886f07d342cf106f2cd588bcd5e031bb2
++      base_revision: 9e1c857886f07d342cf106f2cd588bcd5e031bb2
+     - platform: linux
+-      create_revision: f92f44110e87bad5ff168335c36da6f6053036e6
+-      base_revision: f92f44110e87bad5ff168335c36da6f6053036e6
++      create_revision: 9e1c857886f07d342cf106f2cd588bcd5e031bb2
++      base_revision: 9e1c857886f07d342cf106f2cd588bcd5e031bb2
+     - platform: macos
+-      create_revision: f92f44110e87bad5ff168335c36da6f6053036e6
+-      base_revision: f92f44110e87bad5ff168335c36da6f6053036e6
++      create_revision: 9e1c857886f07d342cf106f2cd588bcd5e031bb2
++      base_revision: 9e1c857886f07d342cf106f2cd588bcd5e031bb2
+     - platform: web
+-      create_revision: f92f44110e87bad5ff168335c36da6f6053036e6
+-      base_revision: f92f44110e87bad5ff168335c36da6f6053036e6
++      create_revision: 9e1c857886f07d342cf106f2cd588bcd5e031bb2
++      base_revision: 9e1c857886f07d342cf106f2cd588bcd5e031bb2
+     - platform: windows
+-      create_revision: f92f44110e87bad5ff168335c36da6f6053036e6
+-      base_revision: f92f44110e87bad5ff168335c36da6f6053036e6
++      create_revision: 9e1c857886f07d342cf106f2cd588bcd5e031bb2
++      base_revision: 9e1c857886f07d342cf106f2cd588bcd5e031bb2
+ 
+   # User provided section
+ 
+diff --git a/android/app/src/main/kotlin/com/ccshambots/app/MainActivity.kt b/android/app/src/main/kotlin/com/ccshambots/app/MainActivity.kt
+new file mode 100644
+index 0000000..9497b37
+--- /dev/null
++++ b/android/app/src/main/kotlin/com/ccshambots/app/MainActivity.kt
+@@ -0,0 +1,6 @@
++package com.ccshambots.app
++
++import io.flutter.embedding.android.FlutterActivity
++
++class MainActivity: FlutterActivity() {
++}
+diff --git a/ios/Podfile b/ios/Podfile
+index fdcc671..36f6b2b 100644
+--- a/ios/Podfile
++++ b/ios/Podfile
+@@ -38,7 +38,21 @@ target 'Runner' do
+ end
+ 
+ post_install do |installer|
++  xcode_base_version = `xcodebuild -version | grep 'Xcode' | awk '{print $2}' | cut -d . -f 1`
++
++    installer.pods_project.targets.each do |target|
++        target.build_configurations.each do |config|
++            # For xcode 15+ only
++             if config.base_configuration_reference && Integer(xcode_base_version) >= 15
++                xcconfig_path = config.base_configuration_reference.real_path
++                xcconfig = File.read(xcconfig_path)
++                xcconfig_mod = xcconfig.gsub(/DT_TOOLCHAIN_DIR/, "TOOLCHAIN_DIR")
++                File.open(xcconfig_path, "w") { |file| file << xcconfig_mod }
++            end
++        end
++    end
+   installer.pods_project.targets.each do |target|
+     flutter_additional_ios_build_settings(target)
+   end
++  
+ end
+diff --git a/ios/Podfile.lock b/ios/Podfile.lock
+index e1f8a1e..823dde9 100644
+--- a/ios/Podfile.lock
++++ b/ios/Podfile.lock
+@@ -2,7 +2,7 @@ PODS:
+   - device_info_plus (0.0.1):
+     - Flutter
+   - Flutter (1.0.0)
+-  - GoogleDataTransport (9.2.5):
++  - GoogleDataTransport (9.3.0):
+     - GoogleUtilities/Environment (~> 7.7)
+     - nanopb (< 2.30910.0, >= 2.30908.0)
+     - PromisesObjC (< 3.0, >= 1.2)
+@@ -23,11 +23,11 @@ PODS:
+     - GoogleToolboxForMac/Defines (= 2.3.2)
+     - "GoogleToolboxForMac/NSString+URLArguments (= 2.3.2)"
+   - "GoogleToolboxForMac/NSString+URLArguments (2.3.2)"
+-  - GoogleUtilities/Environment (7.11.5):
++  - GoogleUtilities/Environment (7.12.0):
+     - PromisesObjC (< 3.0, >= 1.2)
+-  - GoogleUtilities/Logger (7.11.5):
++  - GoogleUtilities/Logger (7.12.0):
+     - GoogleUtilities/Environment
+-  - GoogleUtilities/UserDefaults (7.11.5):
++  - GoogleUtilities/UserDefaults (7.12.0):
+     - GoogleUtilities/Logger
+   - GoogleUtilitiesComponents (1.1.0):
+     - GoogleUtilities/Logger
+@@ -53,11 +53,11 @@ PODS:
+   - mobile_scanner (3.2.0):
+     - Flutter
+     - GoogleMLKit/BarcodeScanning (~> 4.0.0)
+-  - nanopb (2.30909.0):
+-    - nanopb/decode (= 2.30909.0)
+-    - nanopb/encode (= 2.30909.0)
+-  - nanopb/decode (2.30909.0)
+-  - nanopb/encode (2.30909.0)
++  - nanopb (2.30909.1):
++    - nanopb/decode (= 2.30909.1)
++    - nanopb/encode (= 2.30909.1)
++  - nanopb/decode (2.30909.1)
++  - nanopb/encode (2.30909.1)
+   - package_info_plus (0.4.5):
+     - Flutter
+   - path_provider_foundation (0.0.1):
+@@ -118,10 +118,10 @@ EXTERNAL SOURCES:
+ SPEC CHECKSUMS:
+   device_info_plus: 7545d84d8d1b896cb16a4ff98c19f07ec4b298ea
+   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
+-  GoogleDataTransport: 54dee9d48d14580407f8f5fbf2f496e92437a2f2
++  GoogleDataTransport: 57c22343ab29bc686febbf7cbb13bad167c2d8fe
+   GoogleMLKit: 2bd0dc6253c4d4f227aad460f69215a504b2980e
+   GoogleToolboxForMac: 8bef7c7c5cf7291c687cf5354f39f9db6399ad34
+-  GoogleUtilities: 13e2c67ede716b8741c7989e26893d151b2b2084
++  GoogleUtilities: 0759d1a57ebb953965c2dfe0ba4c82e95ccc2e34
+   GoogleUtilitiesComponents: 679b2c881db3b615a2777504623df6122dd20afe
+   GTMSessionFetcher: 3a63d75eecd6aa32c2fc79f578064e1214dfdec2
+   MLImage: 7bb7c4264164ade9bf64f679b40fb29c8f33ee9b
+@@ -129,7 +129,7 @@ SPEC CHECKSUMS:
+   MLKitCommon: c1b791c3e667091918d91bda4bba69a91011e390
+   MLKitVision: 8baa5f46ee3352614169b85250574fde38c36f49
+   mobile_scanner: 47056db0c04027ea5f41a716385542da28574662
+-  nanopb: b552cce312b6c8484180ef47159bc0f65a1f0431
++  nanopb: d4d75c12cd1316f4a64e3c6963f879ecd4b5e0d5
+   package_info_plus: fd030dabf36271f146f1f3beacd48f564b0f17f7
+   path_provider_foundation: 29f094ae23ebbca9d3d0cec13889cd9060c0e943
+   permission_handler_apple: e76247795d700c14ea09e3a2d8855d41ee80a2e6
+@@ -137,6 +137,6 @@ SPEC CHECKSUMS:
+   shared_preferences_foundation: 5b919d13b803cadd15ed2dc053125c68730e5126
+   vibration: 7d883d141656a1c1a6d8d238616b2042a51a1241
+ 
+-PODFILE CHECKSUM: dc959e9c395cfc0ed667b3f83251a823e01b945a
++PODFILE CHECKSUM: ef342423c5dc3e3be312d38b7da98985f539cf37
+ 
+ COCOAPODS: 1.12.1
+diff --git a/ios/Runner.xcodeproj/project.pbxproj b/ios/Runner.xcodeproj/project.pbxproj
+index 4651305..64a3865 100644
+--- a/ios/Runner.xcodeproj/project.pbxproj
++++ b/ios/Runner.xcodeproj/project.pbxproj
+@@ -10,12 +10,11 @@
+ 		1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */ = {isa = PBXBuildFile; fileRef = 1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */; };
+ 		331C808B294A63AB00263BE5 /* RunnerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 331C807B294A618700263BE5 /* RunnerTests.swift */; };
+ 		3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */; };
+-		4B8C3DC5D1A035A311949A03 /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6859F526DE86469FA02C9999 /* Pods_Runner.framework */; };
+ 		74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74858FAE1ED2DC5600515810 /* AppDelegate.swift */; };
+ 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
+ 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
+ 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
+-		C9310BFCFAA3F9724142697B /* Pods_RunnerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D7B30D8019D5396B818B6FC /* Pods_RunnerTests.framework */; };
++		D3AA0FD4992FFCFDC5C43D70 /* Pods_RunnerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AF11161310DC9DDE3A3FCD8 /* Pods_RunnerTests.framework */; };
+ /* End PBXBuildFile section */
+ 
+ /* Begin PBXContainerItemProxy section */
+@@ -44,18 +43,14 @@
+ /* Begin PBXFileReference section */
+ 		1498D2321E8E86230040F4C2 /* GeneratedPluginRegistrant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GeneratedPluginRegistrant.h; sourceTree = "<group>"; };
+ 		1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeneratedPluginRegistrant.m; sourceTree = "<group>"; };
++		2AF11161310DC9DDE3A3FCD8 /* Pods_RunnerTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RunnerTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+ 		331C807B294A618700263BE5 /* RunnerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunnerTests.swift; sourceTree = "<group>"; };
+ 		331C8081294A63A400263BE5 /* RunnerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RunnerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+ 		3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = AppFrameworkInfo.plist; path = Flutter/AppFrameworkInfo.plist; sourceTree = "<group>"; };
+-		3D85FD6EBA28A4DFD4481674 /* Pods-RunnerTests.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.profile.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.profile.xcconfig"; sourceTree = "<group>"; };
+-		455405F51FFD7C02F8E91907 /* Pods-RunnerTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.release.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.release.xcconfig"; sourceTree = "<group>"; };
+-		4D7B30D8019D5396B818B6FC /* Pods_RunnerTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RunnerTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+-		54758EF14750446AFE95E743 /* Pods-RunnerTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.debug.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.debug.xcconfig"; sourceTree = "<group>"; };
+-		6859F526DE86469FA02C9999 /* Pods_Runner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Runner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+-		7152E39C5EA39F313E81BED3 /* Pods-Runner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"; sourceTree = "<group>"; };
+ 		74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Runner-Bridging-Header.h"; sourceTree = "<group>"; };
+ 		74858FAE1ED2DC5600515810 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+ 		7AFA3C8E1D35360C0083082E /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Release.xcconfig; path = Flutter/Release.xcconfig; sourceTree = "<group>"; };
++		939BB98A0A4014306338090D /* Pods-RunnerTests.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.profile.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.profile.xcconfig"; sourceTree = "<group>"; };
+ 		9740EEB21CF90195004384FC /* Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Debug.xcconfig; path = Flutter/Debug.xcconfig; sourceTree = "<group>"; };
+ 		9740EEB31CF90195004384FC /* Generated.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Generated.xcconfig; path = Flutter/Generated.xcconfig; sourceTree = "<group>"; };
+ 		97C146EE1CF9000F007C117D /* Runner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Runner.app; sourceTree = BUILT_PRODUCTS_DIR; };
+@@ -63,39 +58,33 @@
+ 		97C146FD1CF9000F007C117D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+ 		97C147001CF9000F007C117D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+ 		97C147021CF9000F007C117D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+-		EC1E3CF59405155F7DE06816 /* Pods-Runner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig"; sourceTree = "<group>"; };
+-		F132F47A620DC28F66BD6BF3 /* Pods-Runner.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig"; sourceTree = "<group>"; };
++		9F61C798AF2E52616A28EA6B /* Pods_Runner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Runner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
++		A06E28E6EBBF2854FA1F5F42 /* Pods-Runner.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig"; sourceTree = "<group>"; };
++		AFA314AE3DBF04C649E65894 /* Pods-RunnerTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.debug.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.debug.xcconfig"; sourceTree = "<group>"; };
++		CB11CB4F24E10C9A3A48B98E /* Pods-RunnerTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.release.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.release.xcconfig"; sourceTree = "<group>"; };
++		EC471F6B5B5831E2C4E0D63A /* Pods-Runner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig"; sourceTree = "<group>"; };
++		F2C61A0571AB4DE73123A2C4 /* Pods-Runner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"; sourceTree = "<group>"; };
+ /* End PBXFileReference section */
+ 
+ /* Begin PBXFrameworksBuildPhase section */
+-		97C146EB1CF9000F007C117D /* Frameworks */ = {
++		7E7BC84AA94A33727F996ED8 /* Frameworks */ = {
+ 			isa = PBXFrameworksBuildPhase;
+ 			buildActionMask = 2147483647;
+ 			files = (
+-				4B8C3DC5D1A035A311949A03 /* Pods_Runner.framework in Frameworks */,
++				D3AA0FD4992FFCFDC5C43D70 /* Pods_RunnerTests.framework in Frameworks */,
+ 			);
+ 			runOnlyForDeploymentPostprocessing = 0;
+ 		};
+-		A66E4E5139A3A7B36C8DCC47 /* Frameworks */ = {
++		97C146EB1CF9000F007C117D /* Frameworks */ = {
+ 			isa = PBXFrameworksBuildPhase;
+ 			buildActionMask = 2147483647;
+ 			files = (
+-				C9310BFCFAA3F9724142697B /* Pods_RunnerTests.framework in Frameworks */,
+ 			);
+ 			runOnlyForDeploymentPostprocessing = 0;
+ 		};
+ /* End PBXFrameworksBuildPhase section */
+ 
+ /* Begin PBXGroup section */
+-		32447EB14401F26D7E836700 /* Frameworks */ = {
+-			isa = PBXGroup;
+-			children = (
+-				6859F526DE86469FA02C9999 /* Pods_Runner.framework */,
+-				4D7B30D8019D5396B818B6FC /* Pods_RunnerTests.framework */,
+-			);
+-			name = Frameworks;
+-			sourceTree = "<group>";
+-		};
+ 		331C8082294A63A400263BE5 /* RunnerTests */ = {
+ 			isa = PBXGroup;
+ 			children = (
+@@ -104,17 +93,13 @@
+ 			path = RunnerTests;
+ 			sourceTree = "<group>";
+ 		};
+-		64D730BF3133946F092D1D43 /* Pods */ = {
++		93F873CAF95AB1115E785ED2 /* Frameworks */ = {
+ 			isa = PBXGroup;
+ 			children = (
+-				EC1E3CF59405155F7DE06816 /* Pods-Runner.debug.xcconfig */,
+-				7152E39C5EA39F313E81BED3 /* Pods-Runner.release.xcconfig */,
+-				F132F47A620DC28F66BD6BF3 /* Pods-Runner.profile.xcconfig */,
+-				54758EF14750446AFE95E743 /* Pods-RunnerTests.debug.xcconfig */,
+-				455405F51FFD7C02F8E91907 /* Pods-RunnerTests.release.xcconfig */,
+-				3D85FD6EBA28A4DFD4481674 /* Pods-RunnerTests.profile.xcconfig */,
++				9F61C798AF2E52616A28EA6B /* Pods_Runner.framework */,
++				2AF11161310DC9DDE3A3FCD8 /* Pods_RunnerTests.framework */,
+ 			);
+-			path = Pods;
++			name = Frameworks;
+ 			sourceTree = "<group>";
+ 		};
+ 		9740EEB11CF90186004384FC /* Flutter */ = {
+@@ -135,8 +120,8 @@
+ 				97C146F01CF9000F007C117D /* Runner */,
+ 				97C146EF1CF9000F007C117D /* Products */,
+ 				331C8082294A63A400263BE5 /* RunnerTests */,
+-				64D730BF3133946F092D1D43 /* Pods */,
+-				32447EB14401F26D7E836700 /* Frameworks */,
++				C8FFB90976496FBBAB6FFE45 /* Pods */,
++				93F873CAF95AB1115E785ED2 /* Frameworks */,
+ 			);
+ 			sourceTree = "<group>";
+ 		};
+@@ -164,6 +149,19 @@
+ 			path = Runner;
+ 			sourceTree = "<group>";
+ 		};
++		C8FFB90976496FBBAB6FFE45 /* Pods */ = {
++			isa = PBXGroup;
++			children = (
++				EC471F6B5B5831E2C4E0D63A /* Pods-Runner.debug.xcconfig */,
++				F2C61A0571AB4DE73123A2C4 /* Pods-Runner.release.xcconfig */,
++				A06E28E6EBBF2854FA1F5F42 /* Pods-Runner.profile.xcconfig */,
++				AFA314AE3DBF04C649E65894 /* Pods-RunnerTests.debug.xcconfig */,
++				CB11CB4F24E10C9A3A48B98E /* Pods-RunnerTests.release.xcconfig */,
++				939BB98A0A4014306338090D /* Pods-RunnerTests.profile.xcconfig */,
++			);
++			path = Pods;
++			sourceTree = "<group>";
++		};
+ /* End PBXGroup section */
+ 
+ /* Begin PBXNativeTarget section */
+@@ -171,10 +169,10 @@
+ 			isa = PBXNativeTarget;
+ 			buildConfigurationList = 331C8087294A63A400263BE5 /* Build configuration list for PBXNativeTarget "RunnerTests" */;
+ 			buildPhases = (
+-				5E006A1B20CF9636C861FA73 /* [CP] Check Pods Manifest.lock */,
++				A809E2713DF270BC265507C3 /* [CP] Check Pods Manifest.lock */,
+ 				331C807D294A63A400263BE5 /* Sources */,
+ 				331C807F294A63A400263BE5 /* Resources */,
+-				A66E4E5139A3A7B36C8DCC47 /* Frameworks */,
++				7E7BC84AA94A33727F996ED8 /* Frameworks */,
+ 			);
+ 			buildRules = (
+ 			);
+@@ -190,14 +188,14 @@
+ 			isa = PBXNativeTarget;
+ 			buildConfigurationList = 97C147051CF9000F007C117D /* Build configuration list for PBXNativeTarget "Runner" */;
+ 			buildPhases = (
+-				0852ABF23B32944143C2E303 /* [CP] Check Pods Manifest.lock */,
++				E37935B138C868BDE612D458 /* [CP] Check Pods Manifest.lock */,
+ 				9740EEB61CF901F6004384FC /* Run Script */,
+ 				97C146EA1CF9000F007C117D /* Sources */,
+ 				97C146EB1CF9000F007C117D /* Frameworks */,
+ 				97C146EC1CF9000F007C117D /* Resources */,
+ 				9705A1C41CF9048500538489 /* Embed Frameworks */,
+ 				3B06AD1E1E4923F5004D2608 /* Thin Binary */,
+-				32F46DA5B9E5E5F21DF4206F /* [CP] Embed Pods Frameworks */,
++				0F72284A67510A1B384191B8 /* [CP] Embed Pods Frameworks */,
+ 			);
+ 			buildRules = (
+ 			);
+@@ -214,6 +212,7 @@
+ 		97C146E61CF9000F007C117D /* Project object */ = {
+ 			isa = PBXProject;
+ 			attributes = {
++				BuildIndependentTargetsInParallel = YES;
+ 				LastUpgradeCheck = 1430;
+ 				ORGANIZATIONNAME = "";
+ 				TargetAttributes = {
+@@ -268,62 +267,55 @@
+ /* End PBXResourcesBuildPhase section */
+ 
+ /* Begin PBXShellScriptBuildPhase section */
+-		0852ABF23B32944143C2E303 /* [CP] Check Pods Manifest.lock */ = {
++		0F72284A67510A1B384191B8 /* [CP] Embed Pods Frameworks */ = {
+ 			isa = PBXShellScriptBuildPhase;
+ 			buildActionMask = 2147483647;
+ 			files = (
+ 			);
+ 			inputFileListPaths = (
++				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+ 			);
+-			inputPaths = (
+-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+-				"${PODS_ROOT}/Manifest.lock",
+-			);
+-			name = "[CP] Check Pods Manifest.lock";
++			name = "[CP] Embed Pods Frameworks";
+ 			outputFileListPaths = (
+-			);
+-			outputPaths = (
+-				"$(DERIVED_FILE_DIR)/Pods-Runner-checkManifestLockResult.txt",
++				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+ 			);
+ 			runOnlyForDeploymentPostprocessing = 0;
+ 			shellPath = /bin/sh;
+-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
++			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks.sh\"\n";
+ 			showEnvVarsInLog = 0;
+ 		};
+-		32F46DA5B9E5E5F21DF4206F /* [CP] Embed Pods Frameworks */ = {
++		3B06AD1E1E4923F5004D2608 /* Thin Binary */ = {
+ 			isa = PBXShellScriptBuildPhase;
++			alwaysOutOfDate = 1;
+ 			buildActionMask = 2147483647;
+ 			files = (
+ 			);
+-			inputFileListPaths = (
+-				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks-${CONFIGURATION}-input-files.xcfilelist",
++			inputPaths = (
++				"${TARGET_BUILD_DIR}/${INFOPLIST_PATH}",
+ 			);
+-			name = "[CP] Embed Pods Frameworks";
+-			outputFileListPaths = (
+-				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks-${CONFIGURATION}-output-files.xcfilelist",
++			name = "Thin Binary";
++			outputPaths = (
+ 			);
+ 			runOnlyForDeploymentPostprocessing = 0;
+ 			shellPath = /bin/sh;
+-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks.sh\"\n";
+-			showEnvVarsInLog = 0;
++			shellScript = "/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" embed_and_thin";
+ 		};
+-		3B06AD1E1E4923F5004D2608 /* Thin Binary */ = {
++		9740EEB61CF901F6004384FC /* Run Script */ = {
+ 			isa = PBXShellScriptBuildPhase;
+ 			alwaysOutOfDate = 1;
+ 			buildActionMask = 2147483647;
+ 			files = (
+ 			);
+ 			inputPaths = (
+-				"${TARGET_BUILD_DIR}/${INFOPLIST_PATH}",
+ 			);
+-			name = "Thin Binary";
++			name = "Run Script";
+ 			outputPaths = (
+ 			);
+ 			runOnlyForDeploymentPostprocessing = 0;
+ 			shellPath = /bin/sh;
+-			shellScript = "/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" embed_and_thin";
++			shellScript = "/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" build";
+ 		};
+-		5E006A1B20CF9636C861FA73 /* [CP] Check Pods Manifest.lock */ = {
++		A809E2713DF270BC265507C3 /* [CP] Check Pods Manifest.lock */ = {
+ 			isa = PBXShellScriptBuildPhase;
+ 			buildActionMask = 2147483647;
+ 			files = (
+@@ -345,20 +337,27 @@
+ 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+ 			showEnvVarsInLog = 0;
+ 		};
+-		9740EEB61CF901F6004384FC /* Run Script */ = {
++		E37935B138C868BDE612D458 /* [CP] Check Pods Manifest.lock */ = {
+ 			isa = PBXShellScriptBuildPhase;
+-			alwaysOutOfDate = 1;
+ 			buildActionMask = 2147483647;
+ 			files = (
+ 			);
++			inputFileListPaths = (
++			);
+ 			inputPaths = (
++				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
++				"${PODS_ROOT}/Manifest.lock",
++			);
++			name = "[CP] Check Pods Manifest.lock";
++			outputFileListPaths = (
+ 			);
+-			name = "Run Script";
+ 			outputPaths = (
++				"$(DERIVED_FILE_DIR)/Pods-Runner-checkManifestLockResult.txt",
+ 			);
+ 			runOnlyForDeploymentPostprocessing = 0;
+ 			shellPath = /bin/sh;
+-			shellScript = "/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" build";
++			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
++			showEnvVarsInLog = 0;
+ 		};
+ /* End PBXShellScriptBuildPhase section */
+ 
+@@ -443,6 +442,7 @@
+ 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+ 				ENABLE_NS_ASSERTIONS = NO;
+ 				ENABLE_STRICT_OBJC_MSGSEND = YES;
++				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
+ 				GCC_C_LANGUAGE_STANDARD = gnu99;
+ 				GCC_NO_COMMON_BLOCKS = YES;
+ 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+@@ -466,42 +466,32 @@
+ 			buildSettings = {
+ 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+ 				CLANG_ENABLE_MODULES = YES;
+-				CODE_SIGN_IDENTITY = "Apple Development";
+-				CODE_SIGN_STYLE = Automatic;
+ 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
+ 				DEVELOPMENT_TEAM = Q7373TQ6SF;
+ 				ENABLE_BITCODE = NO;
+ 				INFOPLIST_FILE = Runner/Info.plist;
+-				INFOPLIST_KEY_CFBundleDisplayName = "ShamScout Mobile";
+-				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
+ 				LD_RUNPATH_SEARCH_PATHS = (
+ 					"$(inherited)",
+ 					"@executable_path/Frameworks",
+ 				);
+-				MARKETING_VERSION = 2023.3.3;
+-				PRODUCT_BUNDLE_IDENTIFIER = com.ccshambots.shamScoutMobile;
++				PRODUCT_BUNDLE_IDENTIFIER = com.ccshambots.app;
+ 				PRODUCT_NAME = "$(TARGET_NAME)";
+-				PROVISIONING_PROFILE_SPECIFIER = "";
+-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+-				SUPPORTS_MACCATALYST = NO;
+-				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
+ 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
+ 				SWIFT_VERSION = 5.0;
+-				TARGETED_DEVICE_FAMILY = "1,2";
+ 				VERSIONING_SYSTEM = "apple-generic";
+ 			};
+ 			name = Profile;
+ 		};
+ 		331C8088294A63A400263BE5 /* Debug */ = {
+ 			isa = XCBuildConfiguration;
+-			baseConfigurationReference = 54758EF14750446AFE95E743 /* Pods-RunnerTests.debug.xcconfig */;
++			baseConfigurationReference = AFA314AE3DBF04C649E65894 /* Pods-RunnerTests.debug.xcconfig */;
+ 			buildSettings = {
+ 				BUNDLE_LOADER = "$(TEST_HOST)";
+ 				CODE_SIGN_STYLE = Automatic;
+ 				CURRENT_PROJECT_VERSION = 1;
+ 				GENERATE_INFOPLIST_FILE = YES;
+ 				MARKETING_VERSION = 1.0;
+-				PRODUCT_BUNDLE_IDENTIFIER = com.ccshambots.shamScoutMobile.RunnerTests;
++				PRODUCT_BUNDLE_IDENTIFIER = com.ccshambots.app.RunnerTests;
+ 				PRODUCT_NAME = "$(TARGET_NAME)";
+ 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+ 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+@@ -512,14 +502,14 @@
+ 		};
+ 		331C8089294A63A400263BE5 /* Release */ = {
+ 			isa = XCBuildConfiguration;
+-			baseConfigurationReference = 455405F51FFD7C02F8E91907 /* Pods-RunnerTests.release.xcconfig */;
++			baseConfigurationReference = CB11CB4F24E10C9A3A48B98E /* Pods-RunnerTests.release.xcconfig */;
+ 			buildSettings = {
+ 				BUNDLE_LOADER = "$(TEST_HOST)";
+ 				CODE_SIGN_STYLE = Automatic;
+ 				CURRENT_PROJECT_VERSION = 1;
+ 				GENERATE_INFOPLIST_FILE = YES;
+ 				MARKETING_VERSION = 1.0;
+-				PRODUCT_BUNDLE_IDENTIFIER = com.ccshambots.shamScoutMobile.RunnerTests;
++				PRODUCT_BUNDLE_IDENTIFIER = com.ccshambots.app.RunnerTests;
+ 				PRODUCT_NAME = "$(TARGET_NAME)";
+ 				SWIFT_VERSION = 5.0;
+ 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Runner.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Runner";
+@@ -528,14 +518,14 @@
+ 		};
+ 		331C808A294A63A400263BE5 /* Profile */ = {
+ 			isa = XCBuildConfiguration;
+-			baseConfigurationReference = 3D85FD6EBA28A4DFD4481674 /* Pods-RunnerTests.profile.xcconfig */;
++			baseConfigurationReference = 939BB98A0A4014306338090D /* Pods-RunnerTests.profile.xcconfig */;
+ 			buildSettings = {
+ 				BUNDLE_LOADER = "$(TEST_HOST)";
+ 				CODE_SIGN_STYLE = Automatic;
+ 				CURRENT_PROJECT_VERSION = 1;
+ 				GENERATE_INFOPLIST_FILE = YES;
+ 				MARKETING_VERSION = 1.0;
+-				PRODUCT_BUNDLE_IDENTIFIER = com.ccshambots.shamScoutMobile.RunnerTests;
++				PRODUCT_BUNDLE_IDENTIFIER = com.ccshambots.app.RunnerTests;
+ 				PRODUCT_NAME = "$(TARGET_NAME)";
+ 				SWIFT_VERSION = 5.0;
+ 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Runner.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Runner";
+@@ -575,6 +565,7 @@
+ 				DEBUG_INFORMATION_FORMAT = dwarf;
+ 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+ 				ENABLE_TESTABILITY = YES;
++				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
+ 				GCC_C_LANGUAGE_STANDARD = gnu99;
+ 				GCC_DYNAMIC_NO_PIC = NO;
+ 				GCC_NO_COMMON_BLOCKS = YES;
+@@ -630,6 +621,8 @@
+ 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+ 				ENABLE_NS_ASSERTIONS = NO;
+ 				ENABLE_STRICT_OBJC_MSGSEND = YES;
++				EXCLUDED_ARCHS = "";
++				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
+ 				GCC_C_LANGUAGE_STANDARD = gnu99;
+ 				GCC_NO_COMMON_BLOCKS = YES;
+ 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+@@ -655,29 +648,19 @@
+ 			buildSettings = {
+ 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+ 				CLANG_ENABLE_MODULES = YES;
+-				CODE_SIGN_IDENTITY = "Apple Development";
+-				CODE_SIGN_STYLE = Automatic;
+ 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
+ 				DEVELOPMENT_TEAM = Q7373TQ6SF;
+ 				ENABLE_BITCODE = NO;
+ 				INFOPLIST_FILE = Runner/Info.plist;
+-				INFOPLIST_KEY_CFBundleDisplayName = "ShamScout Mobile";
+-				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
+ 				LD_RUNPATH_SEARCH_PATHS = (
+ 					"$(inherited)",
+ 					"@executable_path/Frameworks",
+ 				);
+-				MARKETING_VERSION = 2023.3.3;
+-				PRODUCT_BUNDLE_IDENTIFIER = com.ccshambots.shamScoutMobile;
++				PRODUCT_BUNDLE_IDENTIFIER = com.ccshambots.app;
+ 				PRODUCT_NAME = "$(TARGET_NAME)";
+-				PROVISIONING_PROFILE_SPECIFIER = "";
+-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+-				SUPPORTS_MACCATALYST = NO;
+-				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
+ 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
+ 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+ 				SWIFT_VERSION = 5.0;
+-				TARGETED_DEVICE_FAMILY = "1,2";
+ 				VERSIONING_SYSTEM = "apple-generic";
+ 			};
+ 			name = Debug;
+@@ -688,28 +671,18 @@
+ 			buildSettings = {
+ 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+ 				CLANG_ENABLE_MODULES = YES;
+-				CODE_SIGN_IDENTITY = "Apple Development";
+-				CODE_SIGN_STYLE = Automatic;
+ 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
+ 				DEVELOPMENT_TEAM = Q7373TQ6SF;
+ 				ENABLE_BITCODE = NO;
+ 				INFOPLIST_FILE = Runner/Info.plist;
+-				INFOPLIST_KEY_CFBundleDisplayName = "ShamScout Mobile";
+-				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
+ 				LD_RUNPATH_SEARCH_PATHS = (
+ 					"$(inherited)",
+ 					"@executable_path/Frameworks",
+ 				);
+-				MARKETING_VERSION = 2023.3.3;
+-				PRODUCT_BUNDLE_IDENTIFIER = com.ccshambots.shamScoutMobile;
++				PRODUCT_BUNDLE_IDENTIFIER = com.ccshambots.app;
+ 				PRODUCT_NAME = "$(TARGET_NAME)";
+-				PROVISIONING_PROFILE_SPECIFIER = "";
+-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+-				SUPPORTS_MACCATALYST = NO;
+-				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
+ 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
+ 				SWIFT_VERSION = 5.0;
+-				TARGETED_DEVICE_FAMILY = "1,2";
+ 				VERSIONING_SYSTEM = "apple-generic";
+ 			};
+ 			name = Release;
+diff --git a/ios/Runner.xcodeproj/project.pbxproj.tmp b/ios/Runner.xcodeproj/project.pbxproj.tmp
+deleted file mode 100644
+index 88d1d60..0000000
+--- a/ios/Runner.xcodeproj/project.pbxproj.tmp
++++ /dev/null
+@@ -1,1179 +0,0 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+-<plist version="1.0">
+-<dict>
+-	<key>archiveVersion</key>
+-	<string>1</string>
+-	<key>classes</key>
+-	<dict/>
+-	<key>objectVersion</key>
+-	<string>54</string>
+-	<key>objects</key>
+-	<dict>
+-		<key>1498D2321E8E86230040F4C2</key>
+-		<dict>
+-			<key>isa</key>
+-			<string>PBXFileReference</string>
+-			<key>lastKnownFileType</key>
+-			<string>sourcecode.c.h</string>
+-			<key>path</key>
+-			<string>GeneratedPluginRegistrant.h</string>
+-			<key>sourceTree</key>
+-			<string>&lt;group&gt;</string>
+-		</dict>
+-		<key>1498D2331E8E89220040F4C2</key>
+-		<dict>
+-			<key>fileEncoding</key>
+-			<string>4</string>
+-			<key>isa</key>
+-			<string>PBXFileReference</string>
+-			<key>lastKnownFileType</key>
+-			<string>sourcecode.c.objc</string>
+-			<key>path</key>
+-			<string>GeneratedPluginRegistrant.m</string>
+-			<key>sourceTree</key>
+-			<string>&lt;group&gt;</string>
+-		</dict>
+-		<key>1498D2341E8E89220040F4C2</key>
+-		<dict>
+-			<key>fileRef</key>
+-			<string>1498D2331E8E89220040F4C2</string>
+-			<key>isa</key>
+-			<string>PBXBuildFile</string>
+-		</dict>
+-		<key>249021D3217E4FDB00AE95B9</key>
+-		<dict>
+-			<key>buildSettings</key>
+-			<dict>
+-				<key>ALWAYS_SEARCH_USER_PATHS</key>
+-				<string>NO</string>
+-				<key>CLANG_ANALYZER_NONNULL</key>
+-				<string>YES</string>
+-				<key>CLANG_CXX_LANGUAGE_STANDARD</key>
+-				<string>gnu++0x</string>
+-				<key>CLANG_CXX_LIBRARY</key>
+-				<string>libc++</string>
+-				<key>CLANG_ENABLE_MODULES</key>
+-				<string>YES</string>
+-				<key>CLANG_ENABLE_OBJC_ARC</key>
+-				<string>YES</string>
+-				<key>CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING</key>
+-				<string>YES</string>
+-				<key>CLANG_WARN_BOOL_CONVERSION</key>
+-				<string>YES</string>
+-				<key>CLANG_WARN_COMMA</key>
+-				<string>YES</string>
+-				<key>CLANG_WARN_CONSTANT_CONVERSION</key>
+-				<string>YES</string>
+-				<key>CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS</key>
+-				<string>YES</string>
+-				<key>CLANG_WARN_DIRECT_OBJC_ISA_USAGE</key>
+-				<string>YES_ERROR</string>
+-				<key>CLANG_WARN_EMPTY_BODY</key>
+-				<string>YES</string>
+-				<key>CLANG_WARN_ENUM_CONVERSION</key>
+-				<string>YES</string>
+-				<key>CLANG_WARN_INFINITE_RECURSION</key>
+-				<string>YES</string>
+-				<key>CLANG_WARN_INT_CONVERSION</key>
+-				<string>YES</string>
+-				<key>CLANG_WARN_NON_LITERAL_NULL_CONVERSION</key>
+-				<string>YES</string>
+-				<key>CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF</key>
+-				<string>YES</string>
+-				<key>CLANG_WARN_OBJC_LITERAL_CONVERSION</key>
+-				<string>YES</string>
+-				<key>CLANG_WARN_OBJC_ROOT_CLASS</key>
+-				<string>YES_ERROR</string>
+-				<key>CLANG_WARN_RANGE_LOOP_ANALYSIS</key>
+-				<string>YES</string>
+-				<key>CLANG_WARN_STRICT_PROTOTYPES</key>
+-				<string>YES</string>
+-				<key>CLANG_WARN_SUSPICIOUS_MOVE</key>
+-				<string>YES</string>
+-				<key>CLANG_WARN_UNREACHABLE_CODE</key>
+-				<string>YES</string>
+-				<key>CLANG_WARN__DUPLICATE_METHOD_MATCH</key>
+-				<string>YES</string>
+-				<key>CODE_SIGN_IDENTITY[sdk=iphoneos*]</key>
+-				<string>iPhone Developer</string>
+-				<key>COPY_PHASE_STRIP</key>
+-				<string>NO</string>
+-				<key>DEBUG_INFORMATION_FORMAT</key>
+-				<string>dwarf-with-dsym</string>
+-				<key>ENABLE_NS_ASSERTIONS</key>
+-				<string>NO</string>
+-				<key>ENABLE_STRICT_OBJC_MSGSEND</key>
+-				<string>YES</string>
+-				<key>GCC_C_LANGUAGE_STANDARD</key>
+-				<string>gnu99</string>
+-				<key>GCC_NO_COMMON_BLOCKS</key>
+-				<string>YES</string>
+-				<key>GCC_WARN_64_TO_32_BIT_CONVERSION</key>
+-				<string>YES</string>
+-				<key>GCC_WARN_ABOUT_RETURN_TYPE</key>
+-				<string>YES_ERROR</string>
+-				<key>GCC_WARN_UNDECLARED_SELECTOR</key>
+-				<string>YES</string>
+-				<key>GCC_WARN_UNINITIALIZED_AUTOS</key>
+-				<string>YES_AGGRESSIVE</string>
+-				<key>GCC_WARN_UNUSED_FUNCTION</key>
+-				<string>YES</string>
+-				<key>GCC_WARN_UNUSED_VARIABLE</key>
+-				<string>YES</string>
+-				<key>IPHONEOS_DEPLOYMENT_TARGET</key>
+-				<string>11.0</string>
+-				<key>MTL_ENABLE_DEBUG_INFO</key>
+-				<string>NO</string>
+-				<key>SDKROOT</key>
+-				<string>iphoneos</string>
+-				<key>SUPPORTED_PLATFORMS</key>
+-				<string>iphoneos</string>
+-				<key>TARGETED_DEVICE_FAMILY</key>
+-				<string>1,2</string>
+-				<key>VALIDATE_PRODUCT</key>
+-				<string>YES</string>
+-			</dict>
+-			<key>isa</key>
+-			<string>XCBuildConfiguration</string>
+-			<key>name</key>
+-			<string>Profile</string>
+-		</dict>
+-		<key>249021D4217E4FDB00AE95B9</key>
+-		<dict>
+-			<key>baseConfigurationReference</key>
+-			<string>7AFA3C8E1D35360C0083082E</string>
+-			<key>buildSettings</key>
+-			<dict>
+-				<key>ASSETCATALOG_COMPILER_APPICON_NAME</key>
+-				<string>AppIcon</string>
+-				<key>CLANG_ENABLE_MODULES</key>
+-				<string>YES</string>
+-				<key>CURRENT_PROJECT_VERSION</key>
+-				<string>$(FLUTTER_BUILD_NUMBER)</string>
+-				<key>ENABLE_BITCODE</key>
+-				<string>NO</string>
+-				<key>INFOPLIST_FILE</key>
+-				<string>Runner/Info.plist</string>
+-				<key>LD_RUNPATH_SEARCH_PATHS</key>
+-				<array>
+-					<string>$(inherited)</string>
+-					<string>@executable_path/Frameworks</string>
+-				</array>
+-				<key>PRODUCT_BUNDLE_IDENTIFIER</key>
+-				<string>com.ccshambots.shamScoutMobile</string>
+-				<key>PRODUCT_NAME</key>
+-				<string>$(TARGET_NAME)</string>
+-				<key>SWIFT_OBJC_BRIDGING_HEADER</key>
+-				<string>Runner/Runner-Bridging-Header.h</string>
+-				<key>SWIFT_VERSION</key>
+-				<string>5.0</string>
+-				<key>VERSIONING_SYSTEM</key>
+-				<string>apple-generic</string>
+-			</dict>
+-			<key>isa</key>
+-			<string>XCBuildConfiguration</string>
+-			<key>name</key>
+-			<string>Profile</string>
+-		</dict>
+-		<key>331C807B294A618700263BE5</key>
+-		<dict>
+-			<key>isa</key>
+-			<string>PBXFileReference</string>
+-			<key>lastKnownFileType</key>
+-			<string>sourcecode.swift</string>
+-			<key>path</key>
+-			<string>RunnerTests.swift</string>
+-			<key>sourceTree</key>
+-			<string>&lt;group&gt;</string>
+-		</dict>
+-		<key>331C807D294A63A400263BE5</key>
+-		<dict>
+-			<key>buildActionMask</key>
+-			<string>2147483647</string>
+-			<key>files</key>
+-			<array>
+-				<string>331C808B294A63AB00263BE5</string>
+-			</array>
+-			<key>isa</key>
+-			<string>PBXSourcesBuildPhase</string>
+-			<key>runOnlyForDeploymentPostprocessing</key>
+-			<string>0</string>
+-		</dict>
+-		<key>331C807F294A63A400263BE5</key>
+-		<dict>
+-			<key>buildActionMask</key>
+-			<string>2147483647</string>
+-			<key>files</key>
+-			<array/>
+-			<key>isa</key>
+-			<string>PBXResourcesBuildPhase</string>
+-			<key>runOnlyForDeploymentPostprocessing</key>
+-			<string>0</string>
+-		</dict>
+-		<key>331C8080294A63A400263BE5</key>
+-		<dict>
+-			<key>buildConfigurationList</key>
+-			<string>331C8087294A63A400263BE5</string>
+-			<key>buildPhases</key>
+-			<array>
+-				<string>331C807D294A63A400263BE5</string>
+-				<string>331C807E294A63A400263BE5</string>
+-				<string>331C807F294A63A400263BE5</string>
+-			</array>
+-			<key>buildRules</key>
+-			<array/>
+-			<key>dependencies</key>
+-			<array>
+-				<string>331C8086294A63A400263BE5</string>
+-			</array>
+-			<key>isa</key>
+-			<string>PBXNativeTarget</string>
+-			<key>name</key>
+-			<string>RunnerTests</string>
+-			<key>productName</key>
+-			<string>RunnerTests</string>
+-			<key>productReference</key>
+-			<string>331C8081294A63A400263BE5</string>
+-			<key>productType</key>
+-			<string>com.apple.product-type.bundle.unit-test</string>
+-		</dict>
+-		<key>331C8081294A63A400263BE5</key>
+-		<dict>
+-			<key>explicitFileType</key>
+-			<string>wrapper.cfbundle</string>
+-			<key>includeInIndex</key>
+-			<string>0</string>
+-			<key>isa</key>
+-			<string>PBXFileReference</string>
+-			<key>path</key>
+-			<string>RunnerTests.xctest</string>
+-			<key>sourceTree</key>
+-			<string>BUILT_PRODUCTS_DIR</string>
+-		</dict>
+-		<key>331C8082294A63A400263BE5</key>
+-		<dict>
+-			<key>children</key>
+-			<array>
+-				<string>331C807B294A618700263BE5</string>
+-			</array>
+-			<key>isa</key>
+-			<string>PBXGroup</string>
+-			<key>path</key>
+-			<string>RunnerTests</string>
+-			<key>sourceTree</key>
+-			<string>&lt;group&gt;</string>
+-		</dict>
+-		<key>331C8085294A63A400263BE5</key>
+-		<dict>
+-			<key>containerPortal</key>
+-			<string>97C146E61CF9000F007C117D</string>
+-			<key>isa</key>
+-			<string>PBXContainerItemProxy</string>
+-			<key>proxyType</key>
+-			<string>1</string>
+-			<key>remoteGlobalIDString</key>
+-			<string>97C146ED1CF9000F007C117D</string>
+-			<key>remoteInfo</key>
+-			<string>Runner</string>
+-		</dict>
+-		<key>331C8086294A63A400263BE5</key>
+-		<dict>
+-			<key>isa</key>
+-			<string>PBXTargetDependency</string>
+-			<key>target</key>
+-			<string>97C146ED1CF9000F007C117D</string>
+-			<key>targetProxy</key>
+-			<string>331C8085294A63A400263BE5</string>
+-		</dict>
+-		<key>331C8087294A63A400263BE5</key>
+-		<dict>
+-			<key>buildConfigurations</key>
+-			<array>
+-				<string>331C8088294A63A400263BE5</string>
+-				<string>331C8089294A63A400263BE5</string>
+-				<string>331C808A294A63A400263BE5</string>
+-			</array>
+-			<key>defaultConfigurationIsVisible</key>
+-			<string>0</string>
+-			<key>defaultConfigurationName</key>
+-			<string>Release</string>
+-			<key>isa</key>
+-			<string>XCConfigurationList</string>
+-		</dict>
+-		<key>331C8088294A63A400263BE5</key>
+-		<dict>
+-			<key>baseConfigurationReference</key>
+-			<string>AE0B7B92F70575B8D7E0D07E</string>
+-			<key>buildSettings</key>
+-			<dict>
+-				<key>BUNDLE_LOADER</key>
+-				<string>$(TEST_HOST)</string>
+-				<key>CODE_SIGN_STYLE</key>
+-				<string>Automatic</string>
+-				<key>CURRENT_PROJECT_VERSION</key>
+-				<string>1</string>
+-				<key>GENERATE_INFOPLIST_FILE</key>
+-				<string>YES</string>
+-				<key>MARKETING_VERSION</key>
+-				<string>1.0</string>
+-				<key>PRODUCT_BUNDLE_IDENTIFIER</key>
+-				<string>com.ccshambots.shamScoutMobile.RunnerTests</string>
+-				<key>PRODUCT_NAME</key>
+-				<string>$(TARGET_NAME)</string>
+-				<key>SWIFT_ACTIVE_COMPILATION_CONDITIONS</key>
+-				<string>DEBUG</string>
+-				<key>SWIFT_OPTIMIZATION_LEVEL</key>
+-				<string>-Onone</string>
+-				<key>SWIFT_VERSION</key>
+-				<string>5.0</string>
+-				<key>TEST_HOST</key>
+-				<string>$(BUILT_PRODUCTS_DIR)/Runner.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Runner</string>
+-			</dict>
+-			<key>isa</key>
+-			<string>XCBuildConfiguration</string>
+-			<key>name</key>
+-			<string>Debug</string>
+-		</dict>
+-		<key>331C8089294A63A400263BE5</key>
+-		<dict>
+-			<key>baseConfigurationReference</key>
+-			<string>89B67EB44CE7B6631473024E</string>
+-			<key>buildSettings</key>
+-			<dict>
+-				<key>BUNDLE_LOADER</key>
+-				<string>$(TEST_HOST)</string>
+-				<key>CODE_SIGN_STYLE</key>
+-				<string>Automatic</string>
+-				<key>CURRENT_PROJECT_VERSION</key>
+-				<string>1</string>
+-				<key>GENERATE_INFOPLIST_FILE</key>
+-				<string>YES</string>
+-				<key>MARKETING_VERSION</key>
+-				<string>1.0</string>
+-				<key>PRODUCT_BUNDLE_IDENTIFIER</key>
+-				<string>com.ccshambots.shamScoutMobile.RunnerTests</string>
+-				<key>PRODUCT_NAME</key>
+-				<string>$(TARGET_NAME)</string>
+-				<key>SWIFT_VERSION</key>
+-				<string>5.0</string>
+-				<key>TEST_HOST</key>
+-				<string>$(BUILT_PRODUCTS_DIR)/Runner.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Runner</string>
+-			</dict>
+-			<key>isa</key>
+-			<string>XCBuildConfiguration</string>
+-			<key>name</key>
+-			<string>Release</string>
+-		</dict>
+-		<key>331C808A294A63A400263BE5</key>
+-		<dict>
+-			<key>baseConfigurationReference</key>
+-			<string>640959BDD8F10B91D80A66BE</string>
+-			<key>buildSettings</key>
+-			<dict>
+-				<key>BUNDLE_LOADER</key>
+-				<string>$(TEST_HOST)</string>
+-				<key>CODE_SIGN_STYLE</key>
+-				<string>Automatic</string>
+-				<key>CURRENT_PROJECT_VERSION</key>
+-				<string>1</string>
+-				<key>GENERATE_INFOPLIST_FILE</key>
+-				<string>YES</string>
+-				<key>MARKETING_VERSION</key>
+-				<string>1.0</string>
+-				<key>PRODUCT_BUNDLE_IDENTIFIER</key>
+-				<string>com.ccshambots.shamScoutMobile.RunnerTests</string>
+-				<key>PRODUCT_NAME</key>
+-				<string>$(TARGET_NAME)</string>
+-				<key>SWIFT_VERSION</key>
+-				<string>5.0</string>
+-				<key>TEST_HOST</key>
+-				<string>$(BUILT_PRODUCTS_DIR)/Runner.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Runner</string>
+-			</dict>
+-			<key>isa</key>
+-			<string>XCBuildConfiguration</string>
+-			<key>name</key>
+-			<string>Profile</string>
+-		</dict>
+-		<key>331C808B294A63AB00263BE5</key>
+-		<dict>
+-			<key>fileRef</key>
+-			<string>331C807B294A618700263BE5</string>
+-			<key>isa</key>
+-			<string>PBXBuildFile</string>
+-		</dict>
+-		<key>3B06AD1E1E4923F5004D2608</key>
+-		<dict>
+-			<key>alwaysOutOfDate</key>
+-			<string>1</string>
+-			<key>buildActionMask</key>
+-			<string>2147483647</string>
+-			<key>files</key>
+-			<array/>
+-			<key>inputPaths</key>
+-			<array>
+-				<string>${TARGET_BUILD_DIR}/${INFOPLIST_PATH}</string>
+-			</array>
+-			<key>isa</key>
+-			<string>PBXShellScriptBuildPhase</string>
+-			<key>name</key>
+-			<string>Thin Binary</string>
+-			<key>outputPaths</key>
+-			<array/>
+-			<key>runOnlyForDeploymentPostprocessing</key>
+-			<string>0</string>
+-			<key>shellPath</key>
+-			<string>/bin/sh</string>
+-			<key>shellScript</key>
+-			<string>/bin/sh "$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh" embed_and_thin</string>
+-		</dict>
+-		<key>3B3967151E833CAA004F5970</key>
+-		<dict>
+-			<key>fileEncoding</key>
+-			<string>4</string>
+-			<key>isa</key>
+-			<string>PBXFileReference</string>
+-			<key>lastKnownFileType</key>
+-			<string>text.plist.xml</string>
+-			<key>name</key>
+-			<string>AppFrameworkInfo.plist</string>
+-			<key>path</key>
+-			<string>Flutter/AppFrameworkInfo.plist</string>
+-			<key>sourceTree</key>
+-			<string>&lt;group&gt;</string>
+-		</dict>
+-		<key>3B3967161E833CAA004F5970</key>
+-		<dict>
+-			<key>fileRef</key>
+-			<string>3B3967151E833CAA004F5970</string>
+-			<key>isa</key>
+-			<string>PBXBuildFile</string>
+-		</dict>
+-		<key>74858FAD1ED2DC5600515810</key>
+-		<dict>
+-			<key>isa</key>
+-			<string>PBXFileReference</string>
+-			<key>lastKnownFileType</key>
+-			<string>sourcecode.c.h</string>
+-			<key>path</key>
+-			<string>Runner-Bridging-Header.h</string>
+-			<key>sourceTree</key>
+-			<string>&lt;group&gt;</string>
+-		</dict>
+-		<key>74858FAE1ED2DC5600515810</key>
+-		<dict>
+-			<key>fileEncoding</key>
+-			<string>4</string>
+-			<key>isa</key>
+-			<string>PBXFileReference</string>
+-			<key>lastKnownFileType</key>
+-			<string>sourcecode.swift</string>
+-			<key>path</key>
+-			<string>AppDelegate.swift</string>
+-			<key>sourceTree</key>
+-			<string>&lt;group&gt;</string>
+-		</dict>
+-		<key>74858FAF1ED2DC5600515810</key>
+-		<dict>
+-			<key>fileRef</key>
+-			<string>74858FAE1ED2DC5600515810</string>
+-			<key>isa</key>
+-			<string>PBXBuildFile</string>
+-		</dict>
+-		<key>7AFA3C8E1D35360C0083082E</key>
+-		<dict>
+-			<key>isa</key>
+-			<string>PBXFileReference</string>
+-			<key>lastKnownFileType</key>
+-			<string>text.xcconfig</string>
+-			<key>name</key>
+-			<string>Release.xcconfig</string>
+-			<key>path</key>
+-			<string>Flutter/Release.xcconfig</string>
+-			<key>sourceTree</key>
+-			<string>&lt;group&gt;</string>
+-		</dict>
+-		<key>9705A1C41CF9048500538489</key>
+-		<dict>
+-			<key>buildActionMask</key>
+-			<string>2147483647</string>
+-			<key>dstPath</key>
+-			<string></string>
+-			<key>dstSubfolderSpec</key>
+-			<string>10</string>
+-			<key>files</key>
+-			<array/>
+-			<key>isa</key>
+-			<string>PBXCopyFilesBuildPhase</string>
+-			<key>name</key>
+-			<string>Embed Frameworks</string>
+-			<key>runOnlyForDeploymentPostprocessing</key>
+-			<string>0</string>
+-		</dict>
+-		<key>9740EEB11CF90186004384FC</key>
+-		<dict>
+-			<key>children</key>
+-			<array>
+-				<string>3B3967151E833CAA004F5970</string>
+-				<string>9740EEB21CF90195004384FC</string>
+-				<string>7AFA3C8E1D35360C0083082E</string>
+-				<string>9740EEB31CF90195004384FC</string>
+-			</array>
+-			<key>isa</key>
+-			<string>PBXGroup</string>
+-			<key>name</key>
+-			<string>Flutter</string>
+-			<key>sourceTree</key>
+-			<string>&lt;group&gt;</string>
+-		</dict>
+-		<key>9740EEB21CF90195004384FC</key>
+-		<dict>
+-			<key>fileEncoding</key>
+-			<string>4</string>
+-			<key>isa</key>
+-			<string>PBXFileReference</string>
+-			<key>lastKnownFileType</key>
+-			<string>text.xcconfig</string>
+-			<key>name</key>
+-			<string>Debug.xcconfig</string>
+-			<key>path</key>
+-			<string>Flutter/Debug.xcconfig</string>
+-			<key>sourceTree</key>
+-			<string>&lt;group&gt;</string>
+-		</dict>
+-		<key>9740EEB31CF90195004384FC</key>
+-		<dict>
+-			<key>fileEncoding</key>
+-			<string>4</string>
+-			<key>isa</key>
+-			<string>PBXFileReference</string>
+-			<key>lastKnownFileType</key>
+-			<string>text.xcconfig</string>
+-			<key>name</key>
+-			<string>Generated.xcconfig</string>
+-			<key>path</key>
+-			<string>Flutter/Generated.xcconfig</string>
+-			<key>sourceTree</key>
+-			<string>&lt;group&gt;</string>
+-		</dict>
+-		<key>9740EEB61CF901F6004384FC</key>
+-		<dict>
+-			<key>alwaysOutOfDate</key>
+-			<string>1</string>
+-			<key>buildActionMask</key>
+-			<string>2147483647</string>
+-			<key>files</key>
+-			<array/>
+-			<key>inputPaths</key>
+-			<array/>
+-			<key>isa</key>
+-			<string>PBXShellScriptBuildPhase</string>
+-			<key>name</key>
+-			<string>Run Script</string>
+-			<key>outputPaths</key>
+-			<array/>
+-			<key>runOnlyForDeploymentPostprocessing</key>
+-			<string>0</string>
+-			<key>shellPath</key>
+-			<string>/bin/sh</string>
+-			<key>shellScript</key>
+-			<string>/bin/sh "$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh" build</string>
+-		</dict>
+-		<key>97C146E51CF9000F007C117D</key>
+-		<dict>
+-			<key>children</key>
+-			<array>
+-				<string>9740EEB11CF90186004384FC</string>
+-				<string>97C146F01CF9000F007C117D</string>
+-				<string>97C146EF1CF9000F007C117D</string>
+-				<string>331C8082294A63A400263BE5</string>
+-			</array>
+-			<key>isa</key>
+-			<string>PBXGroup</string>
+-			<key>sourceTree</key>
+-			<string>&lt;group&gt;</string>
+-		</dict>
+-		<key>97C146E61CF9000F007C117D</key>
+-		<dict>
+-			<key>attributes</key>
+-			<dict>
+-				<key>LastUpgradeCheck</key>
+-				<string>1300</string>
+-				<key>ORGANIZATIONNAME</key>
+-				<string></string>
+-				<key>TargetAttributes</key>
+-				<dict>
+-					<key>331C8080294A63A400263BE5</key>
+-					<dict>
+-						<key>CreatedOnToolsVersion</key>
+-						<string>14.0</string>
+-						<key>TestTargetID</key>
+-						<string>97C146ED1CF9000F007C117D</string>
+-					</dict>
+-					<key>97C146ED1CF9000F007C117D</key>
+-					<dict>
+-						<key>CreatedOnToolsVersion</key>
+-						<string>7.3.1</string>
+-						<key>LastSwiftMigration</key>
+-						<string>1100</string>
+-					</dict>
+-				</dict>
+-			</dict>
+-			<key>buildConfigurationList</key>
+-			<string>97C146E91CF9000F007C117D</string>
+-			<key>compatibilityVersion</key>
+-			<string>Xcode 9.3</string>
+-			<key>developmentRegion</key>
+-			<string>en</string>
+-			<key>hasScannedForEncodings</key>
+-			<string>0</string>
+-			<key>isa</key>
+-			<string>PBXProject</string>
+-			<key>knownRegions</key>
+-			<array>
+-				<string>en</string>
+-				<string>Base</string>
+-			</array>
+-			<key>mainGroup</key>
+-			<string>97C146E51CF9000F007C117D</string>
+-			<key>productRefGroup</key>
+-			<string>97C146EF1CF9000F007C117D</string>
+-			<key>projectDirPath</key>
+-			<string></string>
+-			<key>projectRoot</key>
+-			<string></string>
+-			<key>targets</key>
+-			<array>
+-				<string>97C146ED1CF9000F007C117D</string>
+-				<string>331C8080294A63A400263BE5</string>
+-			</array>
+-		</dict>
+-		<key>97C146E91CF9000F007C117D</key>
+-		<dict>
+-			<key>buildConfigurations</key>
+-			<array>
+-				<string>97C147031CF9000F007C117D</string>
+-				<string>97C147041CF9000F007C117D</string>
+-				<string>249021D3217E4FDB00AE95B9</string>
+-			</array>
+-			<key>defaultConfigurationIsVisible</key>
+-			<string>0</string>
+-			<key>defaultConfigurationName</key>
+-			<string>Release</string>
+-			<key>isa</key>
+-			<string>XCConfigurationList</string>
+-		</dict>
+-		<key>97C146EA1CF9000F007C117D</key>
+-		<dict>
+-			<key>buildActionMask</key>
+-			<string>2147483647</string>
+-			<key>files</key>
+-			<array>
+-				<string>74858FAF1ED2DC5600515810</string>
+-				<string>1498D2341E8E89220040F4C2</string>
+-			</array>
+-			<key>isa</key>
+-			<string>PBXSourcesBuildPhase</string>
+-			<key>runOnlyForDeploymentPostprocessing</key>
+-			<string>0</string>
+-		</dict>
+-		<key>97C146EB1CF9000F007C117D</key>
+-		<dict>
+-			<key>buildActionMask</key>
+-			<string>2147483647</string>
+-			<key>files</key>
+-			<array/>
+-			<key>isa</key>
+-			<string>PBXFrameworksBuildPhase</string>
+-			<key>runOnlyForDeploymentPostprocessing</key>
+-			<string>0</string>
+-		</dict>
+-		<key>97C146EC1CF9000F007C117D</key>
+-		<dict>
+-			<key>buildActionMask</key>
+-			<string>2147483647</string>
+-			<key>files</key>
+-			<array>
+-				<string>97C147011CF9000F007C117D</string>
+-				<string>3B3967161E833CAA004F5970</string>
+-				<string>97C146FE1CF9000F007C117D</string>
+-				<string>97C146FC1CF9000F007C117D</string>
+-			</array>
+-			<key>isa</key>
+-			<string>PBXResourcesBuildPhase</string>
+-			<key>runOnlyForDeploymentPostprocessing</key>
+-			<string>0</string>
+-		</dict>
+-		<key>97C146ED1CF9000F007C117D</key>
+-		<dict>
+-			<key>buildConfigurationList</key>
+-			<string>97C147051CF9000F007C117D</string>
+-			<key>buildPhases</key>
+-			<array>
+-				<string>9740EEB61CF901F6004384FC</string>
+-				<string>97C146EA1CF9000F007C117D</string>
+-				<string>97C146EB1CF9000F007C117D</string>
+-				<string>97C146EC1CF9000F007C117D</string>
+-				<string>9705A1C41CF9048500538489</string>
+-				<string>3B06AD1E1E4923F5004D2608</string>
+-			</array>
+-			<key>buildRules</key>
+-			<array/>
+-			<key>dependencies</key>
+-			<array/>
+-			<key>isa</key>
+-			<string>PBXNativeTarget</string>
+-			<key>name</key>
+-			<string>Runner</string>
+-			<key>productName</key>
+-			<string>Runner</string>
+-			<key>productReference</key>
+-			<string>97C146EE1CF9000F007C117D</string>
+-			<key>productType</key>
+-			<string>com.apple.product-type.application</string>
+-		</dict>
+-		<key>97C146EE1CF9000F007C117D</key>
+-		<dict>
+-			<key>explicitFileType</key>
+-			<string>wrapper.application</string>
+-			<key>includeInIndex</key>
+-			<string>0</string>
+-			<key>isa</key>
+-			<string>PBXFileReference</string>
+-			<key>path</key>
+-			<string>Runner.app</string>
+-			<key>sourceTree</key>
+-			<string>BUILT_PRODUCTS_DIR</string>
+-		</dict>
+-		<key>97C146EF1CF9000F007C117D</key>
+-		<dict>
+-			<key>children</key>
+-			<array>
+-				<string>97C146EE1CF9000F007C117D</string>
+-				<string>331C8081294A63A400263BE5</string>
+-			</array>
+-			<key>isa</key>
+-			<string>PBXGroup</string>
+-			<key>name</key>
+-			<string>Products</string>
+-			<key>sourceTree</key>
+-			<string>&lt;group&gt;</string>
+-		</dict>
+-		<key>97C146F01CF9000F007C117D</key>
+-		<dict>
+-			<key>children</key>
+-			<array>
+-				<string>97C146FA1CF9000F007C117D</string>
+-				<string>97C146FD1CF9000F007C117D</string>
+-				<string>97C146FF1CF9000F007C117D</string>
+-				<string>97C147021CF9000F007C117D</string>
+-				<string>1498D2321E8E86230040F4C2</string>
+-				<string>1498D2331E8E89220040F4C2</string>
+-				<string>74858FAE1ED2DC5600515810</string>
+-				<string>74858FAD1ED2DC5600515810</string>
+-			</array>
+-			<key>isa</key>
+-			<string>PBXGroup</string>
+-			<key>path</key>
+-			<string>Runner</string>
+-			<key>sourceTree</key>
+-			<string>&lt;group&gt;</string>
+-		</dict>
+-		<key>97C146FA1CF9000F007C117D</key>
+-		<dict>
+-			<key>children</key>
+-			<array>
+-				<string>97C146FB1CF9000F007C117D</string>
+-			</array>
+-			<key>isa</key>
+-			<string>PBXVariantGroup</string>
+-			<key>name</key>
+-			<string>Main.storyboard</string>
+-			<key>sourceTree</key>
+-			<string>&lt;group&gt;</string>
+-		</dict>
+-		<key>97C146FB1CF9000F007C117D</key>
+-		<dict>
+-			<key>isa</key>
+-			<string>PBXFileReference</string>
+-			<key>lastKnownFileType</key>
+-			<string>file.storyboard</string>
+-			<key>name</key>
+-			<string>Base</string>
+-			<key>path</key>
+-			<string>Base.lproj/Main.storyboard</string>
+-			<key>sourceTree</key>
+-			<string>&lt;group&gt;</string>
+-		</dict>
+-		<key>97C146FC1CF9000F007C117D</key>
+-		<dict>
+-			<key>fileRef</key>
+-			<string>97C146FA1CF9000F007C117D</string>
+-			<key>isa</key>
+-			<string>PBXBuildFile</string>
+-		</dict>
+-		<key>97C146FD1CF9000F007C117D</key>
+-		<dict>
+-			<key>isa</key>
+-			<string>PBXFileReference</string>
+-			<key>lastKnownFileType</key>
+-			<string>folder.assetcatalog</string>
+-			<key>path</key>
+-			<string>Assets.xcassets</string>
+-			<key>sourceTree</key>
+-			<string>&lt;group&gt;</string>
+-		</dict>
+-		<key>97C146FE1CF9000F007C117D</key>
+-		<dict>
+-			<key>fileRef</key>
+-			<string>97C146FD1CF9000F007C117D</string>
+-			<key>isa</key>
+-			<string>PBXBuildFile</string>
+-		</dict>
+-		<key>97C146FF1CF9000F007C117D</key>
+-		<dict>
+-			<key>children</key>
+-			<array>
+-				<string>97C147001CF9000F007C117D</string>
+-			</array>
+-			<key>isa</key>
+-			<string>PBXVariantGroup</string>
+-			<key>name</key>
+-			<string>LaunchScreen.storyboard</string>
+-			<key>sourceTree</key>
+-			<string>&lt;group&gt;</string>
+-		</dict>
+-		<key>97C147001CF9000F007C117D</key>
+-		<dict>
+-			<key>isa</key>
+-			<string>PBXFileReference</string>
+-			<key>lastKnownFileType</key>
+-			<string>file.storyboard</string>
+-			<key>name</key>
+-			<string>Base</string>
+-			<key>path</key>
+-			<string>Base.lproj/LaunchScreen.storyboard</string>
+-			<key>sourceTree</key>
+-			<string>&lt;group&gt;</string>
+-		</dict>
+-		<key>97C147011CF9000F007C117D</key>
+-		<dict>
+-			<key>fileRef</key>
+-			<string>97C146FF1CF9000F007C117D</string>
+-			<key>isa</key>
+-			<string>PBXBuildFile</string>
+-		</dict>
+-		<key>97C147021CF9000F007C117D</key>
+-		<dict>
+-			<key>isa</key>
+-			<string>PBXFileReference</string>
+-			<key>lastKnownFileType</key>
+-			<string>text.plist.xml</string>
+-			<key>path</key>
+-			<string>Info.plist</string>
+-			<key>sourceTree</key>
+-			<string>&lt;group&gt;</string>
+-		</dict>
+-		<key>97C147031CF9000F007C117D</key>
+-		<dict>
+-			<key>buildSettings</key>
+-			<dict>
+-				<key>ALWAYS_SEARCH_USER_PATHS</key>
+-				<string>NO</string>
+-				<key>CLANG_ANALYZER_NONNULL</key>
+-				<string>YES</string>
+-				<key>CLANG_CXX_LANGUAGE_STANDARD</key>
+-				<string>gnu++0x</string>
+-				<key>CLANG_CXX_LIBRARY</key>
+-				<string>libc++</string>
+-				<key>CLANG_ENABLE_MODULES</key>
+-				<string>YES</string>
+-				<key>CLANG_ENABLE_OBJC_ARC</key>
+-				<string>YES</string>
+-				<key>CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING</key>
+-				<string>YES</string>
+-				<key>CLANG_WARN_BOOL_CONVERSION</key>
+-				<string>YES</string>
+-				<key>CLANG_WARN_COMMA</key>
+-				<string>YES</string>
+-				<key>CLANG_WARN_CONSTANT_CONVERSION</key>
+-				<string>YES</string>
+-				<key>CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS</key>
+-				<string>YES</string>
+-				<key>CLANG_WARN_DIRECT_OBJC_ISA_USAGE</key>
+-				<string>YES_ERROR</string>
+-				<key>CLANG_WARN_EMPTY_BODY</key>
+-				<string>YES</string>
+-				<key>CLANG_WARN_ENUM_CONVERSION</key>
+-				<string>YES</string>
+-				<key>CLANG_WARN_INFINITE_RECURSION</key>
+-				<string>YES</string>
+-				<key>CLANG_WARN_INT_CONVERSION</key>
+-				<string>YES</string>
+-				<key>CLANG_WARN_NON_LITERAL_NULL_CONVERSION</key>
+-				<string>YES</string>
+-				<key>CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF</key>
+-				<string>YES</string>
+-				<key>CLANG_WARN_OBJC_LITERAL_CONVERSION</key>
+-				<string>YES</string>
+-				<key>CLANG_WARN_OBJC_ROOT_CLASS</key>
+-				<string>YES_ERROR</string>
+-				<key>CLANG_WARN_RANGE_LOOP_ANALYSIS</key>
+-				<string>YES</string>
+-				<key>CLANG_WARN_STRICT_PROTOTYPES</key>
+-				<string>YES</string>
+-				<key>CLANG_WARN_SUSPICIOUS_MOVE</key>
+-				<string>YES</string>
+-				<key>CLANG_WARN_UNREACHABLE_CODE</key>
+-				<string>YES</string>
+-				<key>CLANG_WARN__DUPLICATE_METHOD_MATCH</key>
+-				<string>YES</string>
+-				<key>CODE_SIGN_IDENTITY[sdk=iphoneos*]</key>
+-				<string>iPhone Developer</string>
+-				<key>COPY_PHASE_STRIP</key>
+-				<string>NO</string>
+-				<key>DEBUG_INFORMATION_FORMAT</key>
+-				<string>dwarf</string>
+-				<key>ENABLE_STRICT_OBJC_MSGSEND</key>
+-				<string>YES</string>
+-				<key>ENABLE_TESTABILITY</key>
+-				<string>YES</string>
+-				<key>GCC_C_LANGUAGE_STANDARD</key>
+-				<string>gnu99</string>
+-				<key>GCC_DYNAMIC_NO_PIC</key>
+-				<string>NO</string>
+-				<key>GCC_NO_COMMON_BLOCKS</key>
+-				<string>YES</string>
+-				<key>GCC_OPTIMIZATION_LEVEL</key>
+-				<string>0</string>
+-				<key>GCC_PREPROCESSOR_DEFINITIONS</key>
+-				<array>
+-					<string>DEBUG=1</string>
+-					<string>$(inherited)</string>
+-				</array>
+-				<key>GCC_WARN_64_TO_32_BIT_CONVERSION</key>
+-				<string>YES</string>
+-				<key>GCC_WARN_ABOUT_RETURN_TYPE</key>
+-				<string>YES_ERROR</string>
+-				<key>GCC_WARN_UNDECLARED_SELECTOR</key>
+-				<string>YES</string>
+-				<key>GCC_WARN_UNINITIALIZED_AUTOS</key>
+-				<string>YES_AGGRESSIVE</string>
+-				<key>GCC_WARN_UNUSED_FUNCTION</key>
+-				<string>YES</string>
+-				<key>GCC_WARN_UNUSED_VARIABLE</key>
+-				<string>YES</string>
+-				<key>IPHONEOS_DEPLOYMENT_TARGET</key>
+-				<string>11.0</string>
+-				<key>MTL_ENABLE_DEBUG_INFO</key>
+-				<string>YES</string>
+-				<key>ONLY_ACTIVE_ARCH</key>
+-				<string>YES</string>
+-				<key>SDKROOT</key>
+-				<string>iphoneos</string>
+-				<key>TARGETED_DEVICE_FAMILY</key>
+-				<string>1,2</string>
+-			</dict>
+-			<key>isa</key>
+-			<string>XCBuildConfiguration</string>
+-			<key>name</key>
+-			<string>Debug</string>
+-		</dict>
+-		<key>97C147041CF9000F007C117D</key>
+-		<dict>
+-			<key>buildSettings</key>
+-			<dict>
+-				<key>ALWAYS_SEARCH_USER_PATHS</key>
+-				<string>NO</string>
+-				<key>CLANG_ANALYZER_NONNULL</key>
+-				<string>YES</string>
+-				<key>CLANG_CXX_LANGUAGE_STANDARD</key>
+-				<string>gnu++0x</string>
+-				<key>CLANG_CXX_LIBRARY</key>
+-				<string>libc++</string>
+-				<key>CLANG_ENABLE_MODULES</key>
+-				<string>YES</string>
+-				<key>CLANG_ENABLE_OBJC_ARC</key>
+-				<string>YES</string>
+-				<key>CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING</key>
+-				<string>YES</string>
+-				<key>CLANG_WARN_BOOL_CONVERSION</key>
+-				<string>YES</string>
+-				<key>CLANG_WARN_COMMA</key>
+-				<string>YES</string>
+-				<key>CLANG_WARN_CONSTANT_CONVERSION</key>
+-				<string>YES</string>
+-				<key>CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS</key>
+-				<string>YES</string>
+-				<key>CLANG_WARN_DIRECT_OBJC_ISA_USAGE</key>
+-				<string>YES_ERROR</string>
+-				<key>CLANG_WARN_EMPTY_BODY</key>
+-				<string>YES</string>
+-				<key>CLANG_WARN_ENUM_CONVERSION</key>
+-				<string>YES</string>
+-				<key>CLANG_WARN_INFINITE_RECURSION</key>
+-				<string>YES</string>
+-				<key>CLANG_WARN_INT_CONVERSION</key>
+-				<string>YES</string>
+-				<key>CLANG_WARN_NON_LITERAL_NULL_CONVERSION</key>
+-				<string>YES</string>
+-				<key>CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF</key>
+-				<string>YES</string>
+-				<key>CLANG_WARN_OBJC_LITERAL_CONVERSION</key>
+-				<string>YES</string>
+-				<key>CLANG_WARN_OBJC_ROOT_CLASS</key>
+-				<string>YES_ERROR</string>
+-				<key>CLANG_WARN_RANGE_LOOP_ANALYSIS</key>
+-				<string>YES</string>
+-				<key>CLANG_WARN_STRICT_PROTOTYPES</key>
+-				<string>YES</string>
+-				<key>CLANG_WARN_SUSPICIOUS_MOVE</key>
+-				<string>YES</string>
+-				<key>CLANG_WARN_UNREACHABLE_CODE</key>
+-				<string>YES</string>
+-				<key>CLANG_WARN__DUPLICATE_METHOD_MATCH</key>
+-				<string>YES</string>
+-				<key>CODE_SIGN_IDENTITY[sdk=iphoneos*]</key>
+-				<string>iPhone Developer</string>
+-				<key>COPY_PHASE_STRIP</key>
+-				<string>NO</string>
+-				<key>DEBUG_INFORMATION_FORMAT</key>
+-				<string>dwarf-with-dsym</string>
+-				<key>ENABLE_NS_ASSERTIONS</key>
+-				<string>NO</string>
+-				<key>ENABLE_STRICT_OBJC_MSGSEND</key>
+-				<string>YES</string>
+-				<key>GCC_C_LANGUAGE_STANDARD</key>
+-				<string>gnu99</string>
+-				<key>GCC_NO_COMMON_BLOCKS</key>
+-				<string>YES</string>
+-				<key>GCC_WARN_64_TO_32_BIT_CONVERSION</key>
+-				<string>YES</string>
+-				<key>GCC_WARN_ABOUT_RETURN_TYPE</key>
+-				<string>YES_ERROR</string>
+-				<key>GCC_WARN_UNDECLARED_SELECTOR</key>
+-				<string>YES</string>
+-				<key>GCC_WARN_UNINITIALIZED_AUTOS</key>
+-				<string>YES_AGGRESSIVE</string>
+-				<key>GCC_WARN_UNUSED_FUNCTION</key>
+-				<string>YES</string>
+-				<key>GCC_WARN_UNUSED_VARIABLE</key>
+-				<string>YES</string>
+-				<key>IPHONEOS_DEPLOYMENT_TARGET</key>
+-				<string>11.0</string>
+-				<key>MTL_ENABLE_DEBUG_INFO</key>
+-				<string>NO</string>
+-				<key>SDKROOT</key>
+-				<string>iphoneos</string>
+-				<key>SUPPORTED_PLATFORMS</key>
+-				<string>iphoneos</string>
+-				<key>SWIFT_COMPILATION_MODE</key>
+-				<string>wholemodule</string>
+-				<key>SWIFT_OPTIMIZATION_LEVEL</key>
+-				<string>-O</string>
+-				<key>TARGETED_DEVICE_FAMILY</key>
+-				<string>1,2</string>
+-				<key>VALIDATE_PRODUCT</key>
+-				<string>YES</string>
+-			</dict>
+-			<key>isa</key>
+-			<string>XCBuildConfiguration</string>
+-			<key>name</key>
+-			<string>Release</string>
+-		</dict>
+-		<key>97C147051CF9000F007C117D</key>
+-		<dict>
+-			<key>buildConfigurations</key>
+-			<array>
+-				<string>97C147061CF9000F007C117D</string>
+-				<string>97C147071CF9000F007C117D</string>
+-				<string>249021D4217E4FDB00AE95B9</string>
+-			</array>
+-			<key>defaultConfigurationIsVisible</key>
+-			<string>0</string>
+-			<key>defaultConfigurationName</key>
+-			<string>Release</string>
+-			<key>isa</key>
+-			<string>XCConfigurationList</string>
+-		</dict>
+-		<key>97C147061CF9000F007C117D</key>
+-		<dict>
+-			<key>baseConfigurationReference</key>
+-			<string>9740EEB21CF90195004384FC</string>
+-			<key>buildSettings</key>
+-			<dict>
+-				<key>ASSETCATALOG_COMPILER_APPICON_NAME</key>
+-				<string>AppIcon</string>
+-				<key>CLANG_ENABLE_MODULES</key>
+-				<string>YES</string>
+-				<key>CURRENT_PROJECT_VERSION</key>
+-				<string>$(FLUTTER_BUILD_NUMBER)</string>
+-				<key>ENABLE_BITCODE</key>
+-				<string>NO</string>
+-				<key>INFOPLIST_FILE</key>
+-				<string>Runner/Info.plist</string>
+-				<key>LD_RUNPATH_SEARCH_PATHS</key>
+-				<array>
+-					<string>$(inherited)</string>
+-					<string>@executable_path/Frameworks</string>
+-				</array>
+-				<key>PRODUCT_BUNDLE_IDENTIFIER</key>
+-				<string>com.ccshambots.shamScoutMobile</string>
+-				<key>PRODUCT_NAME</key>
+-				<string>$(TARGET_NAME)</string>
+-				<key>SWIFT_OBJC_BRIDGING_HEADER</key>
+-				<string>Runner/Runner-Bridging-Header.h</string>
+-				<key>SWIFT_OPTIMIZATION_LEVEL</key>
+-				<string>-Onone</string>
+-				<key>SWIFT_VERSION</key>
+-				<string>5.0</string>
+-				<key>VERSIONING_SYSTEM</key>
+-				<string>apple-generic</string>
+-			</dict>
+-			<key>isa</key>
+-			<string>XCBuildConfiguration</string>
+-			<key>name</key>
+-			<string>Debug</string>
+-		</dict>
+-		<key>97C147071CF9000F007C117D</key>
+-		<dict>
+-			<key>baseConfigurationReference</key>
+-			<string>7AFA3C8E1D35360C0083082E</string>
+-			<key>buildSettings</key>
+-			<dict>
+-				<key>ASSETCATALOG_COMPILER_APPICON_NAME</key>
+-				<string>AppIcon</string>
+-				<key>CLANG_ENABLE_MODULES</key>
+-				<string>YES</string>
+-				<key>CURRENT_PROJECT_VERSION</key>
+-				<string>$(FLUTTER_BUILD_NUMBER)</string>
+-				<key>ENABLE_BITCODE</key>
+-				<string>NO</string>
+-				<key>INFOPLIST_FILE</key>
+-				<string>Runner/Info.plist</string>
+-				<key>LD_RUNPATH_SEARCH_PATHS</key>
+-				<array>
+-					<string>$(inherited)</string>
+-					<string>@executable_path/Frameworks</string>
+-				</array>
+-				<key>PRODUCT_BUNDLE_IDENTIFIER</key>
+-				<string>com.ccshambots.shamScoutMobile</string>
+-				<key>PRODUCT_NAME</key>
+-				<string>$(TARGET_NAME)</string>
+-				<key>SWIFT_OBJC_BRIDGING_HEADER</key>
+-				<string>Runner/Runner-Bridging-Header.h</string>
+-				<key>SWIFT_VERSION</key>
+-				<string>5.0</string>
+-				<key>VERSIONING_SYSTEM</key>
+-				<string>apple-generic</string>
+-			</dict>
+-			<key>isa</key>
+-			<string>XCBuildConfiguration</string>
+-			<key>name</key>
+-			<string>Release</string>
+-		</dict>
+-	</dict>
+-	<key>rootObject</key>
+-	<string>97C146E61CF9000F007C117D</string>
+-</dict>
+-</plist>
+diff --git a/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-1024x1024@1x.png b/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-1024x1024@1x.png
+index 613ba7d..dc9ada4 100644
+Binary files a/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-1024x1024@1x.png and b/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-1024x1024@1x.png differ
+diff --git a/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-20x20@1x.png b/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-20x20@1x.png
+index 641f07b..7353c41 100644
+Binary files a/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-20x20@1x.png and b/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-20x20@1x.png differ
+diff --git a/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-20x20@2x.png b/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-20x20@2x.png
+index 0b139b0..797d452 100644
+Binary files a/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-20x20@2x.png and b/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-20x20@2x.png differ
+diff --git a/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-20x20@3x.png b/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-20x20@3x.png
+index 6e78b9c..6ed2d93 100644
+Binary files a/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-20x20@3x.png and b/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-20x20@3x.png differ
+diff --git a/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-29x29@1x.png b/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-29x29@1x.png
+index 91ff92e..4cd7b00 100644
+Binary files a/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-29x29@1x.png and b/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-29x29@1x.png differ
+diff --git a/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-29x29@2x.png b/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-29x29@2x.png
+index 022e194..fe73094 100644
+Binary files a/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-29x29@2x.png and b/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-29x29@2x.png differ
+diff --git a/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-29x29@3x.png b/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-29x29@3x.png
+index b201469..321773c 100644
+Binary files a/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-29x29@3x.png and b/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-29x29@3x.png differ
+diff --git a/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-40x40@1x.png b/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-40x40@1x.png
+index 0b139b0..797d452 100644
+Binary files a/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-40x40@1x.png and b/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-40x40@1x.png differ
+diff --git a/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-40x40@2x.png b/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-40x40@2x.png
+index d4869de..502f463 100644
+Binary files a/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-40x40@2x.png and b/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-40x40@2x.png differ
+diff --git a/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-40x40@3x.png b/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-40x40@3x.png
+index 7f780a2..0ec3034 100644
+Binary files a/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-40x40@3x.png and b/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-40x40@3x.png differ
+diff --git a/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-50x50@1x.png b/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-50x50@1x.png
+deleted file mode 100644
+index 98b36d2..0000000
+Binary files a/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-50x50@1x.png and /dev/null differ
+diff --git a/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-50x50@2x.png b/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-50x50@2x.png
+deleted file mode 100644
+index 4192b65..0000000
+Binary files a/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-50x50@2x.png and /dev/null differ
+diff --git a/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-57x57@1x.png b/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-57x57@1x.png
+deleted file mode 100644
+index f5eace7..0000000
+Binary files a/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-57x57@1x.png and /dev/null differ
+diff --git a/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-57x57@2x.png b/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-57x57@2x.png
+deleted file mode 100644
+index 0ba42cb..0000000
+Binary files a/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-57x57@2x.png and /dev/null differ
+diff --git a/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-60x60@2x.png b/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-60x60@2x.png
+index 7f780a2..0ec3034 100644
+Binary files a/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-60x60@2x.png and b/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-60x60@2x.png differ
+diff --git a/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-60x60@3x.png b/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-60x60@3x.png
+index 2ad3763..e9f5fea 100644
+Binary files a/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-60x60@3x.png and b/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-60x60@3x.png differ
+diff --git a/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-72x72@1x.png b/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-72x72@1x.png
+deleted file mode 100644
+index c49a9cd..0000000
+Binary files a/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-72x72@1x.png and /dev/null differ
+diff --git a/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-72x72@2x.png b/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-72x72@2x.png
+deleted file mode 100644
+index f116084..0000000
+Binary files a/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-72x72@2x.png and /dev/null differ
+diff --git a/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-76x76@1x.png b/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-76x76@1x.png
+index b961a69..84ac32a 100644
+Binary files a/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-76x76@1x.png and b/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-76x76@1x.png differ
+diff --git a/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-76x76@2x.png b/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-76x76@2x.png
+index 3b1394a..8953cba 100644
+Binary files a/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-76x76@2x.png and b/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-76x76@2x.png differ
+diff --git a/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-83.5x83.5@2x.png b/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-83.5x83.5@2x.png
+index b8f8db2..0467bf1 100644
+Binary files a/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-83.5x83.5@2x.png and b/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-83.5x83.5@2x.png differ
+diff --git a/ios/Runner/Info.plist b/ios/Runner/Info.plist
+index dfa0fbe..c2e05c5 100644
+--- a/ios/Runner/Info.plist
++++ b/ios/Runner/Info.plist
+@@ -2,12 +2,10 @@
+ <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+ <plist version="1.0">
+ <dict>
+-	<key>CADisableMinimumFrameDurationOnPhone</key>
+-	<true/>
+ 	<key>CFBundleDevelopmentRegion</key>
+ 	<string>$(DEVELOPMENT_LANGUAGE)</string>
+ 	<key>CFBundleDisplayName</key>
+-	<string>Sham Scout Mobile</string>
++	<string>App</string>
+ 	<key>CFBundleExecutable</key>
+ 	<string>$(EXECUTABLE_NAME)</string>
+ 	<key>CFBundleIdentifier</key>
+@@ -15,7 +13,7 @@
+ 	<key>CFBundleInfoDictionaryVersion</key>
+ 	<string>6.0</string>
+ 	<key>CFBundleName</key>
+-	<string>sham_scout_mobile</string>
++	<string>app</string>
+ 	<key>CFBundlePackageType</key>
+ 	<string>APPL</string>
+ 	<key>CFBundleShortVersionString</key>
+@@ -26,10 +24,6 @@
+ 	<string>$(FLUTTER_BUILD_NUMBER)</string>
+ 	<key>LSRequiresIPhoneOS</key>
+ 	<true/>
+-	<key>NSCameraUsageDescription</key>
+-	<string>This app needs camera access to scan QR codes</string>
+-	<key>UIApplicationSupportsIndirectInputEvents</key>
+-	<true/>
+ 	<key>UILaunchStoryboardName</key>
+ 	<string>LaunchScreen</string>
+ 	<key>UIMainStoryboardFile</key>
+@@ -37,15 +31,19 @@
+ 	<key>UISupportedInterfaceOrientations</key>
+ 	<array>
+ 		<string>UIInterfaceOrientationPortrait</string>
++		<string>UIInterfaceOrientationLandscapeLeft</string>
++		<string>UIInterfaceOrientationLandscapeRight</string>
+ 	</array>
+ 	<key>UISupportedInterfaceOrientations~ipad</key>
+ 	<array>
+-		<string>UIInterfaceOrientationLandscapeLeft</string>
+-		<string>UIInterfaceOrientationLandscapeRight</string>
+ 		<string>UIInterfaceOrientationPortrait</string>
+ 		<string>UIInterfaceOrientationPortraitUpsideDown</string>
++		<string>UIInterfaceOrientationLandscapeLeft</string>
++		<string>UIInterfaceOrientationLandscapeRight</string>
+ 	</array>
+-	<key>UIViewControllerBasedStatusBarAppearance</key>
+-	<false/>
++	<key>CADisableMinimumFrameDurationOnPhone</key>
++	<true/>
++	<key>UIApplicationSupportsIndirectInputEvents</key>
++	<true/>
+ </dict>
+ </plist>
+diff --git a/linux/.gitignore b/linux/.gitignore
+new file mode 100644
+index 0000000..d3896c9
+--- /dev/null
++++ b/linux/.gitignore
+@@ -0,0 +1 @@
++flutter/ephemeral
+diff --git a/linux/CMakeLists.txt b/linux/CMakeLists.txt
+new file mode 100644
+index 0000000..e1a58c7
+--- /dev/null
++++ b/linux/CMakeLists.txt
+@@ -0,0 +1,145 @@
++# Project-level configuration.
++cmake_minimum_required(VERSION 3.10)
++project(runner LANGUAGES CXX)
++
++# The name of the executable created for the application. Change this to change
++# the on-disk name of your application.
++set(BINARY_NAME "app")
++# The unique GTK application identifier for this application. See:
++# https://wiki.gnome.org/HowDoI/ChooseApplicationID
++set(APPLICATION_ID "com.ccshambots.app")
++
++# Explicitly opt in to modern CMake behaviors to avoid warnings with recent
++# versions of CMake.
++cmake_policy(SET CMP0063 NEW)
++
++# Load bundled libraries from the lib/ directory relative to the binary.
++set(CMAKE_INSTALL_RPATH "$ORIGIN/lib")
++
++# Root filesystem for cross-building.
++if(FLUTTER_TARGET_PLATFORM_SYSROOT)
++  set(CMAKE_SYSROOT ${FLUTTER_TARGET_PLATFORM_SYSROOT})
++  set(CMAKE_FIND_ROOT_PATH ${CMAKE_SYSROOT})
++  set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
++  set(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE ONLY)
++  set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
++  set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
++endif()
++
++# Define build configuration options.
++if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
++  set(CMAKE_BUILD_TYPE "Debug" CACHE
++    STRING "Flutter build mode" FORCE)
++  set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS
++    "Debug" "Profile" "Release")
++endif()
++
++# Compilation settings that should be applied to most targets.
++#
++# Be cautious about adding new options here, as plugins use this function by
++# default. In most cases, you should add new options to specific targets instead
++# of modifying this function.
++function(APPLY_STANDARD_SETTINGS TARGET)
++  target_compile_features(${TARGET} PUBLIC cxx_std_14)
++  target_compile_options(${TARGET} PRIVATE -Wall -Werror)
++  target_compile_options(${TARGET} PRIVATE "$<$<NOT:$<CONFIG:Debug>>:-O3>")
++  target_compile_definitions(${TARGET} PRIVATE "$<$<NOT:$<CONFIG:Debug>>:NDEBUG>")
++endfunction()
++
++# Flutter library and tool build rules.
++set(FLUTTER_MANAGED_DIR "${CMAKE_CURRENT_SOURCE_DIR}/flutter")
++add_subdirectory(${FLUTTER_MANAGED_DIR})
++
++# System-level dependencies.
++find_package(PkgConfig REQUIRED)
++pkg_check_modules(GTK REQUIRED IMPORTED_TARGET gtk+-3.0)
++
++add_definitions(-DAPPLICATION_ID="${APPLICATION_ID}")
++
++# Define the application target. To change its name, change BINARY_NAME above,
++# not the value here, or `flutter run` will no longer work.
++#
++# Any new source files that you add to the application should be added here.
++add_executable(${BINARY_NAME}
++  "main.cc"
++  "my_application.cc"
++  "${FLUTTER_MANAGED_DIR}/generated_plugin_registrant.cc"
++)
++
++# Apply the standard set of build settings. This can be removed for applications
++# that need different build settings.
++apply_standard_settings(${BINARY_NAME})
++
++# Add dependency libraries. Add any application-specific dependencies here.
++target_link_libraries(${BINARY_NAME} PRIVATE flutter)
++target_link_libraries(${BINARY_NAME} PRIVATE PkgConfig::GTK)
++
++# Run the Flutter tool portions of the build. This must not be removed.
++add_dependencies(${BINARY_NAME} flutter_assemble)
++
++# Only the install-generated bundle's copy of the executable will launch
++# correctly, since the resources must in the right relative locations. To avoid
++# people trying to run the unbundled copy, put it in a subdirectory instead of
++# the default top-level location.
++set_target_properties(${BINARY_NAME}
++  PROPERTIES
++  RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/intermediates_do_not_run"
++)
++
++
++# Generated plugin build rules, which manage building the plugins and adding
++# them to the application.
++include(flutter/generated_plugins.cmake)
++
++
++# === Installation ===
++# By default, "installing" just makes a relocatable bundle in the build
++# directory.
++set(BUILD_BUNDLE_DIR "${PROJECT_BINARY_DIR}/bundle")
++if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
++  set(CMAKE_INSTALL_PREFIX "${BUILD_BUNDLE_DIR}" CACHE PATH "..." FORCE)
++endif()
++
++# Start with a clean build bundle directory every time.
++install(CODE "
++  file(REMOVE_RECURSE \"${BUILD_BUNDLE_DIR}/\")
++  " COMPONENT Runtime)
++
++set(INSTALL_BUNDLE_DATA_DIR "${CMAKE_INSTALL_PREFIX}/data")
++set(INSTALL_BUNDLE_LIB_DIR "${CMAKE_INSTALL_PREFIX}/lib")
++
++install(TARGETS ${BINARY_NAME} RUNTIME DESTINATION "${CMAKE_INSTALL_PREFIX}"
++  COMPONENT Runtime)
++
++install(FILES "${FLUTTER_ICU_DATA_FILE}" DESTINATION "${INSTALL_BUNDLE_DATA_DIR}"
++  COMPONENT Runtime)
++
++install(FILES "${FLUTTER_LIBRARY}" DESTINATION "${INSTALL_BUNDLE_LIB_DIR}"
++  COMPONENT Runtime)
++
++foreach(bundled_library ${PLUGIN_BUNDLED_LIBRARIES})
++  install(FILES "${bundled_library}"
++    DESTINATION "${INSTALL_BUNDLE_LIB_DIR}"
++    COMPONENT Runtime)
++endforeach(bundled_library)
++
++# Copy the native assets provided by the build.dart from all packages.
++set(NATIVE_ASSETS_DIR "${PROJECT_BUILD_DIR}native_assets/linux/")
++install(DIRECTORY "${NATIVE_ASSETS_DIR}"
++   DESTINATION "${INSTALL_BUNDLE_LIB_DIR}"
++   COMPONENT Runtime)
++
++# Fully re-copy the assets directory on each build to avoid having stale files
++# from a previous install.
++set(FLUTTER_ASSET_DIR_NAME "flutter_assets")
++install(CODE "
++  file(REMOVE_RECURSE \"${INSTALL_BUNDLE_DATA_DIR}/${FLUTTER_ASSET_DIR_NAME}\")
++  " COMPONENT Runtime)
++install(DIRECTORY "${PROJECT_BUILD_DIR}/${FLUTTER_ASSET_DIR_NAME}"
++  DESTINATION "${INSTALL_BUNDLE_DATA_DIR}" COMPONENT Runtime)
++
++# Install the AOT library on non-Debug builds only.
++if(NOT CMAKE_BUILD_TYPE MATCHES "Debug")
++  install(FILES "${AOT_LIBRARY}" DESTINATION "${INSTALL_BUNDLE_LIB_DIR}"
++    COMPONENT Runtime)
++endif()
+diff --git a/linux/flutter/CMakeLists.txt b/linux/flutter/CMakeLists.txt
+new file mode 100644
+index 0000000..d5bd016
+--- /dev/null
++++ b/linux/flutter/CMakeLists.txt
+@@ -0,0 +1,88 @@
++# This file controls Flutter-level build steps. It should not be edited.
++cmake_minimum_required(VERSION 3.10)
++
++set(EPHEMERAL_DIR "${CMAKE_CURRENT_SOURCE_DIR}/ephemeral")
++
++# Configuration provided via flutter tool.
++include(${EPHEMERAL_DIR}/generated_config.cmake)
++
++# TODO: Move the rest of this into files in ephemeral. See
++# https://github.com/flutter/flutter/issues/57146.
++
++# Serves the same purpose as list(TRANSFORM ... PREPEND ...),
++# which isn't available in 3.10.
++function(list_prepend LIST_NAME PREFIX)
++    set(NEW_LIST "")
++    foreach(element ${${LIST_NAME}})
++        list(APPEND NEW_LIST "${PREFIX}${element}")
++    endforeach(element)
++    set(${LIST_NAME} "${NEW_LIST}" PARENT_SCOPE)
++endfunction()
++
++# === Flutter Library ===
++# System-level dependencies.
++find_package(PkgConfig REQUIRED)
++pkg_check_modules(GTK REQUIRED IMPORTED_TARGET gtk+-3.0)
++pkg_check_modules(GLIB REQUIRED IMPORTED_TARGET glib-2.0)
++pkg_check_modules(GIO REQUIRED IMPORTED_TARGET gio-2.0)
++
++set(FLUTTER_LIBRARY "${EPHEMERAL_DIR}/libflutter_linux_gtk.so")
++
++# Published to parent scope for install step.
++set(FLUTTER_LIBRARY ${FLUTTER_LIBRARY} PARENT_SCOPE)
++set(FLUTTER_ICU_DATA_FILE "${EPHEMERAL_DIR}/icudtl.dat" PARENT_SCOPE)
++set(PROJECT_BUILD_DIR "${PROJECT_DIR}/build/" PARENT_SCOPE)
++set(AOT_LIBRARY "${PROJECT_DIR}/build/lib/libapp.so" PARENT_SCOPE)
++
++list(APPEND FLUTTER_LIBRARY_HEADERS
++  "fl_basic_message_channel.h"
++  "fl_binary_codec.h"
++  "fl_binary_messenger.h"
++  "fl_dart_project.h"
++  "fl_engine.h"
++  "fl_json_message_codec.h"
++  "fl_json_method_codec.h"
++  "fl_message_codec.h"
++  "fl_method_call.h"
++  "fl_method_channel.h"
++  "fl_method_codec.h"
++  "fl_method_response.h"
++  "fl_plugin_registrar.h"
++  "fl_plugin_registry.h"
++  "fl_standard_message_codec.h"
++  "fl_standard_method_codec.h"
++  "fl_string_codec.h"
++  "fl_value.h"
++  "fl_view.h"
++  "flutter_linux.h"
++)
++list_prepend(FLUTTER_LIBRARY_HEADERS "${EPHEMERAL_DIR}/flutter_linux/")
++add_library(flutter INTERFACE)
++target_include_directories(flutter INTERFACE
++  "${EPHEMERAL_DIR}"
++)
++target_link_libraries(flutter INTERFACE "${FLUTTER_LIBRARY}")
++target_link_libraries(flutter INTERFACE
++  PkgConfig::GTK
++  PkgConfig::GLIB
++  PkgConfig::GIO
++)
++add_dependencies(flutter flutter_assemble)
++
++# === Flutter tool backend ===
++# _phony_ is a non-existent file to force this command to run every time,
++# since currently there's no way to get a full input/output list from the
++# flutter tool.
++add_custom_command(
++  OUTPUT ${FLUTTER_LIBRARY} ${FLUTTER_LIBRARY_HEADERS}
++    ${CMAKE_CURRENT_BINARY_DIR}/_phony_
++  COMMAND ${CMAKE_COMMAND} -E env
++    ${FLUTTER_TOOL_ENVIRONMENT}
++    "${FLUTTER_ROOT}/packages/flutter_tools/bin/tool_backend.sh"
++      ${FLUTTER_TARGET_PLATFORM} ${CMAKE_BUILD_TYPE}
++  VERBATIM
++)
++add_custom_target(flutter_assemble DEPENDS
++  "${FLUTTER_LIBRARY}"
++  ${FLUTTER_LIBRARY_HEADERS}
++)
+diff --git a/linux/flutter/generated_plugin_registrant.cc b/linux/flutter/generated_plugin_registrant.cc
+new file mode 100644
+index 0000000..e71a16d
+--- /dev/null
++++ b/linux/flutter/generated_plugin_registrant.cc
+@@ -0,0 +1,11 @@
++//
++//  Generated file. Do not edit.
++//
++
++// clang-format off
++
++#include "generated_plugin_registrant.h"
++
++
++void fl_register_plugins(FlPluginRegistry* registry) {
++}
+diff --git a/linux/flutter/generated_plugin_registrant.h b/linux/flutter/generated_plugin_registrant.h
+new file mode 100644
+index 0000000..e0f0a47
+--- /dev/null
++++ b/linux/flutter/generated_plugin_registrant.h
+@@ -0,0 +1,15 @@
++//
++//  Generated file. Do not edit.
++//
++
++// clang-format off
++
++#ifndef GENERATED_PLUGIN_REGISTRANT_
++#define GENERATED_PLUGIN_REGISTRANT_
++
++#include <flutter_linux/flutter_linux.h>
++
++// Registers Flutter plugins.
++void fl_register_plugins(FlPluginRegistry* registry);
++
++#endif  // GENERATED_PLUGIN_REGISTRANT_
+diff --git a/linux/flutter/generated_plugins.cmake b/linux/flutter/generated_plugins.cmake
+new file mode 100644
+index 0000000..2e1de87
+--- /dev/null
++++ b/linux/flutter/generated_plugins.cmake
+@@ -0,0 +1,23 @@
++#
++# Generated file, do not edit.
++#
++
++list(APPEND FLUTTER_PLUGIN_LIST
++)
++
++list(APPEND FLUTTER_FFI_PLUGIN_LIST
++)
++
++set(PLUGIN_BUNDLED_LIBRARIES)
++
++foreach(plugin ${FLUTTER_PLUGIN_LIST})
++  add_subdirectory(flutter/ephemeral/.plugin_symlinks/${plugin}/linux plugins/${plugin})
++  target_link_libraries(${BINARY_NAME} PRIVATE ${plugin}_plugin)
++  list(APPEND PLUGIN_BUNDLED_LIBRARIES $<TARGET_FILE:${plugin}_plugin>)
++  list(APPEND PLUGIN_BUNDLED_LIBRARIES ${${plugin}_bundled_libraries})
++endforeach(plugin)
++
++foreach(ffi_plugin ${FLUTTER_FFI_PLUGIN_LIST})
++  add_subdirectory(flutter/ephemeral/.plugin_symlinks/${ffi_plugin}/linux plugins/${ffi_plugin})
++  list(APPEND PLUGIN_BUNDLED_LIBRARIES ${${ffi_plugin}_bundled_libraries})
++endforeach(ffi_plugin)
+diff --git a/linux/main.cc b/linux/main.cc
+new file mode 100644
+index 0000000..e7c5c54
+--- /dev/null
++++ b/linux/main.cc
+@@ -0,0 +1,6 @@
++#include "my_application.h"
++
++int main(int argc, char** argv) {
++  g_autoptr(MyApplication) app = my_application_new();
++  return g_application_run(G_APPLICATION(app), argc, argv);
++}
+diff --git a/linux/my_application.cc b/linux/my_application.cc
+new file mode 100644
+index 0000000..42d9b08
+--- /dev/null
++++ b/linux/my_application.cc
+@@ -0,0 +1,104 @@
++#include "my_application.h"
++
++#include <flutter_linux/flutter_linux.h>
++#ifdef GDK_WINDOWING_X11
++#include <gdk/gdkx.h>
++#endif
++
++#include "flutter/generated_plugin_registrant.h"
++
++struct _MyApplication {
++  GtkApplication parent_instance;
++  char** dart_entrypoint_arguments;
++};
++
++G_DEFINE_TYPE(MyApplication, my_application, GTK_TYPE_APPLICATION)
++
++// Implements GApplication::activate.
++static void my_application_activate(GApplication* application) {
++  MyApplication* self = MY_APPLICATION(application);
++  GtkWindow* window =
++      GTK_WINDOW(gtk_application_window_new(GTK_APPLICATION(application)));
++
++  // Use a header bar when running in GNOME as this is the common style used
++  // by applications and is the setup most users will be using (e.g. Ubuntu
++  // desktop).
++  // If running on X and not using GNOME then just use a traditional title bar
++  // in case the window manager does more exotic layout, e.g. tiling.
++  // If running on Wayland assume the header bar will work (may need changing
++  // if future cases occur).
++  gboolean use_header_bar = TRUE;
++#ifdef GDK_WINDOWING_X11
++  GdkScreen* screen = gtk_window_get_screen(window);
++  if (GDK_IS_X11_SCREEN(screen)) {
++    const gchar* wm_name = gdk_x11_screen_get_window_manager_name(screen);
++    if (g_strcmp0(wm_name, "GNOME Shell") != 0) {
++      use_header_bar = FALSE;
++    }
++  }
++#endif
++  if (use_header_bar) {
++    GtkHeaderBar* header_bar = GTK_HEADER_BAR(gtk_header_bar_new());
++    gtk_widget_show(GTK_WIDGET(header_bar));
++    gtk_header_bar_set_title(header_bar, "app");
++    gtk_header_bar_set_show_close_button(header_bar, TRUE);
++    gtk_window_set_titlebar(window, GTK_WIDGET(header_bar));
++  } else {
++    gtk_window_set_title(window, "app");
++  }
++
++  gtk_window_set_default_size(window, 1280, 720);
++  gtk_widget_show(GTK_WIDGET(window));
++
++  g_autoptr(FlDartProject) project = fl_dart_project_new();
++  fl_dart_project_set_dart_entrypoint_arguments(project, self->dart_entrypoint_arguments);
++
++  FlView* view = fl_view_new(project);
++  gtk_widget_show(GTK_WIDGET(view));
++  gtk_container_add(GTK_CONTAINER(window), GTK_WIDGET(view));
++
++  fl_register_plugins(FL_PLUGIN_REGISTRY(view));
++
++  gtk_widget_grab_focus(GTK_WIDGET(view));
++}
++
++// Implements GApplication::local_command_line.
++static gboolean my_application_local_command_line(GApplication* application, gchar*** arguments, int* exit_status) {
++  MyApplication* self = MY_APPLICATION(application);
++  // Strip out the first argument as it is the binary name.
++  self->dart_entrypoint_arguments = g_strdupv(*arguments + 1);
++
++  g_autoptr(GError) error = nullptr;
++  if (!g_application_register(application, nullptr, &error)) {
++     g_warning("Failed to register: %s", error->message);
++     *exit_status = 1;
++     return TRUE;
++  }
++
++  g_application_activate(application);
++  *exit_status = 0;
++
++  return TRUE;
++}
++
++// Implements GObject::dispose.
++static void my_application_dispose(GObject* object) {
++  MyApplication* self = MY_APPLICATION(object);
++  g_clear_pointer(&self->dart_entrypoint_arguments, g_strfreev);
++  G_OBJECT_CLASS(my_application_parent_class)->dispose(object);
++}
++
++static void my_application_class_init(MyApplicationClass* klass) {
++  G_APPLICATION_CLASS(klass)->activate = my_application_activate;
++  G_APPLICATION_CLASS(klass)->local_command_line = my_application_local_command_line;
++  G_OBJECT_CLASS(klass)->dispose = my_application_dispose;
++}
++
++static void my_application_init(MyApplication* self) {}
++
++MyApplication* my_application_new() {
++  return MY_APPLICATION(g_object_new(my_application_get_type(),
++                                     "application-id", APPLICATION_ID,
++                                     "flags", G_APPLICATION_NON_UNIQUE,
++                                     nullptr));
++}
+diff --git a/linux/my_application.h b/linux/my_application.h
+new file mode 100644
+index 0000000..72271d5
+--- /dev/null
++++ b/linux/my_application.h
+@@ -0,0 +1,18 @@
++#ifndef FLUTTER_MY_APPLICATION_H_
++#define FLUTTER_MY_APPLICATION_H_
++
++#include <gtk/gtk.h>
++
++G_DECLARE_FINAL_TYPE(MyApplication, my_application, MY, APPLICATION,
++                     GtkApplication)
++
++/**
++ * my_application_new:
++ *
++ * Creates a new Flutter-based application.
++ *
++ * Returns: a new #MyApplication.
++ */
++MyApplication* my_application_new();
++
++#endif  // FLUTTER_MY_APPLICATION_H_
+diff --git a/pubspec.lock b/pubspec.lock
+index ca65e6d..273bf1e 100644
+--- a/pubspec.lock
++++ b/pubspec.lock
+@@ -69,10 +69,10 @@ packages:
+     dependency: transitive
+     description:
+       name: collection
+-      sha256: f092b211a4319e98e5ff58223576de6c2803db36221657b46c82574721240687
++      sha256: ee67cb0715911d28db6bf4af1026078bd6f0128b07a5f66fb2ed94ec6783c09a
+       url: "https://pub.dev"
+     source: hosted
+-    version: "1.17.2"
++    version: "1.18.0"
+   convert:
+     dependency: transitive
+     description:
+@@ -244,10 +244,10 @@ packages:
+     dependency: transitive
+     description:
+       name: meta
+-      sha256: "3c74dbf8763d36539f114c799d8a2d87343b5067e9d796ca22b5eb8437090ee3"
++      sha256: a6e590c838b18133bb482a2745ad77c5bb7715fb0451209e1a7567d416678b8e
+       url: "https://pub.dev"
+     source: hosted
+-    version: "1.9.1"
++    version: "1.10.0"
+   mobile_scanner:
+     dependency: "direct main"
+     description:
+@@ -513,18 +513,18 @@ packages:
+     dependency: transitive
+     description:
+       name: stack_trace
+-      sha256: c3c7d8edb15bee7f0f74debd4b9c5f3c2ea86766fe4178eb2a18eb30a0bdaed5
++      sha256: "73713990125a6d93122541237550ee3352a2d84baad52d375a4cad2eb9b7ce0b"
+       url: "https://pub.dev"
+     source: hosted
+-    version: "1.11.0"
++    version: "1.11.1"
+   stream_channel:
+     dependency: transitive
+     description:
+       name: stream_channel
+-      sha256: "83615bee9045c1d322bbbd1ba209b7a749c2cbcdcb3fdd1df8eb488b3279c1c8"
++      sha256: ba2aa5d8cc609d96bbb2899c28934f9e1af5cddbd60a827822ea467161eb54e7
+       url: "https://pub.dev"
+     source: hosted
+-    version: "2.1.1"
++    version: "2.1.2"
+   string_scanner:
+     dependency: transitive
+     description:
+@@ -545,10 +545,10 @@ packages:
+     dependency: transitive
+     description:
+       name: test_api
+-      sha256: "75760ffd7786fffdfb9597c35c5b27eaeec82be8edfb6d71d32651128ed7aab8"
++      sha256: "5c2f730018264d276c20e4f1503fd1308dfbbae39ec8ee63c5236311ac06954b"
+       url: "https://pub.dev"
+     source: hosted
+-    version: "0.6.0"
++    version: "0.6.1"
+   typed_data:
+     dependency: transitive
+     description:
+@@ -577,10 +577,10 @@ packages:
+     dependency: transitive
+     description:
+       name: web
+-      sha256: dc8ccd225a2005c1be616fe02951e2e342092edf968cf0844220383757ef8f10
++      sha256: afe077240a270dcfd2aafe77602b4113645af95d0ad31128cc02bce5ac5d5152
+       url: "https://pub.dev"
+     source: hosted
+-    version: "0.1.4-beta"
++    version: "0.3.0"
+   win32:
+     dependency: transitive
+     description:
+@@ -622,5 +622,5 @@ packages:
+     source: hosted
+     version: "3.1.2"
+ sdks:
+-  dart: ">=3.1.0-185.0.dev <4.0.0"
++  dart: ">=3.2.0-194.0.dev <4.0.0"
+   flutter: ">=3.7.0"
+diff --git a/windows/.gitignore b/windows/.gitignore
+new file mode 100644
+index 0000000..d492d0d
+--- /dev/null
++++ b/windows/.gitignore
+@@ -0,0 +1,17 @@
++flutter/ephemeral/
++
++# Visual Studio user-specific files.
++*.suo
++*.user
++*.userosscache
++*.sln.docstates
++
++# Visual Studio build-related files.
++x64/
++x86/
++
++# Visual Studio cache files
++# files ending in .cache can be ignored
++*.[Cc]ache
++# but keep track of directories ending in .cache
++!*.[Cc]ache/
+diff --git a/windows/CMakeLists.txt b/windows/CMakeLists.txt
+new file mode 100644
+index 0000000..19c9efd
+--- /dev/null
++++ b/windows/CMakeLists.txt
+@@ -0,0 +1,108 @@
++# Project-level configuration.
++cmake_minimum_required(VERSION 3.14)
++project(app LANGUAGES CXX)
++
++# The name of the executable created for the application. Change this to change
++# the on-disk name of your application.
++set(BINARY_NAME "app")
++
++# Explicitly opt in to modern CMake behaviors to avoid warnings with recent
++# versions of CMake.
++cmake_policy(VERSION 3.14...3.25)
++
++# Define build configuration option.
++get_property(IS_MULTICONFIG GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
++if(IS_MULTICONFIG)
++  set(CMAKE_CONFIGURATION_TYPES "Debug;Profile;Release"
++    CACHE STRING "" FORCE)
++else()
++  if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
++    set(CMAKE_BUILD_TYPE "Debug" CACHE
++      STRING "Flutter build mode" FORCE)
++    set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS
++      "Debug" "Profile" "Release")
++  endif()
++endif()
++# Define settings for the Profile build mode.
++set(CMAKE_EXE_LINKER_FLAGS_PROFILE "${CMAKE_EXE_LINKER_FLAGS_RELEASE}")
++set(CMAKE_SHARED_LINKER_FLAGS_PROFILE "${CMAKE_SHARED_LINKER_FLAGS_RELEASE}")
++set(CMAKE_C_FLAGS_PROFILE "${CMAKE_C_FLAGS_RELEASE}")
++set(CMAKE_CXX_FLAGS_PROFILE "${CMAKE_CXX_FLAGS_RELEASE}")
++
++# Use Unicode for all projects.
++add_definitions(-DUNICODE -D_UNICODE)
++
++# Compilation settings that should be applied to most targets.
++#
++# Be cautious about adding new options here, as plugins use this function by
++# default. In most cases, you should add new options to specific targets instead
++# of modifying this function.
++function(APPLY_STANDARD_SETTINGS TARGET)
++  target_compile_features(${TARGET} PUBLIC cxx_std_17)
++  target_compile_options(${TARGET} PRIVATE /W4 /WX /wd"4100")
++  target_compile_options(${TARGET} PRIVATE /EHsc)
++  target_compile_definitions(${TARGET} PRIVATE "_HAS_EXCEPTIONS=0")
++  target_compile_definitions(${TARGET} PRIVATE "$<$<CONFIG:Debug>:_DEBUG>")
++endfunction()
++
++# Flutter library and tool build rules.
++set(FLUTTER_MANAGED_DIR "${CMAKE_CURRENT_SOURCE_DIR}/flutter")
++add_subdirectory(${FLUTTER_MANAGED_DIR})
++
++# Application build; see runner/CMakeLists.txt.
++add_subdirectory("runner")
++
++
++# Generated plugin build rules, which manage building the plugins and adding
++# them to the application.
++include(flutter/generated_plugins.cmake)
++
++
++# === Installation ===
++# Support files are copied into place next to the executable, so that it can
++# run in place. This is done instead of making a separate bundle (as on Linux)
++# so that building and running from within Visual Studio will work.
++set(BUILD_BUNDLE_DIR "$<TARGET_FILE_DIR:${BINARY_NAME}>")
++# Make the "install" step default, as it's required to run.
++set(CMAKE_VS_INCLUDE_INSTALL_TO_DEFAULT_BUILD 1)
++if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
++  set(CMAKE_INSTALL_PREFIX "${BUILD_BUNDLE_DIR}" CACHE PATH "..." FORCE)
++endif()
++
++set(INSTALL_BUNDLE_DATA_DIR "${CMAKE_INSTALL_PREFIX}/data")
++set(INSTALL_BUNDLE_LIB_DIR "${CMAKE_INSTALL_PREFIX}")
++
++install(TARGETS ${BINARY_NAME} RUNTIME DESTINATION "${CMAKE_INSTALL_PREFIX}"
++  COMPONENT Runtime)
++
++install(FILES "${FLUTTER_ICU_DATA_FILE}" DESTINATION "${INSTALL_BUNDLE_DATA_DIR}"
++  COMPONENT Runtime)
++
++install(FILES "${FLUTTER_LIBRARY}" DESTINATION "${INSTALL_BUNDLE_LIB_DIR}"
++  COMPONENT Runtime)
++
++if(PLUGIN_BUNDLED_LIBRARIES)
++  install(FILES "${PLUGIN_BUNDLED_LIBRARIES}"
++    DESTINATION "${INSTALL_BUNDLE_LIB_DIR}"
++    COMPONENT Runtime)
++endif()
++
++# Copy the native assets provided by the build.dart from all packages.
++set(NATIVE_ASSETS_DIR "${PROJECT_BUILD_DIR}native_assets/windows/")
++install(DIRECTORY "${NATIVE_ASSETS_DIR}"
++   DESTINATION "${INSTALL_BUNDLE_LIB_DIR}"
++   COMPONENT Runtime)
++
++# Fully re-copy the assets directory on each build to avoid having stale files
++# from a previous install.
++set(FLUTTER_ASSET_DIR_NAME "flutter_assets")
++install(CODE "
++  file(REMOVE_RECURSE \"${INSTALL_BUNDLE_DATA_DIR}/${FLUTTER_ASSET_DIR_NAME}\")
++  " COMPONENT Runtime)
++install(DIRECTORY "${PROJECT_BUILD_DIR}/${FLUTTER_ASSET_DIR_NAME}"
++  DESTINATION "${INSTALL_BUNDLE_DATA_DIR}" COMPONENT Runtime)
++
++# Install the AOT library on non-Debug builds only.
++install(FILES "${AOT_LIBRARY}" DESTINATION "${INSTALL_BUNDLE_DATA_DIR}"
++  CONFIGURATIONS Profile;Release
++  COMPONENT Runtime)
+diff --git a/windows/flutter/CMakeLists.txt b/windows/flutter/CMakeLists.txt
+new file mode 100644
+index 0000000..903f489
+--- /dev/null
++++ b/windows/flutter/CMakeLists.txt
+@@ -0,0 +1,109 @@
++# This file controls Flutter-level build steps. It should not be edited.
++cmake_minimum_required(VERSION 3.14)
++
++set(EPHEMERAL_DIR "${CMAKE_CURRENT_SOURCE_DIR}/ephemeral")
++
++# Configuration provided via flutter tool.
++include(${EPHEMERAL_DIR}/generated_config.cmake)
++
++# TODO: Move the rest of this into files in ephemeral. See
++# https://github.com/flutter/flutter/issues/57146.
++set(WRAPPER_ROOT "${EPHEMERAL_DIR}/cpp_client_wrapper")
++
++# Set fallback configurations for older versions of the flutter tool.
++if (NOT DEFINED FLUTTER_TARGET_PLATFORM)
++  set(FLUTTER_TARGET_PLATFORM "windows-x64")
++endif()
++
++# === Flutter Library ===
++set(FLUTTER_LIBRARY "${EPHEMERAL_DIR}/flutter_windows.dll")
++
++# Published to parent scope for install step.
++set(FLUTTER_LIBRARY ${FLUTTER_LIBRARY} PARENT_SCOPE)
++set(FLUTTER_ICU_DATA_FILE "${EPHEMERAL_DIR}/icudtl.dat" PARENT_SCOPE)
++set(PROJECT_BUILD_DIR "${PROJECT_DIR}/build/" PARENT_SCOPE)
++set(AOT_LIBRARY "${PROJECT_DIR}/build/windows/app.so" PARENT_SCOPE)
++
++list(APPEND FLUTTER_LIBRARY_HEADERS
++  "flutter_export.h"
++  "flutter_windows.h"
++  "flutter_messenger.h"
++  "flutter_plugin_registrar.h"
++  "flutter_texture_registrar.h"
++)
++list(TRANSFORM FLUTTER_LIBRARY_HEADERS PREPEND "${EPHEMERAL_DIR}/")
++add_library(flutter INTERFACE)
++target_include_directories(flutter INTERFACE
++  "${EPHEMERAL_DIR}"
++)
++target_link_libraries(flutter INTERFACE "${FLUTTER_LIBRARY}.lib")
++add_dependencies(flutter flutter_assemble)
++
++# === Wrapper ===
++list(APPEND CPP_WRAPPER_SOURCES_CORE
++  "core_implementations.cc"
++  "standard_codec.cc"
++)
++list(TRANSFORM CPP_WRAPPER_SOURCES_CORE PREPEND "${WRAPPER_ROOT}/")
++list(APPEND CPP_WRAPPER_SOURCES_PLUGIN
++  "plugin_registrar.cc"
++)
++list(TRANSFORM CPP_WRAPPER_SOURCES_PLUGIN PREPEND "${WRAPPER_ROOT}/")
++list(APPEND CPP_WRAPPER_SOURCES_APP
++  "flutter_engine.cc"
++  "flutter_view_controller.cc"
++)
++list(TRANSFORM CPP_WRAPPER_SOURCES_APP PREPEND "${WRAPPER_ROOT}/")
++
++# Wrapper sources needed for a plugin.
++add_library(flutter_wrapper_plugin STATIC
++  ${CPP_WRAPPER_SOURCES_CORE}
++  ${CPP_WRAPPER_SOURCES_PLUGIN}
++)
++apply_standard_settings(flutter_wrapper_plugin)
++set_target_properties(flutter_wrapper_plugin PROPERTIES
++  POSITION_INDEPENDENT_CODE ON)
++set_target_properties(flutter_wrapper_plugin PROPERTIES
++  CXX_VISIBILITY_PRESET hidden)
++target_link_libraries(flutter_wrapper_plugin PUBLIC flutter)
++target_include_directories(flutter_wrapper_plugin PUBLIC
++  "${WRAPPER_ROOT}/include"
++)
++add_dependencies(flutter_wrapper_plugin flutter_assemble)
++
++# Wrapper sources needed for the runner.
++add_library(flutter_wrapper_app STATIC
++  ${CPP_WRAPPER_SOURCES_CORE}
++  ${CPP_WRAPPER_SOURCES_APP}
++)
++apply_standard_settings(flutter_wrapper_app)
++target_link_libraries(flutter_wrapper_app PUBLIC flutter)
++target_include_directories(flutter_wrapper_app PUBLIC
++  "${WRAPPER_ROOT}/include"
++)
++add_dependencies(flutter_wrapper_app flutter_assemble)
++
++# === Flutter tool backend ===
++# _phony_ is a non-existent file to force this command to run every time,
++# since currently there's no way to get a full input/output list from the
++# flutter tool.
++set(PHONY_OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/_phony_")
++set_source_files_properties("${PHONY_OUTPUT}" PROPERTIES SYMBOLIC TRUE)
++add_custom_command(
++  OUTPUT ${FLUTTER_LIBRARY} ${FLUTTER_LIBRARY_HEADERS}
++    ${CPP_WRAPPER_SOURCES_CORE} ${CPP_WRAPPER_SOURCES_PLUGIN}
++    ${CPP_WRAPPER_SOURCES_APP}
++    ${PHONY_OUTPUT}
++  COMMAND ${CMAKE_COMMAND} -E env
++    ${FLUTTER_TOOL_ENVIRONMENT}
++    "${FLUTTER_ROOT}/packages/flutter_tools/bin/tool_backend.bat"
++      ${FLUTTER_TARGET_PLATFORM} $<CONFIG>
++  VERBATIM
++)
++add_custom_target(flutter_assemble DEPENDS
++  "${FLUTTER_LIBRARY}"
++  ${FLUTTER_LIBRARY_HEADERS}
++  ${CPP_WRAPPER_SOURCES_CORE}
++  ${CPP_WRAPPER_SOURCES_PLUGIN}
++  ${CPP_WRAPPER_SOURCES_APP}
++)
+diff --git a/windows/flutter/generated_plugin_registrant.cc b/windows/flutter/generated_plugin_registrant.cc
+new file mode 100644
+index 0000000..48de52b
+--- /dev/null
++++ b/windows/flutter/generated_plugin_registrant.cc
+@@ -0,0 +1,14 @@
++//
++//  Generated file. Do not edit.
++//
++
++// clang-format off
++
++#include "generated_plugin_registrant.h"
++
++#include <permission_handler_windows/permission_handler_windows_plugin.h>
++
++void RegisterPlugins(flutter::PluginRegistry* registry) {
++  PermissionHandlerWindowsPluginRegisterWithRegistrar(
++      registry->GetRegistrarForPlugin("PermissionHandlerWindowsPlugin"));
++}
+diff --git a/windows/flutter/generated_plugin_registrant.h b/windows/flutter/generated_plugin_registrant.h
+new file mode 100644
+index 0000000..dc139d8
+--- /dev/null
++++ b/windows/flutter/generated_plugin_registrant.h
+@@ -0,0 +1,15 @@
++//
++//  Generated file. Do not edit.
++//
++
++// clang-format off
++
++#ifndef GENERATED_PLUGIN_REGISTRANT_
++#define GENERATED_PLUGIN_REGISTRANT_
++
++#include <flutter/plugin_registry.h>
++
++// Registers Flutter plugins.
++void RegisterPlugins(flutter::PluginRegistry* registry);
++
++#endif  // GENERATED_PLUGIN_REGISTRANT_
+diff --git a/windows/flutter/generated_plugins.cmake b/windows/flutter/generated_plugins.cmake
+new file mode 100644
+index 0000000..0e69e40
+--- /dev/null
++++ b/windows/flutter/generated_plugins.cmake
+@@ -0,0 +1,24 @@
++#
++# Generated file, do not edit.
++#
++
++list(APPEND FLUTTER_PLUGIN_LIST
++  permission_handler_windows
++)
++
++list(APPEND FLUTTER_FFI_PLUGIN_LIST
++)
++
++set(PLUGIN_BUNDLED_LIBRARIES)
++
++foreach(plugin ${FLUTTER_PLUGIN_LIST})
++  add_subdirectory(flutter/ephemeral/.plugin_symlinks/${plugin}/windows plugins/${plugin})
++  target_link_libraries(${BINARY_NAME} PRIVATE ${plugin}_plugin)
++  list(APPEND PLUGIN_BUNDLED_LIBRARIES $<TARGET_FILE:${plugin}_plugin>)
++  list(APPEND PLUGIN_BUNDLED_LIBRARIES ${${plugin}_bundled_libraries})
++endforeach(plugin)
++
++foreach(ffi_plugin ${FLUTTER_FFI_PLUGIN_LIST})
++  add_subdirectory(flutter/ephemeral/.plugin_symlinks/${ffi_plugin}/windows plugins/${ffi_plugin})
++  list(APPEND PLUGIN_BUNDLED_LIBRARIES ${${ffi_plugin}_bundled_libraries})
++endforeach(ffi_plugin)
+diff --git a/windows/runner/CMakeLists.txt b/windows/runner/CMakeLists.txt
+new file mode 100644
+index 0000000..394917c
+--- /dev/null
++++ b/windows/runner/CMakeLists.txt
+@@ -0,0 +1,40 @@
++cmake_minimum_required(VERSION 3.14)
++project(runner LANGUAGES CXX)
++
++# Define the application target. To change its name, change BINARY_NAME in the
++# top-level CMakeLists.txt, not the value here, or `flutter run` will no longer
++# work.
++#
++# Any new source files that you add to the application should be added here.
++add_executable(${BINARY_NAME} WIN32
++  "flutter_window.cpp"
++  "main.cpp"
++  "utils.cpp"
++  "win32_window.cpp"
++  "${FLUTTER_MANAGED_DIR}/generated_plugin_registrant.cc"
++  "Runner.rc"
++  "runner.exe.manifest"
++)
++
++# Apply the standard set of build settings. This can be removed for applications
++# that need different build settings.
++apply_standard_settings(${BINARY_NAME})
++
++# Add preprocessor definitions for the build version.
++target_compile_definitions(${BINARY_NAME} PRIVATE "FLUTTER_VERSION=\"${FLUTTER_VERSION}\"")
++target_compile_definitions(${BINARY_NAME} PRIVATE "FLUTTER_VERSION_MAJOR=${FLUTTER_VERSION_MAJOR}")
++target_compile_definitions(${BINARY_NAME} PRIVATE "FLUTTER_VERSION_MINOR=${FLUTTER_VERSION_MINOR}")
++target_compile_definitions(${BINARY_NAME} PRIVATE "FLUTTER_VERSION_PATCH=${FLUTTER_VERSION_PATCH}")
++target_compile_definitions(${BINARY_NAME} PRIVATE "FLUTTER_VERSION_BUILD=${FLUTTER_VERSION_BUILD}")
++
++# Disable Windows macros that collide with C++ standard library functions.
++target_compile_definitions(${BINARY_NAME} PRIVATE "NOMINMAX")
++
++# Add dependency libraries and include directories. Add any application-specific
++# dependencies here.
++target_link_libraries(${BINARY_NAME} PRIVATE flutter flutter_wrapper_app)
++target_link_libraries(${BINARY_NAME} PRIVATE "dwmapi.lib")
++target_include_directories(${BINARY_NAME} PRIVATE "${CMAKE_SOURCE_DIR}")
++
++# Run the Flutter tool portions of the build. This must not be removed.
++add_dependencies(${BINARY_NAME} flutter_assemble)
+diff --git a/windows/runner/Runner.rc b/windows/runner/Runner.rc
+new file mode 100644
+index 0000000..4d3baca
+--- /dev/null
++++ b/windows/runner/Runner.rc
+@@ -0,0 +1,121 @@
++// Microsoft Visual C++ generated resource script.
++//
++#pragma code_page(65001)
++#include "resource.h"
++
++#define APSTUDIO_READONLY_SYMBOLS
++/////////////////////////////////////////////////////////////////////////////
++//
++// Generated from the TEXTINCLUDE 2 resource.
++//
++#include "winres.h"
++
++/////////////////////////////////////////////////////////////////////////////
++#undef APSTUDIO_READONLY_SYMBOLS
++
++/////////////////////////////////////////////////////////////////////////////
++// English (United States) resources
++
++#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
++LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
++
++#ifdef APSTUDIO_INVOKED
++/////////////////////////////////////////////////////////////////////////////
++//
++// TEXTINCLUDE
++//
++
++1 TEXTINCLUDE
++BEGIN
++    "resource.h\0"
++END
++
++2 TEXTINCLUDE
++BEGIN
++    "#include ""winres.h""\r\n"
++    "\0"
++END
++
++3 TEXTINCLUDE
++BEGIN
++    "\r\n"
++    "\0"
++END
++
++#endif    // APSTUDIO_INVOKED
++
++
++/////////////////////////////////////////////////////////////////////////////
++//
++// Icon
++//
++
++// Icon with lowest ID value placed first to ensure application icon
++// remains consistent on all systems.
++IDI_APP_ICON            ICON                    "resources\\app_icon.ico"
++
++
++/////////////////////////////////////////////////////////////////////////////
++//
++// Version
++//
++
++#if defined(FLUTTER_VERSION_MAJOR) && defined(FLUTTER_VERSION_MINOR) && defined(FLUTTER_VERSION_PATCH) && defined(FLUTTER_VERSION_BUILD)
++#define VERSION_AS_NUMBER FLUTTER_VERSION_MAJOR,FLUTTER_VERSION_MINOR,FLUTTER_VERSION_PATCH,FLUTTER_VERSION_BUILD
++#else
++#define VERSION_AS_NUMBER 1,0,0,0
++#endif
++
++#if defined(FLUTTER_VERSION)
++#define VERSION_AS_STRING FLUTTER_VERSION
++#else
++#define VERSION_AS_STRING "1.0.0"
++#endif
++
++VS_VERSION_INFO VERSIONINFO
++ FILEVERSION VERSION_AS_NUMBER
++ PRODUCTVERSION VERSION_AS_NUMBER
++ FILEFLAGSMASK VS_FFI_FILEFLAGSMASK
++#ifdef _DEBUG
++ FILEFLAGS VS_FF_DEBUG
++#else
++ FILEFLAGS 0x0L
++#endif
++ FILEOS VOS__WINDOWS32
++ FILETYPE VFT_APP
++ FILESUBTYPE 0x0L
++BEGIN
++    BLOCK "StringFileInfo"
++    BEGIN
++        BLOCK "040904e4"
++        BEGIN
++            VALUE "CompanyName", "com.ccshambots" "\0"
++            VALUE "FileDescription", "app" "\0"
++            VALUE "FileVersion", VERSION_AS_STRING "\0"
++            VALUE "InternalName", "app" "\0"
++            VALUE "LegalCopyright", "Copyright (C) 2023 com.ccshambots. All rights reserved." "\0"
++            VALUE "OriginalFilename", "app.exe" "\0"
++            VALUE "ProductName", "app" "\0"
++            VALUE "ProductVersion", VERSION_AS_STRING "\0"
++        END
++    END
++    BLOCK "VarFileInfo"
++    BEGIN
++        VALUE "Translation", 0x409, 1252
++    END
++END
++
++#endif    // English (United States) resources
++/////////////////////////////////////////////////////////////////////////////
++
++
++
++#ifndef APSTUDIO_INVOKED
++/////////////////////////////////////////////////////////////////////////////
++//
++// Generated from the TEXTINCLUDE 3 resource.
++//
++
++
++/////////////////////////////////////////////////////////////////////////////
++#endif    // not APSTUDIO_INVOKED
+diff --git a/windows/runner/flutter_window.cpp b/windows/runner/flutter_window.cpp
+new file mode 100644
+index 0000000..955ee30
+--- /dev/null
++++ b/windows/runner/flutter_window.cpp
+@@ -0,0 +1,71 @@
++#include "flutter_window.h"
++
++#include <optional>
++
++#include "flutter/generated_plugin_registrant.h"
++
++FlutterWindow::FlutterWindow(const flutter::DartProject& project)
++    : project_(project) {}
++
++FlutterWindow::~FlutterWindow() {}
++
++bool FlutterWindow::OnCreate() {
++  if (!Win32Window::OnCreate()) {
++    return false;
++  }
++
++  RECT frame = GetClientArea();
++
++  // The size here must match the window dimensions to avoid unnecessary surface
++  // creation / destruction in the startup path.
++  flutter_controller_ = std::make_unique<flutter::FlutterViewController>(
++      frame.right - frame.left, frame.bottom - frame.top, project_);
++  // Ensure that basic setup of the controller was successful.
++  if (!flutter_controller_->engine() || !flutter_controller_->view()) {
++    return false;
++  }
++  RegisterPlugins(flutter_controller_->engine());
++  SetChildContent(flutter_controller_->view()->GetNativeWindow());
++
++  flutter_controller_->engine()->SetNextFrameCallback([&]() {
++    this->Show();
++  });
++
++  // Flutter can complete the first frame before the "show window" callback is
++  // registered. The following call ensures a frame is pending to ensure the
++  // window is shown. It is a no-op if the first frame hasn't completed yet.
++  flutter_controller_->ForceRedraw();
++
++  return true;
++}
++
++void FlutterWindow::OnDestroy() {
++  if (flutter_controller_) {
++    flutter_controller_ = nullptr;
++  }
++
++  Win32Window::OnDestroy();
++}
++
++LRESULT
++FlutterWindow::MessageHandler(HWND hwnd, UINT const message,
++                              WPARAM const wparam,
++                              LPARAM const lparam) noexcept {
++  // Give Flutter, including plugins, an opportunity to handle window messages.
++  if (flutter_controller_) {
++    std::optional<LRESULT> result =
++        flutter_controller_->HandleTopLevelWindowProc(hwnd, message, wparam,
++                                                      lparam);
++    if (result) {
++      return *result;
++    }
++  }
++
++  switch (message) {
++    case WM_FONTCHANGE:
++      flutter_controller_->engine()->ReloadSystemFonts();
++      break;
++  }
++
++  return Win32Window::MessageHandler(hwnd, message, wparam, lparam);
++}
+diff --git a/windows/runner/flutter_window.h b/windows/runner/flutter_window.h
+new file mode 100644
+index 0000000..6da0652
+--- /dev/null
++++ b/windows/runner/flutter_window.h
+@@ -0,0 +1,33 @@
++#ifndef RUNNER_FLUTTER_WINDOW_H_
++#define RUNNER_FLUTTER_WINDOW_H_
++
++#include <flutter/dart_project.h>
++#include <flutter/flutter_view_controller.h>
++
++#include <memory>
++
++#include "win32_window.h"
++
++// A window that does nothing but host a Flutter view.
++class FlutterWindow : public Win32Window {
++ public:
++  // Creates a new FlutterWindow hosting a Flutter view running |project|.
++  explicit FlutterWindow(const flutter::DartProject& project);
++  virtual ~FlutterWindow();
++
++ protected:
++  // Win32Window:
++  bool OnCreate() override;
++  void OnDestroy() override;
++  LRESULT MessageHandler(HWND window, UINT const message, WPARAM const wparam,
++                         LPARAM const lparam) noexcept override;
++
++ private:
++  // The project to run.
++  flutter::DartProject project_;
++
++  // The Flutter instance hosted by this window.
++  std::unique_ptr<flutter::FlutterViewController> flutter_controller_;
++};
++
++#endif  // RUNNER_FLUTTER_WINDOW_H_
+diff --git a/windows/runner/main.cpp b/windows/runner/main.cpp
+new file mode 100644
+index 0000000..bc9bfa3
+--- /dev/null
++++ b/windows/runner/main.cpp
+@@ -0,0 +1,43 @@
++#include <flutter/dart_project.h>
++#include <flutter/flutter_view_controller.h>
++#include <windows.h>
++
++#include "flutter_window.h"
++#include "utils.h"
++
++int APIENTRY wWinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prev,
++                      _In_ wchar_t *command_line, _In_ int show_command) {
++  // Attach to console when present (e.g., 'flutter run') or create a
++  // new console when running with a debugger.
++  if (!::AttachConsole(ATTACH_PARENT_PROCESS) && ::IsDebuggerPresent()) {
++    CreateAndAttachConsole();
++  }
++
++  // Initialize COM, so that it is available for use in the library and/or
++  // plugins.
++  ::CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED);
++
++  flutter::DartProject project(L"data");
++
++  std::vector<std::string> command_line_arguments =
++      GetCommandLineArguments();
++
++  project.set_dart_entrypoint_arguments(std::move(command_line_arguments));
++
++  FlutterWindow window(project);
++  Win32Window::Point origin(10, 10);
++  Win32Window::Size size(1280, 720);
++  if (!window.Create(L"app", origin, size)) {
++    return EXIT_FAILURE;
++  }
++  window.SetQuitOnClose(true);
++
++  ::MSG msg;
++  while (::GetMessage(&msg, nullptr, 0, 0)) {
++    ::TranslateMessage(&msg);
++    ::DispatchMessage(&msg);
++  }
++
++  ::CoUninitialize();
++  return EXIT_SUCCESS;
++}
+diff --git a/windows/runner/resource.h b/windows/runner/resource.h
+new file mode 100644
+index 0000000..66a65d1
+--- /dev/null
++++ b/windows/runner/resource.h
+@@ -0,0 +1,16 @@
++//{{NO_DEPENDENCIES}}
++// Microsoft Visual C++ generated include file.
++// Used by Runner.rc
++//
++#define IDI_APP_ICON                    101
++
++// Next default values for new objects
++//
++#ifdef APSTUDIO_INVOKED
++#ifndef APSTUDIO_READONLY_SYMBOLS
++#define _APS_NEXT_RESOURCE_VALUE        102
++#define _APS_NEXT_COMMAND_VALUE         40001
++#define _APS_NEXT_CONTROL_VALUE         1001
++#define _APS_NEXT_SYMED_VALUE           101
++#endif
++#endif
+diff --git a/windows/runner/resources/app_icon.ico b/windows/runner/resources/app_icon.ico
+new file mode 100644
+index 0000000..c04e20c
+Binary files /dev/null and b/windows/runner/resources/app_icon.ico differ
+diff --git a/windows/runner/runner.exe.manifest b/windows/runner/runner.exe.manifest
+new file mode 100644
+index 0000000..a42ea76
+--- /dev/null
++++ b/windows/runner/runner.exe.manifest
+@@ -0,0 +1,20 @@
++<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
++<assembly xmlns="urn:schemas-microsoft-com:asm.v1" manifestVersion="1.0">
++  <application xmlns="urn:schemas-microsoft-com:asm.v3">
++    <windowsSettings>
++      <dpiAwareness xmlns="http://schemas.microsoft.com/SMI/2016/WindowsSettings">PerMonitorV2</dpiAwareness>
++    </windowsSettings>
++  </application>
++  <compatibility xmlns="urn:schemas-microsoft-com:compatibility.v1">
++    <application>
++      <!-- Windows 10 and Windows 11 -->
++      <supportedOS Id="{8e0f7a12-bfb3-4fe8-b9a5-48fd50a15a9a}"/>
++      <!-- Windows 8.1 -->
++      <supportedOS Id="{1f676c76-80e1-4239-95bb-83d0f6d0da78}"/>
++      <!-- Windows 8 -->
++      <supportedOS Id="{4a2f28e3-53b9-4441-ba9c-d69d4a4a6e38}"/>
++      <!-- Windows 7 -->
++      <supportedOS Id="{35138b9a-5d96-4fbd-8e2d-a2440225f93a}"/>
++    </application>
++  </compatibility>
++</assembly>
+diff --git a/windows/runner/utils.cpp b/windows/runner/utils.cpp
+new file mode 100644
+index 0000000..b2b0873
+--- /dev/null
++++ b/windows/runner/utils.cpp
+@@ -0,0 +1,65 @@
++#include "utils.h"
++
++#include <flutter_windows.h>
++#include <io.h>
++#include <stdio.h>
++#include <windows.h>
++
++#include <iostream>
++
++void CreateAndAttachConsole() {
++  if (::AllocConsole()) {
++    FILE *unused;
++    if (freopen_s(&unused, "CONOUT$", "w", stdout)) {
++      _dup2(_fileno(stdout), 1);
++    }
++    if (freopen_s(&unused, "CONOUT$", "w", stderr)) {
++      _dup2(_fileno(stdout), 2);
++    }
++    std::ios::sync_with_stdio();
++    FlutterDesktopResyncOutputStreams();
++  }
++}
++
++std::vector<std::string> GetCommandLineArguments() {
++  // Convert the UTF-16 command line arguments to UTF-8 for the Engine to use.
++  int argc;
++  wchar_t** argv = ::CommandLineToArgvW(::GetCommandLineW(), &argc);
++  if (argv == nullptr) {
++    return std::vector<std::string>();
++  }
++
++  std::vector<std::string> command_line_arguments;
++
++  // Skip the first argument as it's the binary name.
++  for (int i = 1; i < argc; i++) {
++    command_line_arguments.push_back(Utf8FromUtf16(argv[i]));
++  }
++
++  ::LocalFree(argv);
++
++  return command_line_arguments;
++}
++
++std::string Utf8FromUtf16(const wchar_t* utf16_string) {
++  if (utf16_string == nullptr) {
++    return std::string();
++  }
++  int target_length = ::WideCharToMultiByte(
++      CP_UTF8, WC_ERR_INVALID_CHARS, utf16_string,
++      -1, nullptr, 0, nullptr, nullptr)
++    -1; // remove the trailing null character
++  int input_length = (int)wcslen(utf16_string);
++  std::string utf8_string;
++  if (target_length <= 0 || target_length > utf8_string.max_size()) {
++    return utf8_string;
++  }
++  utf8_string.resize(target_length);
++  int converted_length = ::WideCharToMultiByte(
++      CP_UTF8, WC_ERR_INVALID_CHARS, utf16_string,
++      input_length, utf8_string.data(), target_length, nullptr, nullptr);
++  if (converted_length == 0) {
++    return std::string();
++  }
++  return utf8_string;
++}
+diff --git a/windows/runner/utils.h b/windows/runner/utils.h
+new file mode 100644
+index 0000000..3879d54
+--- /dev/null
++++ b/windows/runner/utils.h
+@@ -0,0 +1,19 @@
++#ifndef RUNNER_UTILS_H_
++#define RUNNER_UTILS_H_
++
++#include <string>
++#include <vector>
++
++// Creates a console for the process, and redirects stdout and stderr to
++// it for both the runner and the Flutter library.
++void CreateAndAttachConsole();
++
++// Takes a null-terminated wchar_t* encoded in UTF-16 and returns a std::string
++// encoded in UTF-8. Returns an empty std::string on failure.
++std::string Utf8FromUtf16(const wchar_t* utf16_string);
++
++// Gets the command line arguments passed in as a std::vector<std::string>,
++// encoded in UTF-8. Returns an empty std::vector<std::string> on failure.
++std::vector<std::string> GetCommandLineArguments();
++
++#endif  // RUNNER_UTILS_H_
+diff --git a/windows/runner/win32_window.cpp b/windows/runner/win32_window.cpp
+new file mode 100644
+index 0000000..60608d0
+--- /dev/null
++++ b/windows/runner/win32_window.cpp
+@@ -0,0 +1,288 @@
++#include "win32_window.h"
++
++#include <dwmapi.h>
++#include <flutter_windows.h>
++
++#include "resource.h"
++
++namespace {
++
++/// Window attribute that enables dark mode window decorations.
++///
++/// Redefined in case the developer's machine has a Windows SDK older than
++/// version 10.0.22000.0.
++/// See: https://docs.microsoft.com/windows/win32/api/dwmapi/ne-dwmapi-dwmwindowattribute
++#ifndef DWMWA_USE_IMMERSIVE_DARK_MODE
++#define DWMWA_USE_IMMERSIVE_DARK_MODE 20
++#endif
++
++constexpr const wchar_t kWindowClassName[] = L"FLUTTER_RUNNER_WIN32_WINDOW";
++
++/// Registry key for app theme preference.
++///
++/// A value of 0 indicates apps should use dark mode. A non-zero or missing
++/// value indicates apps should use light mode.
++constexpr const wchar_t kGetPreferredBrightnessRegKey[] =
++  L"Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize";
++constexpr const wchar_t kGetPreferredBrightnessRegValue[] = L"AppsUseLightTheme";
++
++// The number of Win32Window objects that currently exist.
++static int g_active_window_count = 0;
++
++using EnableNonClientDpiScaling = BOOL __stdcall(HWND hwnd);
++
++// Scale helper to convert logical scaler values to physical using passed in
++// scale factor
++int Scale(int source, double scale_factor) {
++  return static_cast<int>(source * scale_factor);
++}
++
++// Dynamically loads the |EnableNonClientDpiScaling| from the User32 module.
++// This API is only needed for PerMonitor V1 awareness mode.
++void EnableFullDpiSupportIfAvailable(HWND hwnd) {
++  HMODULE user32_module = LoadLibraryA("User32.dll");
++  if (!user32_module) {
++    return;
++  }
++  auto enable_non_client_dpi_scaling =
++      reinterpret_cast<EnableNonClientDpiScaling*>(
++          GetProcAddress(user32_module, "EnableNonClientDpiScaling"));
++  if (enable_non_client_dpi_scaling != nullptr) {
++    enable_non_client_dpi_scaling(hwnd);
++  }
++  FreeLibrary(user32_module);
++}
++
++}  // namespace
++
++// Manages the Win32Window's window class registration.
++class WindowClassRegistrar {
++ public:
++  ~WindowClassRegistrar() = default;
++
++  // Returns the singleton registrar instance.
++  static WindowClassRegistrar* GetInstance() {
++    if (!instance_) {
++      instance_ = new WindowClassRegistrar();
++    }
++    return instance_;
++  }
++
++  // Returns the name of the window class, registering the class if it hasn't
++  // previously been registered.
++  const wchar_t* GetWindowClass();
++
++  // Unregisters the window class. Should only be called if there are no
++  // instances of the window.
++  void UnregisterWindowClass();
++
++ private:
++  WindowClassRegistrar() = default;
++
++  static WindowClassRegistrar* instance_;
++
++  bool class_registered_ = false;
++};
++
++WindowClassRegistrar* WindowClassRegistrar::instance_ = nullptr;
++
++const wchar_t* WindowClassRegistrar::GetWindowClass() {
++  if (!class_registered_) {
++    WNDCLASS window_class{};
++    window_class.hCursor = LoadCursor(nullptr, IDC_ARROW);
++    window_class.lpszClassName = kWindowClassName;
++    window_class.style = CS_HREDRAW | CS_VREDRAW;
++    window_class.cbClsExtra = 0;
++    window_class.cbWndExtra = 0;
++    window_class.hInstance = GetModuleHandle(nullptr);
++    window_class.hIcon =
++        LoadIcon(window_class.hInstance, MAKEINTRESOURCE(IDI_APP_ICON));
++    window_class.hbrBackground = 0;
++    window_class.lpszMenuName = nullptr;
++    window_class.lpfnWndProc = Win32Window::WndProc;
++    RegisterClass(&window_class);
++    class_registered_ = true;
++  }
++  return kWindowClassName;
++}
++
++void WindowClassRegistrar::UnregisterWindowClass() {
++  UnregisterClass(kWindowClassName, nullptr);
++  class_registered_ = false;
++}
++
++Win32Window::Win32Window() {
++  ++g_active_window_count;
++}
++
++Win32Window::~Win32Window() {
++  --g_active_window_count;
++  Destroy();
++}
++
++bool Win32Window::Create(const std::wstring& title,
++                         const Point& origin,
++                         const Size& size) {
++  Destroy();
++
++  const wchar_t* window_class =
++      WindowClassRegistrar::GetInstance()->GetWindowClass();
++
++  const POINT target_point = {static_cast<LONG>(origin.x),
++                              static_cast<LONG>(origin.y)};
++  HMONITOR monitor = MonitorFromPoint(target_point, MONITOR_DEFAULTTONEAREST);
++  UINT dpi = FlutterDesktopGetDpiForMonitor(monitor);
++  double scale_factor = dpi / 96.0;
++
++  HWND window = CreateWindow(
++      window_class, title.c_str(), WS_OVERLAPPEDWINDOW,
++      Scale(origin.x, scale_factor), Scale(origin.y, scale_factor),
++      Scale(size.width, scale_factor), Scale(size.height, scale_factor),
++      nullptr, nullptr, GetModuleHandle(nullptr), this);
++
++  if (!window) {
++    return false;
++  }
++
++  UpdateTheme(window);
++
++  return OnCreate();
++}
++
++bool Win32Window::Show() {
++  return ShowWindow(window_handle_, SW_SHOWNORMAL);
++}
++
++// static
++LRESULT CALLBACK Win32Window::WndProc(HWND const window,
++                                      UINT const message,
++                                      WPARAM const wparam,
++                                      LPARAM const lparam) noexcept {
++  if (message == WM_NCCREATE) {
++    auto window_struct = reinterpret_cast<CREATESTRUCT*>(lparam);
++    SetWindowLongPtr(window, GWLP_USERDATA,
++                     reinterpret_cast<LONG_PTR>(window_struct->lpCreateParams));
++
++    auto that = static_cast<Win32Window*>(window_struct->lpCreateParams);
++    EnableFullDpiSupportIfAvailable(window);
++    that->window_handle_ = window;
++  } else if (Win32Window* that = GetThisFromHandle(window)) {
++    return that->MessageHandler(window, message, wparam, lparam);
++  }
++
++  return DefWindowProc(window, message, wparam, lparam);
++}
++
++LRESULT
++Win32Window::MessageHandler(HWND hwnd,
++                            UINT const message,
++                            WPARAM const wparam,
++                            LPARAM const lparam) noexcept {
++  switch (message) {
++    case WM_DESTROY:
++      window_handle_ = nullptr;
++      Destroy();
++      if (quit_on_close_) {
++        PostQuitMessage(0);
++      }
++      return 0;
++
++    case WM_DPICHANGED: {
++      auto newRectSize = reinterpret_cast<RECT*>(lparam);
++      LONG newWidth = newRectSize->right - newRectSize->left;
++      LONG newHeight = newRectSize->bottom - newRectSize->top;
++
++      SetWindowPos(hwnd, nullptr, newRectSize->left, newRectSize->top, newWidth,
++                   newHeight, SWP_NOZORDER | SWP_NOACTIVATE);
++
++      return 0;
++    }
++    case WM_SIZE: {
++      RECT rect = GetClientArea();
++      if (child_content_ != nullptr) {
++        // Size and position the child window.
++        MoveWindow(child_content_, rect.left, rect.top, rect.right - rect.left,
++                   rect.bottom - rect.top, TRUE);
++      }
++      return 0;
++    }
++
++    case WM_ACTIVATE:
++      if (child_content_ != nullptr) {
++        SetFocus(child_content_);
++      }
++      return 0;
++
++    case WM_DWMCOLORIZATIONCOLORCHANGED:
++      UpdateTheme(hwnd);
++      return 0;
++  }
++
++  return DefWindowProc(window_handle_, message, wparam, lparam);
++}
++
++void Win32Window::Destroy() {
++  OnDestroy();
++
++  if (window_handle_) {
++    DestroyWindow(window_handle_);
++    window_handle_ = nullptr;
++  }
++  if (g_active_window_count == 0) {
++    WindowClassRegistrar::GetInstance()->UnregisterWindowClass();
++  }
++}
++
++Win32Window* Win32Window::GetThisFromHandle(HWND const window) noexcept {
++  return reinterpret_cast<Win32Window*>(
++      GetWindowLongPtr(window, GWLP_USERDATA));
++}
++
++void Win32Window::SetChildContent(HWND content) {
++  child_content_ = content;
++  SetParent(content, window_handle_);
++  RECT frame = GetClientArea();
++
++  MoveWindow(content, frame.left, frame.top, frame.right - frame.left,
++             frame.bottom - frame.top, true);
++
++  SetFocus(child_content_);
++}
++
++RECT Win32Window::GetClientArea() {
++  RECT frame;
++  GetClientRect(window_handle_, &frame);
++  return frame;
++}
++
++HWND Win32Window::GetHandle() {
++  return window_handle_;
++}
++
++void Win32Window::SetQuitOnClose(bool quit_on_close) {
++  quit_on_close_ = quit_on_close;
++}
++
++bool Win32Window::OnCreate() {
++  // No-op; provided for subclasses.
++  return true;
++}
++
++void Win32Window::OnDestroy() {
++  // No-op; provided for subclasses.
++}
++
++void Win32Window::UpdateTheme(HWND const window) {
++  DWORD light_mode;
++  DWORD light_mode_size = sizeof(light_mode);
++  LSTATUS result = RegGetValue(HKEY_CURRENT_USER, kGetPreferredBrightnessRegKey,
++                               kGetPreferredBrightnessRegValue,
++                               RRF_RT_REG_DWORD, nullptr, &light_mode,
++                               &light_mode_size);
++
++  if (result == ERROR_SUCCESS) {
++    BOOL enable_dark_mode = light_mode == 0;
++    DwmSetWindowAttribute(window, DWMWA_USE_IMMERSIVE_DARK_MODE,
++                          &enable_dark_mode, sizeof(enable_dark_mode));
++  }
++}
+diff --git a/windows/runner/win32_window.h b/windows/runner/win32_window.h
+new file mode 100644
+index 0000000..e901dde
+--- /dev/null
++++ b/windows/runner/win32_window.h
+@@ -0,0 +1,102 @@
++#ifndef RUNNER_WIN32_WINDOW_H_
++#define RUNNER_WIN32_WINDOW_H_
++
++#include <windows.h>
++
++#include <functional>
++#include <memory>
++#include <string>
++
++// A class abstraction for a high DPI-aware Win32 Window. Intended to be
++// inherited from by classes that wish to specialize with custom
++// rendering and input handling
++class Win32Window {
++ public:
++  struct Point {
++    unsigned int x;
++    unsigned int y;
++    Point(unsigned int x, unsigned int y) : x(x), y(y) {}
++  };
++
++  struct Size {
++    unsigned int width;
++    unsigned int height;
++    Size(unsigned int width, unsigned int height)
++        : width(width), height(height) {}
++  };
++
++  Win32Window();
++  virtual ~Win32Window();
++
++  // Creates a win32 window with |title| that is positioned and sized using
++  // |origin| and |size|. New windows are created on the default monitor. Window
++  // sizes are specified to the OS in physical pixels, hence to ensure a
++  // consistent size this function will scale the inputted width and height as
++  // as appropriate for the default monitor. The window is invisible until
++  // |Show| is called. Returns true if the window was created successfully.
++  bool Create(const std::wstring& title, const Point& origin, const Size& size);
++
++  // Show the current window. Returns true if the window was successfully shown.
++  bool Show();
++
++  // Release OS resources associated with window.
++  void Destroy();
++
++  // Inserts |content| into the window tree.
++  void SetChildContent(HWND content);
++
++  // Returns the backing Window handle to enable clients to set icon and other
++  // window properties. Returns nullptr if the window has been destroyed.
++  HWND GetHandle();
++
++  // If true, closing this window will quit the application.
++  void SetQuitOnClose(bool quit_on_close);
++
++  // Return a RECT representing the bounds of the current client area.
++  RECT GetClientArea();
++
++ protected:
++  // Processes and route salient window messages for mouse handling,
++  // size change and DPI. Delegates handling of these to member overloads that
++  // inheriting classes can handle.
++  virtual LRESULT MessageHandler(HWND window,
++                                 UINT const message,
++                                 WPARAM const wparam,
++                                 LPARAM const lparam) noexcept;
++
++  // Called when CreateAndShow is called, allowing subclass window-related
++  // setup. Subclasses should return false if setup fails.
++  virtual bool OnCreate();
++
++  // Called when Destroy is called.
++  virtual void OnDestroy();
++
++ private:
++  friend class WindowClassRegistrar;
++
++  // OS callback called by message pump. Handles the WM_NCCREATE message which
++  // is passed when the non-client area is being created and enables automatic
++  // non-client DPI scaling so that the non-client area automatically
++  // responds to changes in DPI. All other messages are handled by
++  // MessageHandler.
++  static LRESULT CALLBACK WndProc(HWND const window,
++                                  UINT const message,
++                                  WPARAM const wparam,
++                                  LPARAM const lparam) noexcept;
++
++  // Retrieves a class instance pointer for |window|
++  static Win32Window* GetThisFromHandle(HWND const window) noexcept;
++
++  // Update the window frame's theme to match the system theme.
++  static void UpdateTheme(HWND const window);
++
++  bool quit_on_close_ = false;
++
++  // window handle for top level window.
++  HWND window_handle_ = nullptr;
++
++  // window handle for hosted content.
++  HWND child_content_ = nullptr;
++};
++
++#endif  // RUNNER_WIN32_WINDOW_H_
