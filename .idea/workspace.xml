@@ -10,8 +10,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="70134016-93c8-4f74-903e-0c68fb181f93" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.app.zip" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/apple screenshots/Simulator Screen Shot - iPad Pro (12.9-inch) (2nd generation) - 2023-09-20 at 17.10.06.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/apple screenshots/iPad Pro (12.9-inch) (2nd generation).png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/apple screenshots/Simulator Screen Shot - iPad Pro (12.9-inch) (6th generation) - 2023-09-20 at 17.05.50.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/apple screenshots/iPad Pro (12.9-inch) (6th generation).png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/apple screenshots/Simulator Screen Shot - iPhone 11 Pro Max - 2023-09-20 at 17.34.35.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/apple screenshots/iPhone 11 Pro Max.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/apple screenshots/Simulator Screen Shot - iphone 5.5 - 2023-09-20 at 17.09.06.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/apple screenshots/iphone 6S Plus.png" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -22,7 +25,7 @@
     <option name="formatViaClangd" value="false" />
   </component>
   <component name="DarkyenusTimeTracker">
-    <option name="totalTimeSeconds" value="93066" />
+    <option name="totalTimeSeconds" value="94198" />
     <option name="gitIntegration" value="true" />
     <option name="naggedAbout" value="1" />
   </component>
