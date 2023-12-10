@@ -43,7 +43,7 @@ class SearchWindowState extends State<SearchWindow> {
 
             print(configName);
 
-            Uri targetUri = Uri.parse("${ApiConstants.baseUrl}/forms/get/template/$configName/id/$value");
+            Uri targetUri = Uri.parse("${ApiConstants.baseUrl}${ApiConstants.getFormEndpoint}$configName/id/$value");
             print(targetUri.toString());
             http.Response response = await http.get(targetUri);
 

@@ -11,7 +11,10 @@
   <component name="ChangeListManager">
     <list default="true" id="70134016-93c8-4f74-903e-0c68fb181f93" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/home.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/home.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/SearchWindow.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/SearchWindow.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/constants.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/constants.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/formItems.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/formItems.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/handleCode.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/handleCode.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/main.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/settings.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/settings.dart" afterDir="false" />
     </list>
@@ -24,7 +27,7 @@
     <option name="formatViaClangd" value="false" />
   </component>
   <component name="DarkyenusTimeTracker">
-    <option name="totalTimeSeconds" value="96032" />
+    <option name="totalTimeSeconds" value="96867" />
     <option name="gitIntegration" value="true" />
     <option name="naggedAbout" value="1" />
   </component>

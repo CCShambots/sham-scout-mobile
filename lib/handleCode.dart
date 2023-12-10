@@ -112,7 +112,7 @@ class HandleCode {
 
   static pullTemplate(String name, SharedPreferences prefs) async {
 
-    Uri path = Uri.parse("${ApiConstants.remoteUrl}/templates/get/name/$name");
+    Uri path = Uri.parse("${ApiConstants.remoteUrl}${ApiConstants.getTemplateByNameEndpoint}$name");
 
     http.Response response = await http.get(path);
 

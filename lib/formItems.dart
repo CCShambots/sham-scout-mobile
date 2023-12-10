@@ -118,7 +118,7 @@ class GameConfig {
   Future<Response?> saveToAPI(String json, bool editing, String id) async {
 
     try {
-      var url = !editing ? Uri.parse("${ApiConstants.baseUrl}/forms/submit/template/$title") : Uri.parse("${ApiConstants.baseUrl}/forms/edit/template/$title/id/$id");
+      var url = !editing ? Uri.parse("${ApiConstants.baseUrl}${ApiConstants.submitFormEndpoint}$title") : Uri.parse("${ApiConstants.baseUrl}${ApiConstants.editFormEndpoint}$title/id/$id");
       var response = await (!editing ? http.post(
         url,
         headers: <String, String>{

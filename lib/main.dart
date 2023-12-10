@@ -21,7 +21,7 @@ class ConnectionStatus {
   static const connectionInterval = Duration(seconds: 5);
 
   static checkConnection() async{
-    var url = Uri.parse(ApiConstants.statusEndpoint);
+    var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.statusEndpoint);
 
     try {
       var response = await http.get(url).timeout(const Duration(seconds: 5), onTimeout: () {
@@ -152,7 +152,7 @@ class BottomNavigationBarState extends State<BottomNavigation>{
   Future<void> backSaveForms(BuildContext context) async {
     final prefs = await SharedPreferences.getInstance();
 
-    String gameConfig = prefs.getString("game-config") ?? "";
+    String gameConfig = prefs.getString(PrefsConstants.activeConfigPref) ?? "";
 
     //Remove newline characters to avoid problems
     final parsedJson = jsonDecode(GameConfig.parseOutRatingJson(jsonEncode(jsonDecode(gameConfig != "" ? gameConfig : '{"name": "None", "year": 2023, "fields":[]}'))));

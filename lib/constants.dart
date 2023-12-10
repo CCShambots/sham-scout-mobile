@@ -3,15 +3,27 @@ import 'package:shared_preferences/shared_preferences.dart';
 class ApiConstants {
   static String remoteUrl = 'http://167.71.240.213:8080';
   static String localUrl = 'http://localhost:8080';
-  // static String localUrl = 'http://167.71.240.213:8080';
 
   static String baseUrl = PrefsConstants.editorMode ? localUrl : remoteUrl;
-  static String templatesEndpoint = '/templates/get';
-  static String statusEndpoint = '$baseUrl/status';
 
+  //Status endpoint
+  static String statusEndpoint = '/status';
+
+  //Templates endpoints
+  static String getTemplatesEndpoint = '/templates/get';
+  static String getTemplateByNameEndpoint = '/templates/get/name/';
+
+  //Forms endpoints
+  static String getFormEndpoint = '/forms/get/template/';
+  static String submitFormEndpoint = '/forms/submit/template/';
+  static String editFormEndpoint = '/forms/edit/template/';
+
+  //Schedules endpoints
+  static String getSchedulesEndpoint = '/schedules/get/event/';
+
+  //Blue alliance endpoints
   static String tbaBaseUrl = 'https://www.thebluealliance.com/api/v3';
 
-  //TODO: Make this not suck
   static void loadRemoteAPI() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
@@ -19,7 +31,6 @@ class ApiConstants {
 
     remoteUrl = host;
     baseUrl = PrefsConstants.editorMode ? localUrl : remoteUrl;
-    statusEndpoint = '$baseUrl/status';
   }
 }
 
