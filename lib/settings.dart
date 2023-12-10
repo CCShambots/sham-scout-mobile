@@ -301,7 +301,7 @@ class SettingsState extends State<Settings> {
                   controller: tbaKeyController,
                 )] :
                 [
-                  Text(!haveTBAKey ? "Talk to the Scouting Manager about TBA key" : "TBA Key Set!", style: biggerTextStyle,),
+                  Text(!haveTBAKey ? "Talk to Scouting Manager abt. TBA key" : "TBA Key Set!", style: biggerTextStyle,),
                   Icon(!haveTBAKey ? CupertinoIcons.exclamationmark_square_fill : Icons.check, color: !haveTBAKey ? Colors.red : Colors.green,)
                 ]
 
