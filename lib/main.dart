@@ -15,12 +15,22 @@ import 'package:sham_scout_mobile/constants.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
+class SnackBarService {
+  static final scaffoldKey = GlobalKey<ScaffoldMessengerState>();
+
+  static void showSnackBar({required String content}) {
+    scaffoldKey.currentState?.showSnackBar(SnackBar(content: Text(content)));
+  }
+}
+
 class ConnectionStatus {
   static bool connected = false;
 
   static const connectionInterval = Duration(seconds: 5);
 
   static checkConnection() async{
+    bool wasAlreadyConnected = connected;
+
     var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.statusEndpoint);
 
     try {
@@ -34,6 +44,12 @@ class ConnectionStatus {
 
     } catch(e) {
       ConnectionStatus.connected = false;
+    }
+
+    if(connected && !wasAlreadyConnected) {
+      SnackBarService.showSnackBar(content: "Connected to the Database!");
+    } else if(!connected && wasAlreadyConnected) {
+      SnackBarService.showSnackBar(content: "Lost connection to the Database!");
     }
   }
 
@@ -65,6 +81,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'ShamScout Mobile',
+      scaffoldMessengerKey: SnackBarService.scaffoldKey,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,

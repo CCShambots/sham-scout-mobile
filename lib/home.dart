@@ -52,7 +52,6 @@ class HomeState extends State<Home> {
         nextMatch = firstMatch;
         matchesToGo = loaded.isNotEmpty ? loaded.length : -1;
         matchesDone = finishedMatches.isNotEmpty ? finishedMatches.length : -1;
-
       });
     }
   }
@@ -60,6 +59,8 @@ class HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+
+    loadNextUpMatch();
 
     TextStyle bigText = TextStyle(fontSize: 32, fontWeight: FontWeight.bold);
     TextStyle statisticsText = TextStyle(fontWeight: FontWeight.bold, fontSize: 48);

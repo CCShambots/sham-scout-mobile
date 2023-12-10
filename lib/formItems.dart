@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:sham_scout_mobile/main.dart';
 import 'package:sham_scout_mobile/schedule.dart';
 import 'package:sham_scout_mobile/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -71,6 +72,7 @@ class GameConfig {
     };
 
     await saveForm(data, station, match, teamNum, id != "none", id);
+
   }
 
   Future<bool> saveForm(Map<String, dynamic> data, int station, int match, int teamNum, bool editing, String id) async {
@@ -139,6 +141,7 @@ class GameConfig {
         print(response.statusCode);
         print(response.body);
       } else {
+        SnackBarService.showSnackBar(content: "Successfully saved form!");
         print("API successfully posted!");
       }
 
