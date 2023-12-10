@@ -4,6 +4,7 @@ import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:sham_scout_mobile/handleCode.dart';
 import 'package:sham_scout_mobile/shift.dart';
 import 'package:sham_scout_mobile/constants.dart';
@@ -36,6 +37,8 @@ class SettingsState extends State<Settings> {
 
   String tbaKey = "";
 
+  String version = "";
+
   @override
   void initState() {
     loadVariables();
@@ -59,6 +62,8 @@ class SettingsState extends State<Settings> {
 
     getTemplates();
 
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+
     setState(() {
       //Load the current event
         currentEventKey = currentKey;
@@ -66,6 +71,7 @@ class SettingsState extends State<Settings> {
         eventKeyOverride = override;
         tbaKey = tba;
         template = configName;
+        version = packageInfo.version;
     });
   }
 
@@ -238,92 +244,110 @@ class SettingsState extends State<Settings> {
   @override
   Widget build(BuildContext context) {
 
+    TextStyle biggerTextStyle = TextStyle(fontWeight: FontWeight.bold, fontSize: 16);
+    bool haveTBAKey = tbaKey != "";
+
     return Scaffold(
       body: SingleChildScrollView(
-          child: Column(
-            children: [
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-                child: TextField(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+              child: TextField(
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  hintText: "Enter event key"
+                ),
+                onSubmitted: (String? value) {
+
+                  if(value != currentEventKey) {
+                    if(eventKeyOverride) {
+                      saveEventKey(value!);
+                    } else {
+                      openModal(context, value!);
+                    }
+                  }
+                },
+                controller: eventKeyController,
+              )
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Text("Select Name"),
+                DropdownButton<String>(
+                  value: name,
+                  icon: const Icon(Icons.keyboard_arrow_down),
+                  onChanged: (String? value) {
+                    setScouter(value!);
+                  },
+                  items: shifts.isNotEmpty ? shifts.map((e) => e.scouter).toSet().toList().map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem(value: value, child: Text(value));
+                  }).toList() : [DropdownMenuItem(value: name, child: Text("FAIL"))],
+                )
+              ],
+            ),
+            Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: PrefsConstants.editorMode ? [TextField(
                   decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: "Enter event key"
+                      border: OutlineInputBorder(),
+                      hintText: "Enter TBA Key"
                   ),
                   onSubmitted: (String? value) {
-
-                    if(value != currentEventKey) {
-                      if(eventKeyOverride) {
-                        saveEventKey(value!);
-                      } else {
-                        openModal(context, value!);
-                      }
-                    }
+                    saveTBAKey();
                   },
-                  controller: eventKeyController,
-                )
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Text("Select Name"),
-                  DropdownButton<String>(
-                    value: name,
-                    icon: const Icon(Icons.keyboard_arrow_down),
-                    onChanged: (String? value) {
-                      setScouter(value!);
-                    },
-                    items: shifts.isNotEmpty ? shifts.map((e) => e.scouter).toSet().toList().map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem(value: value, child: Text(value));
-                    }).toList() : [DropdownMenuItem(value: name, child: Text("FAIL"))],
-                  )
-                ],
-              ),
-              Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-                  child: PrefsConstants.editorMode ? TextField(
-                    decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        hintText: "Enter TBA Key"
+                  controller: tbaKeyController,
+                )] :
+                [
+                  Text(!haveTBAKey ? "Talk to the Scouting Manager about TBA key" : "TBA Key Set!", style: biggerTextStyle,),
+                  Icon(!haveTBAKey ? CupertinoIcons.exclamationmark_square_fill : Icons.check, color: !haveTBAKey ? Colors.red : Colors.green,)
+                ]
+
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton.icon(
+                    onPressed: tbaKey != "" ? syncMatchSchedule : null,
+                    icon: Icon(
+                      Icons.sync,
                     ),
-                    onSubmitted: (String? value) {
-                      saveTBAKey();
-                    },
-                    controller: tbaKeyController,
-                  ) : Text(tbaKey == "" ? "TBA Key not set! Talk to the Scouting Manager" : "TBA Key Set!", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),)
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ElevatedButton.icon(
-                      onPressed: tbaKey != "" ? syncMatchSchedule : null,
-                      icon: Icon(
-                        Icons.sync,
-                      ),
-                      label: const Text("Sync Match Schedule")
-                  )
-                ],
-              ),
-              PrefsConstants.editorMode ?
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Text("Select Game Config"),
-                  DropdownButton<String>(
-                    value: template,
-                    icon: const Icon(Icons.keyboard_arrow_down),
-                    onChanged: (String? value) {
-                      setGameConfig(value!);
-                    },
-                    items: templates.map<DropdownMenuItem<String>>((String value) {
-                      print("evaluating: $value");
-                      return DropdownMenuItem(value: value, child: Text(value));
-                    }).toList(),
-                  )
-                ],
-              ) : Container(),
-            ],
-          )
+                    label: const Text("Sync Match Schedule")
+                )
+              ],
+            ),
+            PrefsConstants.editorMode ?
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Text("Select Game Config"),
+                DropdownButton<String>(
+                  value: template,
+                  icon: const Icon(Icons.keyboard_arrow_down),
+                  onChanged: (String? value) {
+                    setGameConfig(value!);
+                  },
+                  items: templates.map<DropdownMenuItem<String>>((String value) {
+                    print("evaluating: $value");
+                    return DropdownMenuItem(value: value, child: Text(value));
+                  }).toList(),
+                )
+              ],
+            ) : Container(),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 8),
+                  child: Text("Version: $version", style: biggerTextStyle,),
+                )
+              ],
+            )
+          ],
         )
+      )
     );
   }
 
