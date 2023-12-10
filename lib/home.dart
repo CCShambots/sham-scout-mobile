@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:sham_scout_mobile/formItems.dart';
@@ -17,8 +19,8 @@ class Home extends StatefulWidget {
 
 class HomeState extends State<Home> {
 
-  int matchesToGo = 0;
-  int matchesDone = 0;
+  int matchesToGo = -1;
+  int matchesDone = -1;
 
   ScheduleMatch? nextMatch;
 
@@ -48,8 +50,8 @@ class HomeState extends State<Home> {
       //Copy the list to make the state update
       setState(() {
         nextMatch = firstMatch;
-        matchesToGo = loaded.length;
-        matchesDone = finishedMatches.length;
+        matchesToGo = loaded.isNotEmpty ? loaded.length : -1;
+        matchesDone = finishedMatches.isNotEmpty ? finishedMatches.length : -1;
 
       });
     }
@@ -89,7 +91,7 @@ class HomeState extends State<Home> {
               },nextMatch!.teamNum.toString(),) : Text("No upcoming matches!", style: bigText,),
             ],
           ),
-          Row(
+          matchesDone != -1 ? Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               Column(
@@ -125,8 +127,8 @@ class HomeState extends State<Home> {
                 ],
               )
             ],
-          ),
-          CircularPercentIndicator(
+          ) : Container(),
+          matchesDone != -1 ? CircularPercentIndicator(
             radius: 100,
             lineWidth: 13.0,
             animation: true,
@@ -137,7 +139,7 @@ class HomeState extends State<Home> {
             ),
             circularStrokeCap: CircularStrokeCap.round,
             progressColor: Theme.of(context).colorScheme.inversePrimary,
-          )
+          ) : Container()
         ],
       )
     );

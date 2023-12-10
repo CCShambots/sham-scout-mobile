@@ -152,8 +152,10 @@ class BottomNavigationBarState extends State<BottomNavigation>{
   Future<void> backSaveForms(BuildContext context) async {
     final prefs = await SharedPreferences.getInstance();
 
+    String gameConfig = prefs.getString("game-config") ?? "";
+
     //Remove newline characters to avoid problems
-    final parsedJson = jsonDecode(GameConfig.parseOutRatingJson(jsonEncode(jsonDecode(prefs.getString("game-config") ?? '{"name": "None", "year": 2023, "fields":[]}'))));
+    final parsedJson = jsonDecode(GameConfig.parseOutRatingJson(jsonEncode(jsonDecode(gameConfig != "" ? gameConfig : '{"name": "None", "year": 2023, "fields":[]}'))));
 
     final GameConfig loadedConfig = GameConfig.fromJson(parsedJson);
 
