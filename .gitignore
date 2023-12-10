@@ -42,8 +42,6 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
-
-.idea/
 /android/key.properties
 CERTIFICATE.pfx
 mobile-crt.crt
