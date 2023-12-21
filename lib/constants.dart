@@ -21,6 +21,9 @@ class ApiConstants {
   //Schedules endpoints
   static String getSchedulesEndpoint = '/schedules/get/event/';
 
+  //Bytes endpoint
+  static String bytesUrl = "/bytes/get/key/";
+
   //Blue alliance endpoints
   static String tbaBaseUrl = 'https://www.thebluealliance.com/api/v3';
 

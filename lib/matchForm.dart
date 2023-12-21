@@ -7,6 +7,7 @@ import 'package:sham_scout_mobile/home.dart';
 import 'package:sham_scout_mobile/schedule.dart';
 import 'package:sham_scout_mobile/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 class MatchForm extends StatefulWidget {
   final bool redAlliance;
@@ -59,6 +60,37 @@ class MatchFormState extends State<MatchForm> {
     });
   }
 
+  Widget buildImagePopup(BuildContext context) {
+    return AlertDialog(
+      title: Text("$team's Robot"),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Stack(
+            children: [
+              const Center(
+                  child: Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: CircularProgressIndicator(),
+                  )
+              ),
+              Container(
+                clipBehavior: Clip.hardEdge,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10.0)
+                ),
+                child: FadeInImage.memoryNetwork(
+                    placeholder: kTransparentImage,
+                    image: "${ApiConstants.baseUrl}${ApiConstants.bytesUrl}$team-img"
+                ),
+              )
+            ],
+          )
+        ]
+      ),
+    );
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -93,14 +125,27 @@ class MatchFormState extends State<MatchForm> {
                 backgroundColor: widget.redAlliance ? redHeader : blueHeader,
                 leading: BackButton(onPressed: () => openModal(context)),
                 title: Text("${widget.scheduleMatch.getMatch()} - $team - ${widget.scheduleMatch.getStation()}"),
+                actions: [
+                  IconButton(
+                      icon: Icon(Icons.question_mark),
+                      onPressed: () {
+                        showDialog(context: context, builder: buildImagePopup);
+                      },
+                  )
+                ],
               ),
               body: Scaffold(
                 backgroundColor: widget.redAlliance ? redColor : blueColor,
                 body: SingleChildScrollView(
                     child: Column(
-                      children: config.items.map((e) =>
+                      children: [...config.items.map((e) =>
                       e.widget
-                      ).toList(),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: Text("--- END OF FORM ---", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),),
+                      )
+                      ],
                     )
                 ),
 
@@ -118,7 +163,7 @@ class MatchFormState extends State<MatchForm> {
                 tooltip: 'Save',
                 child: const Icon(Icons.save),
               ),
-          floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
+          floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         )
         )
     );

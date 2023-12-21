@@ -47,6 +47,7 @@ dependencies:
   vibration: ^1.8.1
   package_info_plus: ^5.0.1
   percent_indicator: ^4.2.3
+  transparent_image: ^2.0.1
 
 
 dev_dependencies:
