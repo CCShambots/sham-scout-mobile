@@ -103,6 +103,7 @@ class HandleCode {
 
     //Just save the event key for later
     prefs.setString(PrefsConstants.currentEventPref, items[0]);
+    prefs.setString(PrefsConstants.currentYearPref, items[0].substring(0, 4));
     prefs.setBool(PrefsConstants.overrideCurrentEventPref, false);
 
     prefs.setString(PrefsConstants.tbaPref, items[1]);

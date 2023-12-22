@@ -43,6 +43,7 @@ class PrefsConstants {
   static String activeConfigNamePref = "game-config-name";
   static String namePref = "name";
   static String currentEventPref = "current-event";
+  static String currentYearPref = "current-year";
   static String overrideCurrentEventPref = "current-event-override";
   static String numMatchesPref = "num-matches";
   static String schedulePref = "schedule";

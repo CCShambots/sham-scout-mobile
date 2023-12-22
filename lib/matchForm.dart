@@ -24,6 +24,7 @@ class MatchFormState extends State<MatchForm> {
 
   GameConfig config = GameConfig(title: "none", year: 2023, items: []);
   String team = "0";
+  String year = "0";
 
   bool loadedValues = false;
 
@@ -56,6 +57,7 @@ class MatchFormState extends State<MatchForm> {
     setState(() {
       config = loadedConfig;
       team = outputTeamNum;
+      year = prefs.getString(PrefsConstants.currentYearPref)!;
 
     });
   }
@@ -81,7 +83,7 @@ class MatchFormState extends State<MatchForm> {
                 ),
                 child: FadeInImage.memoryNetwork(
                     placeholder: kTransparentImage,
-                    image: "${ApiConstants.baseUrl}${ApiConstants.bytesUrl}$team-img"
+                    image: "${ApiConstants.baseUrl}${ApiConstants.bytesUrl}$team-img-$year"
                 ),
               )
             ],
