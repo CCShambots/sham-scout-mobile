@@ -107,6 +107,8 @@ class HandleCode {
 
     prefs.setString(PrefsConstants.tbaPref, items[1]);
 
+    prefs.remove(PrefsConstants.namePref);
+
     pullTemplate(items[2], prefs);
   }
 
