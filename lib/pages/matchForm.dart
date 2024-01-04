@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sham_scout_mobile/formItems.dart';
-import 'package:sham_scout_mobile/pages/home.dart';
 import 'package:sham_scout_mobile/pages/schedule.dart';
 import 'package:sham_scout_mobile/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';

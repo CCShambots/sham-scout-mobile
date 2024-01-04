@@ -49,5 +49,7 @@ class PrefsConstants {
   static String schedulePref = "schedule";
   static String tbaPref = "tba-key";
   static String apiAddressPref = "api-address";
+  static String emailPref = "email";
+  static String jwtPref = "jwt";
 
 }

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -12,7 +13,9 @@ import 'package:sham_scout_mobile/scan.dart';
 import 'package:sham_scout_mobile/pages/settings.dart';
 import 'package:sham_scout_mobile/constants.dart';
 import 'package:http/http.dart' as http;
+import 'package:sham_scout_mobile/util/Session.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SnackBarService {
   static final scaffoldKey = GlobalKey<ScaffoldMessengerState>();
@@ -24,31 +27,52 @@ class SnackBarService {
 
 class ConnectionStatus {
   static bool connected = false;
+  static bool openBrowserForCookieGen = false;
 
   static const connectionInterval = Duration(seconds: 5);
 
   static checkConnection() async{
-    bool wasAlreadyConnected = connected;
 
-    var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.statusEndpoint);
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    String apiBase = prefs.getString("api") ?? "";
+
+    //Set the default API location
+    if(apiBase == "") {
+      apiBase = 'https://scout.voth.name:3000/protected';
+
+      prefs.setString("api", apiBase);
+    }
+
+    var url = Uri.parse("$apiBase/code");
 
     try {
-      var response = await http.get(url).timeout(const Duration(seconds: 5), onTimeout: () {
-        return http.Response('Disconnected Error', 408);
-      });
+      var client = HttpClient();
+      var request = await client.getUrl(url);
+      request.followRedirects = false;
 
-      bool success = response.statusCode == 200;
-
-      ConnectionStatus.connected = success;
+      int responseCode =
+      !Session.cookieExists ?
+      (await request.close().timeout(const Duration(seconds: 5))).statusCode :
+      (await Session.get(apiBase)).statusCode;
+      
+      switch(responseCode) {
+        case 200:
+          //All good, ready to use
+          ConnectionStatus.connected = true;
+          openBrowserForCookieGen = false;
+          break;
+        default:
+          //Have no cookie, redirect user to page to generate
+          if(!openBrowserForCookieGen) {
+            await launchUrl(url);
+          }
+          openBrowserForCookieGen = true;
+          break;
+      }
 
     } catch(e) {
       ConnectionStatus.connected = false;
-    }
-
-    if(connected && !wasAlreadyConnected) {
-      SnackBarService.showSnackBar(content: "Connected to the Database!");
-    } else if(!connected && wasAlreadyConnected) {
-      SnackBarService.showSnackBar(content: "Lost connection to the Database!");
     }
   }
 
@@ -58,6 +82,8 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp]);
+
+  Session.updateCookie();
 
 
   ApiConstants.loadRemoteAPI();
@@ -114,33 +140,46 @@ class BottomNavigationBarState extends State<BottomNavigation>{
   int selectedIndex = 2;
   final pageViewController = PageController(initialPage: 2);
 
+  String email = "";
+  var emailController = TextEditingController();
+  String code = "";
+
+  bool showCookieModal = false;
+  bool cookieModalOpen = false;
+
 
   @override
   void initState() {
     super.initState();
-    loadName();
+    loadPrefsValues();
 
     Future.delayed(Duration(seconds: 2), () {
-      setState(() {
-        wasConnected = connection;
-        connection = ConnectionStatus.connected;
-      });
+      handleConnectionCheckResult();
     });
 
     Timer.periodic(ConnectionStatus.connectionInterval, (timer) {
-      setState(() {
-        wasConnected = connection;
-        connection = ConnectionStatus.connected;
-      });
+      handleConnectionCheckResult();
     });
   }
 
-  Future<void> loadName() async {
+  void handleConnectionCheckResult() {
+    setState(() {
+      connection = ConnectionStatus.connected;
+      showCookieModal = ConnectionStatus.openBrowserForCookieGen;
+    });
+  }
+
+  Future<void> loadPrefsValues() async {
 
     final prefs = await SharedPreferences.getInstance();
 
+    String email = prefs.getString(PrefsConstants.emailPref) ?? "";
+
+    emailController.text = email;
+
     setState(() {
       name = prefs.getString(PrefsConstants.namePref) != null ? prefs.getString(PrefsConstants.namePref) ?? "" : name;
+      this.email = email;
     });
   }
 
@@ -184,11 +223,98 @@ class BottomNavigationBarState extends State<BottomNavigation>{
 
   }
 
+  void updateEmail(String newEmail) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    prefs.setString("email", newEmail);
+
+    setState(() {
+      email = newEmail;
+    });
+  }
+
+  void openAuthModal(BuildContext context) {
+    showDialog(context: context, builder: (BuildContext context) =>
+        AlertDialog(
+            content:  Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text("Input Login info"),
+                TextField(
+                  decoration: const InputDecoration(
+                      border: UnderlineInputBorder(),
+                      labelText: 'Enter Email Address'
+                  ),
+                  controller: emailController,
+                  onChanged: (value) {
+                    updateEmail(value);
+                  },
+                ),
+                TextField(
+                  decoration: const InputDecoration(
+                      border: UnderlineInputBorder(),
+                      labelText: 'Enter One-Time Code'
+                  ),
+                  onChanged: (value) {
+                    setState(() {
+                      code = value;
+                    });
+                  },
+                )
+              ],
+            ),
+            actions: <TextButton>[
+              TextButton(
+                  onPressed: () async {
+                    setState(() {
+                      cookieModalOpen = false;
+                      showCookieModal = false;
+                    });
+                    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+                    String api = prefs.getString("api") ?? "";
+
+                    Uri url = Uri.parse("${api.replaceAll("/protected", "")}/auth/$code/$email");
+
+                    http.Response resp = await http.get(url);
+                    prefs.setString(PrefsConstants.jwtPref, resp.body);
+
+                    Session.updateCookie();
+
+                    if(resp.statusCode == 200) {
+                      ConnectionStatus.openBrowserForCookieGen = false;
+                    }
+
+                    if(mounted) {
+                      Navigator.pop(context);
+                    }
+                  },
+                  child: const Text('Submit')
+              )
+            ]
+        )).then((val) {
+      setState(() {
+        cookieModalOpen = false;
+        showCookieModal = false;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
 
     //Reload the user's name
-    loadName();
+    loadPrefsValues();
+
+    if(showCookieModal && !cookieModalOpen) {
+      setState(() {
+        cookieModalOpen = true;
+      });
+
+      Future.delayed(Duration.zero, () {
+        openAuthModal(context);
+      });
+    }
 
     if(connection && !wasConnected) {
       backSaveForms(context);

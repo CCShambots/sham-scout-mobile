@@ -48,6 +48,7 @@ dependencies:
   package_info_plus: ^5.0.1
   percent_indicator: ^4.2.3
   transparent_image: ^2.0.1
+  url_launcher: ^6.2.2
 
 
 dev_dependencies:
