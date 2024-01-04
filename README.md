@@ -3,7 +3,6 @@
 Sham Scout Mobile
 
 ## Mobile Builds
-- Ensure `editorMode` is set to `false` in `constants.dart`
 - Update the version number with the year as the major version. Bump the minor version for new features and bump the patch number for bug fixes.
     - Ex. 2023.1.1 --> 2024.0.0 at the start of a new season
     - Ex. 2023.1.1 --> 2023.2.0 when adding new features
@@ -18,15 +17,7 @@ Sham Scout Mobile
   - Enter the version number as the name
   - Write any relevant changelog information in the description section
 - Apple
-  - IDK if Appollo will give us access, but if they do, I need to write docuemtation for how to do that
-  - Anyways, somehow get your `.ipa` file up to [App Store Connect](https://appstoreconnect.apple.com)
-  - Update based on status of app being released to the public
-
-## Editor builds
-- Make sure you have [Inno Setup](https://jrsoftware.org/isdl.php) installed
-- Ensure `editorMode` is set to `true` in `constants.dart`
-- Run `flutter build windows`
-- Open the `editor builder script.iss` and run it
-- Upload `ShamScoutEditor.exe` to GitHub
-- Set `editorMode` back to `false` in `constants.dart`
+  - Use Odevio to publish a production build
+  - In App Store Connect, go to the Testflight versions and "Manage" the missing compliance (the app doesn't use any encryption algorithms)
+  - In the App Store section, add version information, save it, and submit for review
 
