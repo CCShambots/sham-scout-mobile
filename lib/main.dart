@@ -3,14 +3,13 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:sham_scout_mobile/SearchWindow.dart';
 import 'package:sham_scout_mobile/formItems.dart';
-import 'package:sham_scout_mobile/history.dart';
-import 'package:sham_scout_mobile/home.dart';
+import 'package:sham_scout_mobile/pages/history.dart';
+import 'package:sham_scout_mobile/pages/home.dart';
 import 'package:sham_scout_mobile/matches.dart';
-import 'package:sham_scout_mobile/schedule.dart';
+import 'package:sham_scout_mobile/pages/schedule.dart';
 import 'package:sham_scout_mobile/scan.dart';
-import 'package:sham_scout_mobile/settings.dart';
+import 'package:sham_scout_mobile/pages/settings.dart';
 import 'package:sham_scout_mobile/constants.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -148,8 +147,7 @@ class BottomNavigationBarState extends State<BottomNavigation>{
   static const TextStyle optionStyle = TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static List<Widget> widgetOptions = <Widget>[
     Matches(),
-    !PrefsConstants.editorMode ?
-    Scan() : SearchWindow(),
+    Scan(),
     Home(),
     Schedule(),
     History(),
@@ -230,14 +228,9 @@ class BottomNavigationBarState extends State<BottomNavigation>{
               icon: Icon(Icons.list_alt),
               label:'Matches',
           ),
-          !PrefsConstants.editorMode ?
           BottomNavigationBarItem(
               icon: Icon(Icons.qr_code),
               label:'Scan',
-          ) :
-          BottomNavigationBarItem(
-            icon: Icon(Icons.search),
-            label:'Scan',
           ),
           BottomNavigationBarItem(
               icon: Icon(Icons.home),

@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sham_scout_mobile/formItems.dart';
-import 'package:sham_scout_mobile/matchForm.dart';
-import 'package:sham_scout_mobile/QRCodeDisplay.dart';
-import 'package:sham_scout_mobile/schedule.dart';
+import 'package:sham_scout_mobile/pages/matchForm.dart';
+import 'package:sham_scout_mobile/pages/QRCodeDisplay.dart';
+import 'package:sham_scout_mobile/pages/schedule.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class History extends StatefulWidget {

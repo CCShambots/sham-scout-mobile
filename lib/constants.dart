@@ -4,7 +4,7 @@ class ApiConstants {
   static String remoteUrl = 'http://167.71.240.213:8080';
   static String localUrl = 'http://localhost:8080';
 
-  static String baseUrl = PrefsConstants.editorMode ? localUrl : remoteUrl;
+  static String baseUrl = remoteUrl;
 
   //Status endpoint
   static String statusEndpoint = '/status';
@@ -33,7 +33,7 @@ class ApiConstants {
     String host = prefs.getString(PrefsConstants.apiAddressPref) ?? remoteUrl;
 
     remoteUrl = host;
-    baseUrl = PrefsConstants.editorMode ? localUrl : remoteUrl;
+    baseUrl = remoteUrl;
   }
 }
 
@@ -50,5 +50,4 @@ class PrefsConstants {
   static String tbaPref = "tba-key";
   static String apiAddressPref = "api-address";
 
-  static bool editorMode = false;
 }

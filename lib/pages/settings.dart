@@ -5,7 +5,7 @@ import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:sham_scout_mobile/handleCode.dart';
+import 'package:sham_scout_mobile/util/handleCode.dart';
 import 'package:sham_scout_mobile/shift.dart';
 import 'package:sham_scout_mobile/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -290,16 +290,7 @@ class SettingsState extends State<Settings> {
             ),
             Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: PrefsConstants.editorMode ? [TextField(
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      hintText: "Enter TBA Key"
-                  ),
-                  onSubmitted: (String? value) {
-                    saveTBAKey();
-                  },
-                  controller: tbaKeyController,
-                )] :
+                children:
                 [
                   Text(!haveTBAKey ? "Talk to Scouting Manager abt. TBA key" : "TBA Key Set!", style: biggerTextStyle,),
                   Icon(!haveTBAKey ? CupertinoIcons.exclamationmark_square_fill : Icons.check, color: !haveTBAKey ? Colors.red : Colors.green,)
@@ -318,24 +309,6 @@ class SettingsState extends State<Settings> {
                 )
               ],
             ),
-            PrefsConstants.editorMode ?
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Text("Select Game Config"),
-                DropdownButton<String>(
-                  value: template,
-                  icon: const Icon(Icons.keyboard_arrow_down),
-                  onChanged: (String? value) {
-                    setGameConfig(value!);
-                  },
-                  items: templates.map<DropdownMenuItem<String>>((String value) {
-                    print("evaluating: $value");
-                    return DropdownMenuItem(value: value, child: Text(value));
-                  }).toList(),
-                )
-              ],
-            ) : Container(),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [

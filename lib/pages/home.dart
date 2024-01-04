@@ -3,8 +3,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:sham_scout_mobile/formItems.dart';
-import 'package:sham_scout_mobile/matchForm.dart';
-import 'package:sham_scout_mobile/schedule.dart';
+import 'package:sham_scout_mobile/pages/matchForm.dart';
+import 'package:sham_scout_mobile/pages/schedule.dart';
 import 'package:sham_scout_mobile/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
