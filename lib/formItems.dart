@@ -8,8 +8,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:sham_scout_mobile/main.dart';
 import 'package:sham_scout_mobile/pages/schedule.dart';
 import 'package:sham_scout_mobile/constants.dart';
+import 'package:sham_scout_mobile/util/Session.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
 
 class GameConfig {
 
@@ -88,7 +88,7 @@ class GameConfig {
       //Save to the server through the api
       Response? response = await saveToAPI(json, editing, id).timeout(Duration(seconds: 2));
 
-      print(response!.body);
+      // print(response!.body);
 
       //If we got a response and the request succeeded, save the uuid
       if(response != null && response.statusCode == 200) {
@@ -120,21 +120,12 @@ class GameConfig {
   Future<Response?> saveToAPI(String json, bool editing, String id) async {
 
     try {
-      var url = !editing ? Uri.parse("${ApiConstants.baseUrl}${ApiConstants.submitFormEndpoint}$title") : Uri.parse("${ApiConstants.baseUrl}${ApiConstants.editFormEndpoint}$title/id/$id");
-      var response = await (!editing ? http.post(
-        url,
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: json,
-      ) : http.put(
-        url,
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: json,
-      ));
-
+      var url = !editing ? "${ApiConstants.baseUrl}${ApiConstants.submitFormEndpoint}$title" : "${ApiConstants.baseUrl}${ApiConstants.editFormEndpoint}$title/$id/edit";
+      var response = await (!editing ?
+      Session.post(url, json,)
+          :
+      Session.patch(url, json,)
+      );
 
       if (response.statusCode != 200) {
         print("FAILED API POST");
@@ -196,6 +187,8 @@ class GameConfig {
       Map<String,dynamic> loadedJson = jsonDecode(fileLoaded.readAsStringSync());
 
       if(loadedJson["id"] == "none") {
+
+        print("attempting to upload");
 
         //0-indexed
         int matchIndex = loadedJson["match_number"]-1;

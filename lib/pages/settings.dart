@@ -5,6 +5,7 @@ import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:sham_scout_mobile/util/Session.dart';
 import 'package:sham_scout_mobile/util/handleCode.dart';
 import 'package:sham_scout_mobile/shift.dart';
 import 'package:sham_scout_mobile/constants.dart';
@@ -99,8 +100,8 @@ class SettingsState extends State<Settings> {
 
   Future<void> getShifts(String eventKey) async {
     try {
-      var url = Uri.parse("${ApiConstants.baseUrl}${ApiConstants.getSchedulesEndpoint}$eventKey");
-      var response = await http.get(url);
+      var url = "${ApiConstants.baseUrl}${ApiConstants.getSchedulesEndpoint}$eventKey";
+      var response = await Session.get(url);
       if (response.statusCode == 200) {
         setState(() {
           shifts = List.from(jsonDecode(response.body)["shifts"]).map((e) => Shift.fromJson(e)).toList();
@@ -117,9 +118,9 @@ class SettingsState extends State<Settings> {
 
   Future<void> getTemplates() async {
     try {
-      var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.getTemplatesEndpoint);
+      var url = ApiConstants.baseUrl + ApiConstants.getTemplatesEndpoint;
 
-      var response=  await http.get(url);
+      var response=  await Session.get(url);
 
       if(response.statusCode == 200) {
 
@@ -159,9 +160,9 @@ class SettingsState extends State<Settings> {
   Future<void> setGameConfig(String configName) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    var url = Uri.parse("${ApiConstants.baseUrl}${ApiConstants.getTemplateByNameEndpoint}$configName");
+    var url = "${ApiConstants.baseUrl}${ApiConstants.getTemplateByNameEndpoint}$configName";
 
-    var response =  await http.get(url);
+    var response =  await Session.get(url);
 
     prefs.setString(PrefsConstants.activeConfigPref, response.body);
     prefs.setString(PrefsConstants.activeConfigNamePref, configName);

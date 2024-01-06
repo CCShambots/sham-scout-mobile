@@ -3,7 +3,9 @@ import 'package:sham_scout_mobile/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Session {
-  static Map<String, String> headers = {};
+  static Map<String, String> headers = {
+    'Content-Type': 'application/json; charset=UTF-8',
+  };
   static bool cookieExists = false;
 
   static Future<http.Response> get(String url) async {

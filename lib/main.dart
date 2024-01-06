@@ -35,16 +35,7 @@ class ConnectionStatus {
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    String apiBase = prefs.getString("api") ?? "";
-
-    //Set the default API location
-    if(apiBase == "") {
-      apiBase = 'https://scout.voth.name:3000/protected';
-
-      prefs.setString("api", apiBase);
-    }
-
-    var url = Uri.parse("$apiBase/code");
+    var url = Uri.parse("${ApiConstants.baseUrl}/code");
 
     try {
       var client = HttpClient();
@@ -54,8 +45,8 @@ class ConnectionStatus {
       int responseCode =
       !Session.cookieExists ?
       (await request.close().timeout(const Duration(seconds: 5))).statusCode :
-      (await Session.get(apiBase)).statusCode;
-      
+      (await Session.get(ApiConstants.baseUrl)).statusCode;
+
       switch(responseCode) {
         case 200:
           //All good, ready to use
@@ -84,7 +75,6 @@ void main() {
       [DeviceOrientation.portraitUp]);
 
   Session.updateCookie();
-
 
   ApiConstants.loadRemoteAPI();
 
@@ -204,9 +194,12 @@ class BottomNavigationBarState extends State<BottomNavigation>{
   }
 
   Future<void> backSaveForms(BuildContext context) async {
+    print("backsaving");
+
     final prefs = await SharedPreferences.getInstance();
 
     String gameConfig = prefs.getString(PrefsConstants.activeConfigPref) ?? "";
+    print(gameConfig);
 
     //Remove newline characters to avoid problems
     final parsedJson = jsonDecode(GameConfig.parseOutRatingJson(jsonEncode(jsonDecode(gameConfig != "" ? gameConfig : '{"name": "None", "year": 2023, "fields":[]}'))));
@@ -272,9 +265,7 @@ class BottomNavigationBarState extends State<BottomNavigation>{
                     });
                     SharedPreferences prefs = await SharedPreferences.getInstance();
 
-                    String api = prefs.getString("api") ?? "";
-
-                    Uri url = Uri.parse("${api.replaceAll("/protected", "")}/auth/$code/$email");
+                    Uri url = Uri.parse("${ApiConstants.baseUrl.replaceAll("/protected", "")}/auth/$code/$email");
 
                     http.Response resp = await http.get(url);
                     prefs.setString(PrefsConstants.jwtPref, resp.body);
@@ -321,6 +312,12 @@ class BottomNavigationBarState extends State<BottomNavigation>{
 
       setState(() {
         wasConnected = connection;
+      });
+    }
+
+    if(!connection) {
+      setState(() {
+        wasConnected = false;
       });
     }
 

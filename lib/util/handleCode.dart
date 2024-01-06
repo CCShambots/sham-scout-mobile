@@ -1,6 +1,7 @@
 import 'package:sham_scout_mobile/formItems.dart';
 import 'package:sham_scout_mobile/pages/settings.dart';
 import 'package:sham_scout_mobile/constants.dart';
+import 'package:sham_scout_mobile/util/Session.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:http/http.dart' as http;
@@ -84,6 +85,7 @@ class HandleCode {
     prefs.setString(PrefsConstants.matchSchedulePref, "");
     prefs.setString(PrefsConstants.currentEventPref, "");
     prefs.setStringList(PrefsConstants.schedulePref, []);
+    prefs.setString(PrefsConstants.apiAddressPref, "");
 
     GameConfig.deleteSubmittedForms();
 
@@ -115,9 +117,9 @@ class HandleCode {
 
   static pullTemplate(String name, SharedPreferences prefs) async {
 
-    Uri path = Uri.parse("${ApiConstants.remoteUrl}${ApiConstants.getTemplateByNameEndpoint}$name");
 
-    http.Response response = await http.get(path);
+    http.Response response =
+      await Session.get("${ApiConstants.baseUrl}${ApiConstants.getTemplateByNameEndpoint}$name");
 
     saveGameConfig(response.body, prefs);
   }

@@ -1,28 +1,22 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiConstants {
-  static String remoteUrl = 'http://167.71.240.213:8080';
-  static String localUrl = 'http://localhost:8080';
-
-  static String baseUrl = remoteUrl;
-
-  //Status endpoint
-  static String statusEndpoint = '/status';
+  static String baseUrl = 'https://scout.voth.name:3000/protected';
 
   //Templates endpoints
-  static String getTemplatesEndpoint = '/templates/get';
-  static String getTemplateByNameEndpoint = '/templates/get/name/';
+  static String getTemplatesEndpoint = '/templates/';
+  static String getTemplateByNameEndpoint = '/template/';
 
   //Forms endpoints
-  static String getFormEndpoint = '/forms/get/template/';
-  static String submitFormEndpoint = '/forms/submit/template/';
-  static String editFormEndpoint = '/forms/edit/template/';
+  static String getFormEndpoint = '/forms/';
+  static String submitFormEndpoint = '/form/';
+  static String editFormEndpoint = '/form/';
 
   //Schedules endpoints
-  static String getSchedulesEndpoint = '/schedules/get/event/';
+  static String getSchedulesEndpoint = '/schedule/';
 
   //Bytes endpoint
-  static String bytesUrl = "/bytes/get/key/";
+  static String bytesUrl = "/bytes/";
 
   //Blue alliance endpoints
   static String tbaBaseUrl = 'https://www.thebluealliance.com/api/v3';
@@ -30,10 +24,10 @@ class ApiConstants {
   static void loadRemoteAPI() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    String host = prefs.getString(PrefsConstants.apiAddressPref) ?? remoteUrl;
-
-    remoteUrl = host;
-    baseUrl = remoteUrl;
+    String? host = prefs.getString(PrefsConstants.apiAddressPref);
+    if(host != null && host != "") {
+      baseUrl = host;
+    }
   }
 }
 
