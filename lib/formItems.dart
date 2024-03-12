@@ -384,7 +384,7 @@ class ShortTextFieldState extends FormItemState<ShortTextField>{
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        Text(widget.label, style: labelTextStyle,),
+        Flexible(child: Text(widget.label, style: labelTextStyle,)),
         Expanded(child: TextField(
           controller: textController,
           onChanged: (String value) {
@@ -432,7 +432,7 @@ class NumberFieldState extends FormItemState<NumberField>{
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        Text(widget.label, style: labelTextStyle),
+        Flexible(child: Text(widget.label, style: labelTextStyle)),
         Row(
           children: [
             IconButton(
@@ -490,7 +490,7 @@ class RatingFieldState extends FormItemState<RatingField>{
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        Text(widget.label, style: labelTextStyle,),
+        Flexible(child: Text(widget.label, style: labelTextStyle,)),
         Row(
           children: [
             Text(widget.min.toString(), style: labelTextStyle,),
@@ -556,7 +556,7 @@ class CheckBoxFieldState extends FormItemState<CheckBoxField>{
     return Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          Text(widget.label, style: labelTextStyle,),
+          Flexible(child: Text(widget.label, style: labelTextStyle,), ),
           Checkbox(
               value: val,
               onChanged: (e) => setVal(e ?? false)
