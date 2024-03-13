@@ -357,7 +357,7 @@ class BottomNavigationBarState extends State<BottomNavigation>{
           ),
           BottomNavigationBarItem(
               icon: Icon(Icons.home),
-              label:'Search',
+              label:'Home',
           ),
           BottomNavigationBarItem(
               icon: Icon(Icons.calendar_month),
