@@ -44,19 +44,26 @@ class HistoryState extends State<History> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: submittedMatches.isNotEmpty ? SingleChildScrollView(
-            child: Column(
-              children: submittedMatches.map((e) =>
-                  ScheduleItem(e, () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => MatchForm(
-                          scheduleMatch:e,
-                          redAlliance: e.getStation().toLowerCase().contains("red"),
-                        ),
-                      ),
-                    );
-                  }, e.teamNum.toString(), true)
-              ).toList()
+            child: Container(
+                constraints: BoxConstraints(
+                  maxHeight: MediaQuery.of(context).size.height, // or any other desired height
+                ),
+                child: ListView.builder(
+                  itemCount: submittedMatches.length,
+                  itemBuilder: (context, index) {
+                     var e = submittedMatches[index];
+                      return ScheduleItem(e, () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => MatchForm(
+                              scheduleMatch:e,
+                              redAlliance: e.getStation().toLowerCase().contains("red"),
+                            ),
+                          ),
+                        );
+                      }, e.teamNum.toString(), true);
+                  },
+                )
             )
         ):
           Center(

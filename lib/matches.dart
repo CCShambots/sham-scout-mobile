@@ -49,78 +49,113 @@ class MatchesState extends State<Matches> {
     Color blueColor = isDarkMode ? Colors.blue[800]! : Colors.blue[100]!;
 
     return Scaffold(
-        body: matchSchedule.length > 0 ? SingleChildScrollView(
-            child: Column(
-              children:
-                matchSchedule.map((e) =>
-                  Container(
+        body: matchSchedule.isNotEmpty ?
+            Container(
+              constraints: BoxConstraints(
+                maxHeight: MediaQuery.of(context).size.height, // or any other desired height
+              ),
+              child: ListView.builder(
+                itemCount: matchSchedule.length,
+                itemBuilder: (context, index) {
+                  var e = matchSchedule[index];
+                  return Container(
                       margin: EdgeInsets.all(5),
                       decoration: BoxDecoration(
-                          color: Theme.of(context).cardColor,
+                          color: Theme
+                              .of(context)
+                              .cardColor,
                           borderRadius: BorderRadius.all(Radius.circular(10))
                       ),
-                    child:Row(
-                      children: [
-                        Expanded(
-                            flex: 1,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                Text((matchSchedule.indexOf(e)+1).toString()),
-                              ],
-                            )
-                        ),
-                        Expanded(
-                            flex: 9,
-                            child: Column(
-                              children: [
-                                Container(
-                                  height: 40,
-                                  padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(10),
-                                        topRight: Radius.circular(10)
-                                      ),
-                                      color: redColor
-                                  ),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      child: Row(
+                        children: [
+                          Expanded(
+                              flex: 1,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment
+                                    .spaceAround,
+                                children: [
+                                  Text((matchSchedule.indexOf(e) + 1)
+                                      .toString()),
+                                ],
+                              )
+                          ),
+                          Expanded(
+                              flex: 9,
+                              child: Column(
+                                children: [
+                                  Container(
+                                    height: 40,
+                                    padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(10),
+                                            topRight: Radius.circular(10)
+                                        ),
+                                        color: redColor
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment
+                                          .spaceBetween,
 
-                                    children: [
-                                      TeamLink(matchIndex: matchSchedule.indexOf(e), station: Station.Red1, team: e.red1),
-                                      TeamLink(matchIndex: matchSchedule.indexOf(e), station: Station.Red2, team: e.red2),
-                                      TeamLink(matchIndex: matchSchedule.indexOf(e), station: Station.Red3, team: e.red3),
-                                    ],
+                                      children: [
+                                        TeamLink(
+                                            matchIndex: matchSchedule.indexOf(
+                                                e),
+                                            station: Station.Red1,
+                                            team: e.red1),
+                                        TeamLink(
+                                            matchIndex: matchSchedule.indexOf(
+                                                e),
+                                            station: Station.Red2,
+                                            team: e.red2),
+                                        TeamLink(
+                                            matchIndex: matchSchedule.indexOf(
+                                                e),
+                                            station: Station.Red3,
+                                            team: e.red3),
+                                      ],
+                                    ),
                                   ),
-                                ),
-                                Container(
-                                  height: 40,
-                                  padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.only(
-                                        bottomRight: Radius.circular(10),
-                                        bottomLeft: Radius.circular(10)
-                                      ),
-                                      color: blueColor
-                                  ),
-                                  child:Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      TeamLink(matchIndex: matchSchedule.indexOf(e), station: Station.Blue1, team: e.blue1),
-                                      TeamLink(matchIndex: matchSchedule.indexOf(e), station: Station.Blue2, team: e.blue2),
-                                      TeamLink(matchIndex: matchSchedule.indexOf(e), station: Station.Blue3, team: e.blue3),
-                                    ],
-                                  ),
-                                )
-                              ],
-                            )
-                        )
-                      ],
-                    ),
-                  ),
-                ).toList(),
-            )
+                                  Container(
+                                    height: 40,
+                                    padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.only(
+                                            bottomRight: Radius.circular(10),
+                                            bottomLeft: Radius.circular(10)
+                                        ),
+                                        color: blueColor
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment
+                                          .spaceBetween,
+                                      children: [
+                                        TeamLink(
+                                            matchIndex: matchSchedule.indexOf(
+                                                e),
+                                            station: Station.Blue1,
+                                            team: e.blue1),
+                                        TeamLink(
+                                            matchIndex: matchSchedule.indexOf(
+                                                e),
+                                            station: Station.Blue2,
+                                            team: e.blue2),
+                                        TeamLink(
+                                            matchIndex: matchSchedule.indexOf(
+                                                e),
+                                            station: Station.Blue3,
+                                            team: e.blue3),
+                                      ],
+                                    ),
+                                  )
+                                ],
+                              )
+                          )
+                        ],
+                      )
+                  );
+                }
+              )
         ) :
         Center(
           child: Text("No Match Schedule Found!", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),)

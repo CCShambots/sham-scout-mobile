@@ -54,22 +54,31 @@ class ScheduleState extends State<Schedule> {
     loadMatches();
 
     return Scaffold(
-        body:  matches.isNotEmpty ? SingleChildScrollView(
-          child: Column(
-            children: matches!.map((e) =>
-                ScheduleItem(e, () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => MatchForm(
-                        scheduleMatch:e,
-                        redAlliance: e.getStation().toLowerCase().contains("red"),
-                      ),
-                    ),
-                  );
-                }, teamNums[e.matchNum * 6 + e.station.index], )
-              ,).toList()
+        body:  matches.isNotEmpty ?
+            Container(
+                constraints: BoxConstraints(
+                  maxHeight: MediaQuery.of(context).size.height, // or any other desired height
+                ),
+                child: ListView.builder(
+                  itemCount: matches.length,
+                  itemBuilder: (context, index) {
+                    var e = matches[index];
+
+                    return ScheduleItem(e, () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => MatchForm(
+                            scheduleMatch:e,
+                            redAlliance: e.getStation().toLowerCase().contains("red"),
+                          ),
+                        ),
+                      );
+                    }, teamNums[e.matchNum * 6 + e.station.index], );
+
+                  },
+              )
           )
-        ):
+        :
         Center(
           child:Text("No Upcoming Matches!", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),),
         ),
