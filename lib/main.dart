@@ -30,12 +30,15 @@ class ConnectionStatus {
   static bool openBrowserForCookieGen = false;
 
   static const connectionInterval = Duration(seconds: 5);
+  static var url = Uri.parse("");
 
   static checkConnection() async{
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    var url = Uri.parse("${ApiConstants.baseUrl}/code");
+    String apiBase = ApiConstants.baseUrl;
+
+    url = Uri.parse("$apiBase/code");
 
     try {
       var client = HttpClient();
@@ -63,6 +66,8 @@ class ConnectionStatus {
       }
 
     } catch(e) {
+      print(e);
+
       ConnectionStatus.connected = false;
     }
   }
@@ -265,15 +270,17 @@ class BottomNavigationBarState extends State<BottomNavigation>{
                     });
                     SharedPreferences prefs = await SharedPreferences.getInstance();
 
-                    Uri url = Uri.parse("${ApiConstants.baseUrl.replaceAll("/protected", "")}/auth/$code/$email");
+                    Uri url = Uri.parse("${ApiConstants.baseUrl.replaceAll("/protected", "")}/auth/$code/${email.toLowerCase()}");
 
                     http.Response resp = await http.get(url);
-                    prefs.setString(PrefsConstants.jwtPref, resp.body);
+                    if(!resp.body.contains("<!doctype")) {
+                      prefs.setString(PrefsConstants.jwtPref, resp.body);
 
-                    Session.updateCookie();
+                      Session.updateCookie();
 
-                    if(resp.statusCode == 200) {
-                      ConnectionStatus.openBrowserForCookieGen = false;
+                      if(resp.statusCode == 200) {
+                        ConnectionStatus.openBrowserForCookieGen = false;
+                      }
                     }
 
                     if(mounted) {
@@ -331,7 +338,14 @@ class BottomNavigationBarState extends State<BottomNavigation>{
                 color: connection ? Colors.green : Colors.red,
               ),
               tooltip: connection ? "API Connected" : "API Disconnected",
-              onPressed: null,
+              onPressed: () async {
+                if(!connection) {
+                  //Open the url and display the cookie modal
+                  SharedPreferences prefs = await SharedPreferences.getInstance();
+
+                  prefs.setString(PrefsConstants.jwtPref, "");
+                }
+              },
           )
         ],
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,

@@ -26,7 +26,10 @@ class Session {
   static void updateCookie() async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String cookieVal = prefs.getString(PrefsConstants.jwtPref) ?? "";
-    if(cookieVal != "") {
+
+    if(cookieVal.contains("<!doctype")) {
+      prefs.setString(PrefsConstants.jwtPref, "");
+    } else if(cookieVal != "") {
       headers['cookie'] = cookieVal;
       cookieExists = true;
     }
