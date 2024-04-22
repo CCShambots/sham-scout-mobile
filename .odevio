@@ -1,7 +1,9 @@
 app-key=3JWJ
-build-type=publication
-flutter=3.16.5
+build-type=configuration
+flutter=3.19.6
 minimal-ios-version=11.0
+app-version=2024.1.4
+build-number=16
 mode=release
 target=lib/main.dart
 tunnel-host=localhost
