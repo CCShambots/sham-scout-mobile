@@ -1,7 +1,7 @@
 app-key=3JWJ
-build-type=configuration
+build-type=validation
 flutter=3.19.6
-minimal-ios-version=11.0
+minimal-ios-version=12.0
 app-version=2024.1.4
 build-number=16
 mode=release
